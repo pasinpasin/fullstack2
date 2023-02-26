@@ -64,13 +64,13 @@ const Programet = (props) => {
 
   const getData = async () => {
     try {
-      const { data } = await sendRequest(
-        `departamenti/${idf.id}/programi`,
+      const response = await sendRequest(
+        `departamenti/${idf.id}/programi/`,
         "GET",
         {},
         "GET_PROGRAME"
       );
-      if (data.programet.length > 0) setProgramet2(data.programet);
+      if (response.data.length > 0) setProgramet2(response.data);
       setLoading(false);
       //console.log(data);
     } catch (error) {

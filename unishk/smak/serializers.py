@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
+from rest_framework.exceptions import ValidationError
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -130,18 +131,42 @@ class FakultetiSerializer(serializers.ModelSerializer):
         fields = ['id', 'emertimi']
 
 class DepartamentiSerializer(serializers.ModelSerializer):
-    
+    fakulteti=FakultetiSerializer(read_only=True)
     class Meta:
         model = Departamenti
         fields = ['id', 'emertimi','fakulteti']
+    
+    
+    
+    def validate_emertimi(self, value):
+        if len(value) > 0:
+             raise ValidationError('Length of the attribute can not be less than 10')
+        return value
 
 class ProgramiSerializer(serializers.ModelSerializer):
     class Meta:
         model = Programi
+        fields = ['id', 'emertimi','departamenti']
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+        ]
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user=UserSerializer(read_only=True)
+    departamenti=DepartamentiSerializer(read_only=True)
     class Meta:
         model = Profile
+        fields = ['id', 'atesia','roli','departamenti','titulli','user']
 
 
 

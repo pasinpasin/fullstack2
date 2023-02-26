@@ -48,15 +48,15 @@ const DepartamentContent = () => {
 
   const getFakultet = async () => {
     try {
-      const { data } = await sendRequest(
+      const response = await sendRequest(
         `departamenti/${idf.id}/`,
         "GET",
         {},
         "GET_FAKULTETE"
       );
-      setFakultetet(data.fakulteti);
+      setFakultetet(response.data);
       setLoadingf(false);
-      console.log(data.fakulteti);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
       setLoadingf(false);

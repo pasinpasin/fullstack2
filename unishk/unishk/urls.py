@@ -17,6 +17,15 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.views import exception_handler
+from http import HTTPStatus
+from typing import Any
+
+
+
+    # Call REST framework's default exception handler first,
+    # to get the standard error response.
+    
 
 urlpatterns = [
     path('admin/', admin.site.urls),

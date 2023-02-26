@@ -34,6 +34,7 @@ const Departamentet = () => {
   } = useAppContext();
 
   const idf = useParams();
+  
 
   const columnsData = [
     { field: "emertimi", header: "Departamenti" },
@@ -53,7 +54,7 @@ const Departamentet = () => {
   const editRow = (departamentpermodifikim) => {
     setformdepartamenti("");
     setCurrentDepartament({
-      id: departamentpermodifikim._id,
+      id: departamentpermodifikim.id,
       departamenti: departamentpermodifikim.emertimi,
     });
     //setformdepartamenti(departamentpermodifikim.emertimi);
@@ -67,15 +68,17 @@ const Departamentet = () => {
 
   const getData = async () => {
     try {
+      console.log(Object.keys(idf).length)
       const response = await sendRequest(
-        `fakulteti/${idf.id}/departamenti`,
+        Object.keys(idf).length>0 ? `fakulteti/${idf.id}/departamenti/`: 'departamenti',
         "GET",
         {},
         "GET_DEPARTAMENTE"
       );
-      setfakultetiperket(`${idf.id}`);
+      if (Object.keys(idf).length>0 )  {setfakultetiperket(`${idf.id}`)}
       setDepartamentet2(response.data);
       setLoading(false);
+      
       //console.log(data);
     } catch (error) {
       console.log(error);
@@ -91,14 +94,14 @@ const Departamentet = () => {
       };
       console.log(bodytosend);
       //const { data } = await sendRequest(
-      const data = await sendRequest(
-        "/departamenti",
+      const response = await sendRequest(
+        "departamenti/",
         "POST",
         bodytosend,
         "SHTO_DEPARTAMENT"
       );
       setformdepartamenti("");
-      if (data.status === "success") {
+      if( response.statusText === "Created") {
         getData();
       }
     } catch (error) {
@@ -110,8 +113,8 @@ const Departamentet = () => {
     try {
       const bodytosend = { emertimi: `${currentDepartament.departamenti}` };
 
-      const data = await sendRequest(
-        `/departamenti/${currentDepartament.id}`,
+      const result = await sendRequest(
+        `departamenti/${currentDepartament.id}/`,
         "PATCH",
         bodytosend,
         "PERDITESO_DEPARTAMENT"
@@ -126,7 +129,7 @@ const Departamentet = () => {
   const fshijDepartament = async (id) => {
     try {
       const data = await sendRequest(
-        `/departamenti/${id}`,
+        `departamenti/${id}/`,
         "DELETE",
         {},
         "FSHIJ_DEPARTAMENT"
@@ -187,7 +190,7 @@ const Departamentet = () => {
                 handleChange={handleChange2}
               />
             </>
-          ) : (
+          ) : Object.keys(idf).length>0 ? 
             <>
               <h2>Shto Departamentet</h2>
               {showAlert && <Alert />}
@@ -198,8 +201,8 @@ const Departamentet = () => {
                 emri="Departamenti"
                 handleChange={handleChange}
               />
-            </>
-          )}
+            </> : <></>
+          }
 
           {departamentet2 && departamentet2.length > 0 ? (
             <Tabela

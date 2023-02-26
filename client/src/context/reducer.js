@@ -267,7 +267,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      departamentet: action.payload.data.data.departamentet,
+      departamentet: action.payload.data,
       //fakultetet: action.payload,
       // fakultetet: action.payload.responseData.data,
     };
@@ -356,7 +356,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      programet: action.payload.data.data.programi,
+      programet: action.payload.data,
       //fakultetet: action.payload,
       // fakultetet: action.payload.responseData.data,
     };

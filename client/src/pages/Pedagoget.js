@@ -37,10 +37,10 @@ const Pedagoget = (props) => {
   console.log(idf);
 
   const columnsData = [
-    { field: "emri", header: "Emri" },
-    { field: "mbiemri", header: "Mbiemri" },
+    { field: "user.first_name", header: "Emri" },
+    { field: "user.last_name", header: "Mbiemri" },
     { field: "titulli", header: "Titulli" },
-    { field: "fakulteti.emertimi", header: "Fakulteti" },
+    { field: "departamenti.fakulteti.emertimi", header: "Fakulteti" },
     { field: "departamenti.emertimi", header: "Departamenti" },
   ];
   const [columns, setColumns] = useState(columnsData);
@@ -68,16 +68,16 @@ const Pedagoget = (props) => {
 
   const getData = async () => {
     try {
-      const { data } = await sendRequest(
-        `departamenti/${idf.id}/users`,
+      const response = await sendRequest(
+        `departamenti/${idf.id}/users/`,
         "GET",
         {},
         "GET_PEDAGOG"
       );
-      console.log(data.users);
-      if (data.users.length > 0) setUsers2(data.users);
+      console.log(response.data);
+      if (response.data.length > 0) setUsers2(response.data);
       setLoading(false);
-      console.log(data.users);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
       setLoading(false);

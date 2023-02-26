@@ -67,6 +67,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+           <Route
+            path="departamentet"
+            element={
+              <ProtectedRoute>
+                <Departamentet />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="users/:id/"
             element={

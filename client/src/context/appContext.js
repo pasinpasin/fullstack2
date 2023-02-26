@@ -76,7 +76,7 @@ const AppProvider = ({ children }) => {
   });
   const activeHttpRequests = useRef([]);
 
-  authFetch.interceptors.response.use(
+  /* authFetch.interceptors.response.use(
     (response) => {
       return response;
     },
@@ -92,7 +92,7 @@ const AppProvider = ({ children }) => {
 
       return Promise.reject(error);
     }
-  );
+  ); */
 
   /*  authFetch.interceptors.request.use(async (req) => {
     let user = jwt_decode(state.authTokens.access);

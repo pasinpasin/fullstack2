@@ -41,23 +41,23 @@ class Programi(models.Model):
 
 class Profile(models.Model):
     class Titulli(models.TextChoices):
-        MSC = '1', 'Msc.'
-        Dr = '2', 'Dr'
-        ProfDr = '3', 'Prof.Dr'
-        Doc = '4', 'Doc'
+        MSC = 'Msc', 'Msc.'
+        Dr = 'Dr', 'Dr'
+        ProfDr = 'Prof.Dr', 'Prof.Dr'
+        Doc = 'Doc', 'Doc'
     class Roli(models.TextChoices):
-        Pedagog = '1', 'Pedagog'
-        Shef = '2', 'ShefDep'
-        Dekan = '3', 'Dekan'
-        Rektor = '4', 'Rektor'
-        Kurrikula = '5', 'Kurrikula'
-        Admin= '6', 'Admin'
+        Pedagog = 'Pedagog', 'Pedagog'
+        Shef = 'ShefDep', 'ShefDep'
+        Dekan = 'Dekan', 'Dekan'
+        Rektor = 'Rektor', 'Rektor'
+        Kurrikula = 'Kurrikula', 'Kurrikula'
+        Admin= 'Admin', 'Admin'
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
 
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
     atesia= models.CharField(max_length=250,blank=True)
-    titulli = models.CharField(max_length=6,
+    titulli = models.CharField(max_length=10,
                               choices=Titulli.choices,
                               blank=False)
     roli = models.CharField(max_length=10,

@@ -9,7 +9,7 @@ const links = [
   {
     id: 2,
     text: "Departamentet",
-    path: "departamentet",
+    path: "/departamentet",
     icon: <FcDepartment />,
   },
   { id: 3, text: "Programet", path: "programet", icon: <IoBookSharp /> },

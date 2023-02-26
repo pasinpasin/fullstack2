@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "drf_standardized_errors",
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
@@ -42,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'smak.apps.SmakConfig',
-    'django.contrib.postgres'
+    'django.contrib.postgres',
+    
     
 
 ]
@@ -153,7 +155,11 @@ REST_FRAMEWORK = {
     ],
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    #"EXCEPTION_HANDLER": "smak.errorhandling2.core_exception_handler",
+    #"EXCEPTION_HANDLER": "smak.errorhandling.api_exception_handler",
+   "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
+    #"EXCEPTION_FORMATTER_CLASS": "drf_standardized_errors.formatter.ExceptionFormatter"
 } 
 
 

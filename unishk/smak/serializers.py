@@ -131,6 +131,7 @@ class FakultetiSerializer(serializers.ModelSerializer):
         fields = ['id', 'emertimi']
 
 class DepartamentiSerializer(serializers.ModelSerializer):
+    DepartamentiSerializer.is_valid(raise_exception=True)
     fakulteti=FakultetiSerializer(read_only=True)
     class Meta:
         model = Departamenti
@@ -140,8 +141,11 @@ class DepartamentiSerializer(serializers.ModelSerializer):
     
     def validate_emertimi(self, value):
         if len(value) > 0:
-             raise ValidationError('Length of the attribute can not be less than 10')
+             raise serializers.ValidationError('Length of the attribute can not be less than 10')
         return value
+    def create(self, validated_data):
+        
+        return Departamenti.objects.create(**validated_data)
 
 class ProgramiSerializer(serializers.ModelSerializer):
     class Meta:

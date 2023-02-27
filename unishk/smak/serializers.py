@@ -6,6 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -131,21 +132,24 @@ class FakultetiSerializer(serializers.ModelSerializer):
         fields = ['id', 'emertimi']
 
 class DepartamentiSerializer(serializers.ModelSerializer):
-    DepartamentiSerializer.is_valid(raise_exception=True)
-    fakulteti=FakultetiSerializer(read_only=True)
+    
+    fakulteti= serializers.PrimaryKeyRelatedField(queryset=Fakulteti.objects.all())
+    
     class Meta:
         model = Departamenti
-        fields = ['id', 'emertimi','fakulteti']
+        fields = '__all__'
+        extra_fields = ['fakulteti']
+    
+    
+
+    
+
     
     
     
-    def validate_emertimi(self, value):
-        if len(value) > 0:
-             raise serializers.ValidationError('Length of the attribute can not be less than 10')
-        return value
-    def create(self, validated_data):
-        
-        return Departamenti.objects.create(**validated_data)
+    
+    
+    
 
 class ProgramiSerializer(serializers.ModelSerializer):
     class Meta:

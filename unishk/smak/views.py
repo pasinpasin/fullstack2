@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import ValidationError
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 
 
@@ -87,20 +88,51 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             departamentet = Departamenti.objects.order_by('updated')
             serializer = self.get_serializer(departamentet, many=True)
             return Response(serializer.data)
+        
+    
+        
+        
+   
+    
    
    
         
-    """  def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         fak = request.data.get('fakulteti')
+        
         emertimi = request.data.get('emertimi')
-        if fak is None:
-                error_msg = 'mungon fakulteti'
-                explanation="dfdsdsg"
-                status_code=401
-                raise ValidationError("mungon fakulteti")
-                #return Response({'message': error_msg}, status=status.HTTP_400_BAD_REQUEST)  
-               # return JsonResponse({'message':error_msg,'explanation':explanation}, status=status_code)  
-        return super().create(request, *args, **kwargs)  """
+        print(emertimi)
+
+        if fak is None or emertimi is None:
+                
+            raise ValidationError("mungon fakulteti ose emertimi i departamentit")
+            
+        if Departamenti.objects.filter(emertimi=emertimi).exists():
+
+            raise ValidationError("Fakulteti me kete emer ekziston")
+        try:
+                instance = Fakulteti.objects.get(emertimi=fak).id
+
+                print(instance)
+                
+               
+        except Fakulteti.DoesNotExist:
+                raise ValidationError("Nuk ekziston nje fakultet i tille")
+        data = {
+            'emertimi': request.POST.get('emertimi', None),
+            
+            
+        }
+
+        serializer = self.serializer_class(data=data, context={'fakulteti_id': instance})
+                
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        
+         
             
         
         

@@ -89,15 +89,29 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             serializer = self.get_serializer(departamentet, many=True)
             return Response(serializer.data)
         
-    
-        
-        
-   
-    
-   
-   
-        
     def create(self, request, *args, **kwargs):
+        fakulteti=request.data.get('fakulteti')
+        fakid=Fakulteti.objects.get(emertimi=fakulteti).id
+        
+        data = {
+            "emertimi": request.data.get('emertimi'),
+            "fakulteti": fakid,
+            }
+        _serializer = self.serializer_class(data=data)  # NOQA
+        if _serializer.is_valid():
+            _serializer.save()
+            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        else:
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
+        
+    
+        
+        
+   
+    
+   
+   
+"""  def create(self, request, *args, **kwargs):
         fak = request.data.get('fakulteti')
         
         emertimi = request.data.get('emertimi')
@@ -132,7 +146,7 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         
-         
+         """
             
         
         

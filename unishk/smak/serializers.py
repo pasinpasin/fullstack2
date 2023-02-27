@@ -133,12 +133,20 @@ class FakultetiSerializer(serializers.ModelSerializer):
 
 class DepartamentiSerializer(serializers.ModelSerializer):
     
-    fakulteti= serializers.PrimaryKeyRelatedField(queryset=Fakulteti.objects.all())
+    fakulteti= FakultetiSerializer
     
     class Meta:
         model = Departamenti
         fields = '__all__'
-        extra_fields = ['fakulteti']
+
+    def create(self, validated_data):
+        fakulteti_id = validated_data.get('fakulteti') 
+        emertimi=validated_data.get('emertimi')
+        depi = Departamenti.objects.create(**validated_data)  # saving post object
+        return depi
+        
+    
+
     
     
 

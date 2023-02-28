@@ -198,7 +198,7 @@ const AppProvider = ({ children }) => {
         url: `${baseURL}/${url}`,
         data: body,
       });
-      const data = response.data;
+      //const data = response.data;
       console.log(response);
       //const responseData = response.data;
 
@@ -217,10 +217,11 @@ const AppProvider = ({ children }) => {
       clearAlert();
       return response;
     } catch (error) {
+      console.log(error.response.data.error);
       if (error.response) {
         dispatch({
           type: `${tipi}_ERROR`,
-          payload: { msg: error.response.data.message },
+          payload: { msg: error.response.data.error.details },
         });
       } else {
         console.log(error);

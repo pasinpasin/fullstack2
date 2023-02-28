@@ -19,13 +19,6 @@ class Departamenti(models.Model):
                              related_name='iperketfakultetit')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    def clean(self):
-        if not self.fakulteti :
-            raise ValidationError("Finish must occur after start")
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
     class Meta:
         ordering = ['-updated']
     def __str__(self):

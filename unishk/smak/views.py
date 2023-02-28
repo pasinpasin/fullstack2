@@ -89,14 +89,33 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             serializer = self.get_serializer(departamentet, many=True)
             return Response(serializer.data)
         
+    
+        
+    
     def create(self, request, *args, **kwargs):
-        fakulteti=request.data.get('fakulteti')
-        fakid=Fakulteti.objects.get(emertimi=fakulteti).id
+        fakulteti = request.data.get('fakulteti')
+        
+        emertimi = request.data.get('emertimi')
+        #print(emertimi)
+
+        if fakulteti is None or emertimi is None:
+                
+            raise ValidationError("mungon fakulteti ose emertimi i departamentit")
+            
+        if Departamenti.objects.filter(emertimi=emertimi).exists():
+
+            raise ValidationError("Departamenti me kete emer ekziston")
+        try:
+                fid = Fakulteti.objects.get(id=fakulteti)
+
+        except Fakulteti.DoesNotExist:
+                raise ValidationError("Nuk ekziston nje fakultet i tille")
         
         data = {
-            "emertimi": request.data.get('emertimi'),
-            "fakulteti": fakid,
+            "emertimi": emertimi,
+            "fakulteti": fakulteti,
             }
+
         _serializer = self.serializer_class(data=data)  # NOQA
         if _serializer.is_valid():
             _serializer.save()
@@ -104,49 +123,44 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
         else:
             return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
         
-    
-        
-        
-   
-    
-   
-   
-"""  def create(self, request, *args, **kwargs):
-        fak = request.data.get('fakulteti')
+    def update(self, request,pk=None, *args, **kwargs):
+
+        fakulteti = request.data.get('fakulteti')
         
         emertimi = request.data.get('emertimi')
-        print(emertimi)
+        instance = self.get_object()
+        #print(emertimi)
 
-        if fak is None or emertimi is None:
+        if fakulteti is None or emertimi is None:
                 
             raise ValidationError("mungon fakulteti ose emertimi i departamentit")
-            
-        if Departamenti.objects.filter(emertimi=emertimi).exists():
-
-            raise ValidationError("Fakulteti me kete emer ekziston")
         try:
-                instance = Fakulteti.objects.get(emertimi=fak).id
+                fid = Fakulteti.objects.get(emertimi=fakulteti).id
 
-                print(instance)
-                
-               
         except Fakulteti.DoesNotExist:
                 raise ValidationError("Nuk ekziston nje fakultet i tille")
-        data = {
-            'emertimi': request.POST.get('emertimi', None),
-            
-            
-        }
-
-        serializer = self.serializer_class(data=data, context={'fakulteti_id': instance})
-                
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         
-         """
+        if Departamenti.objects.filter(emertimi=emertimi,fakulteti_id=fid).exists():
+
+            raise ValidationError("Departamenti me kete emer ekziston")
+       
+        
+        data = {
+            "emertimi": emertimi,
+            "fakulteti": fid,
+            }
+        
+        
+        _serializer = self.serializer_class(instance=instance,data=data,partial=True)  # NOQA
+        if _serializer.is_valid():
+            _serializer.save()
+            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        else:
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
+
+        
+        
+         
             
         
         
@@ -164,6 +178,76 @@ class ProgramiViewSet(viewsets.ModelViewSet):
             programet = Programi.objects.order_by('updated')
             serializer = self.get_serializer(programet, many=True)
             return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        departamenti = request.data.get('departamenti')
+        
+        emertimi = request.data.get('emertimi')
+        
+        #print(emertimi)
+
+        if departamenti is None or emertimi is None:
+                
+            raise ValidationError("mungon departmenti ose emertimi i departamentit")
+        
+        if  len(emertimi)==0:
+            raise ValidationError("Fushat nuk mund te jene bosh") 
+            
+        if Programi.objects.filter(emertimi=emertimi).exists():
+
+            raise ValidationError("Programi me kete emer ekziston")
+        try:
+                instance = Departamenti.objects.get(id=departamenti)
+
+        except Departamenti.DoesNotExist:
+                raise ValidationError("Nuk ekziston nje Departament i tille")
+        
+        data = {
+            "emertimi": emertimi,
+            "departamenti": departamenti,
+            }
+
+        _serializer = self.serializer_class(data=data)  # NOQA
+        if _serializer.is_valid():
+            _serializer.save()
+            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        else:
+            print(_serializer)
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        
+    def update(self, request,pk=None, *args, **kwargs):
+
+        departamenti = request.data.get('departamenti')
+        
+        emertimi = request.data.get('emertimi')
+        instance = self.get_object()
+        #print(emertimi)
+
+        if departamenti is None or emertimi is None:
+                
+            raise ValidationError("mungon departamenti ose emertimi i departamentit")
+        try:
+                did = Departamenti.objects.get(emertimi=departamenti).id
+
+        except Departamenti.DoesNotExist:
+                raise ValidationError("Nuk ekziston nje departament i tille")
+        
+        if Departamenti.objects.filter(emertimi=emertimi,departamenti_id=did).exists():
+
+            raise ValidationError("Departamenti me kete emer ekziston")
+       
+        
+        data = {
+            "emertimi": emertimi,
+            "departamenti": did,
+            }
+        
+        
+        _serializer = self.serializer_class(instance=instance,data=data,partial=True)  # NOQA
+        if _serializer.is_valid():
+            _serializer.save()
+            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        else:
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
         
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()

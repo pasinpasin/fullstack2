@@ -148,7 +148,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "smak.util.errorhandling.api_exception_handler",
+    #"EXCEPTION_HANDLER": "smak.util.errorhandling.api_exception_handler",
     
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -156,7 +156,7 @@ REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    #"EXCEPTION_HANDLER": "smak.errorhandling2.core_exception_handler",
+    "EXCEPTION_HANDLER": "smak.errorhandling2.core_exception_handler",
     
    #"EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
     #"EXCEPTION_FORMATTER_CLASS": "drf_standardized_errors.formatter.ExceptionFormatter"

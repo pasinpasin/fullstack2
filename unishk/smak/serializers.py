@@ -138,12 +138,28 @@ class DepartamentiSerializer(serializers.ModelSerializer):
     class Meta:
         model = Departamenti
         fields = '__all__'
+    """ def to_representation(self, instance):
+        representation = dict()
+        representation["id"] = instance.id
+        representation["emertimi"] = instance.emertimi
+        representation["fakulteti_id"] = instance.fakulteti.id
+        representation["fakulteti_emertimi"] = instance.fakulteti.emertimi
+        representation["created_"] = instance.created
+        representation["updated_"] = instance.updated
 
-    def create(self, validated_data):
+        return representation """
+    def to_representation(self, instance):
+       ret = super().to_representation(instance)
+       ret['fakulteti'] = FakultetiSerializer(instance.fakulteti).data
+       return ret
+
+    
+
+    """ def create(self, validated_data):
         fakulteti_id = validated_data.get('fakulteti') 
         emertimi=validated_data.get('emertimi')
         depi = Departamenti.objects.create(**validated_data)  # saving post object
-        return depi
+        return depi """
         
     
 
@@ -160,9 +176,15 @@ class DepartamentiSerializer(serializers.ModelSerializer):
     
 
 class ProgramiSerializer(serializers.ModelSerializer):
+    departamenti= DepartamentiSerializer
     class Meta:
         model = Programi
-        fields = ['id', 'emertimi','departamenti']
+        fields = '__all__'
+    def to_representation(self, instance):
+       ret = super().to_representation(instance)
+       ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
+       return ret
+    
 
 
 

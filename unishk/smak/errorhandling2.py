@@ -2,6 +2,7 @@ from rest_framework.views import exception_handler
 from datetime import datetime
 
 def core_exception_handler(exc, context):
+    
     # If an exception is thrown that we don't explicitly handle here, we want
     # to delegate to the default exception handler offered by DRF. If we do
     # handle this exception type, we will still want access to the response
@@ -37,10 +38,10 @@ def _handle_generic_error(exc, context, response):
 
 def _handle_not_found_error(exc, context, response):
     view = context.get('view', None)
-
+    
     if view and hasattr(view, 'queryset') and view.queryset is not None:
         error_key = view.queryset.model._meta.verbose_name
-
+        
         response.data = {
             'errors': {
                 error_key: response.data['detail']

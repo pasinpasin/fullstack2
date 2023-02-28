@@ -65,7 +65,7 @@ const Programet = (props) => {
   const getData = async () => {
     try {
       const response = await sendRequest(
-        `departamenti/${idf.id}/programi/`,
+        `departamenti/${idf.id}/programi`,
         "GET",
         {},
         "GET_PROGRAME"
@@ -83,19 +83,20 @@ const Programet = (props) => {
     try {
       const bodytosend = {
         emertimi: `${formprogrami}`,
-        fakulteti: `${props.fid}`,
+        //fakulteti: `${props.fid}`,
         departamenti: `${idf.id}`,
       };
-      console.log(bodytosend);
+
       //const { data } = await sendRequest(
-      const data = await sendRequest(
-        "/programi",
+      const response = await sendRequest(
+        "programi/",
         "POST",
         bodytosend,
         "SHTO_PROGRAM"
       );
+      console.log(response);
       setformprogrami("");
-      if (data.status === "success") {
+      if (response.statusText === "Created") {
         getData();
       }
     } catch (error) {
@@ -107,8 +108,8 @@ const Programet = (props) => {
     try {
       const bodytosend = { emertimi: `${currentProgram.programi}` };
 
-      const data = await sendRequest(
-        `/programi/${currentProgram.id}`,
+      const response = await sendRequest(
+        `programi/${currentProgram.id}/`,
         "PATCH",
         bodytosend,
         "PERDITESO_PROGRAM"
@@ -123,7 +124,7 @@ const Programet = (props) => {
   const fshijProgram = async (id) => {
     try {
       const data = await sendRequest(
-        `/programi/${id}`,
+        `programi/${id}/`,
         "DELETE",
         {},
         "FSHIJ_PROGRAM"

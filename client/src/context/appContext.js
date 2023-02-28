@@ -217,11 +217,12 @@ const AppProvider = ({ children }) => {
       clearAlert();
       return response;
     } catch (error) {
-      console.log(error.response.data.error);
+     
       if (error.response) {
+        console.log(error.response.data.error.details.detail);
         dispatch({
           type: `${tipi}_ERROR`,
-          payload: { msg: error.response.data.error.details },
+          payload: { msg: error.response.data.error.details.detail || error.response.data.error.details},
         });
       } else {
         console.log(error);

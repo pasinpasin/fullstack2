@@ -13,9 +13,10 @@ def api_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
     # Call REST framework's default exception handler first,
     # to get the standard error response.
     response = exception_handler(exc, context)
-    print(response)
+    
     if response is not None:
         
+        print(response)
         # Using the description's of the HTTPStatus class as error message.
         http_code_to_message = {v.value: v.description for v in HTTPStatus}
 

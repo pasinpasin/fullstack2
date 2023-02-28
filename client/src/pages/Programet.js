@@ -50,7 +50,7 @@ const Programet = (props) => {
   const editRow = (programpermodifikim) => {
     setformprogrami("");
     setCurrentProgram({
-      id: programpermodifikim._id,
+      id: programpermodifikim.id,
       programi: programpermodifikim.emertimi,
     });
     //setformprogrami(programpermodifikim.emertimi);
@@ -107,32 +107,40 @@ const Programet = (props) => {
   const ModifikoData = async () => {
     try {
       const bodytosend = { emertimi: `${currentProgram.programi}` };
-
+      
       const response = await sendRequest(
         `programi/${currentProgram.id}/`,
         "PATCH",
         bodytosend,
         "PERDITESO_PROGRAM"
       );
+      setEditing(false);
+      if (response.statusText === "Created") {
+        getData();
+      }
+      
     } catch (error) {
       console.log(error);
     }
-    setEditing(false);
-    getData();
+   
   };
 
   const fshijProgram = async (id) => {
     try {
-      const data = await sendRequest(
+      const response = await sendRequest(
         `programi/${id}/`,
         "DELETE",
         {},
         "FSHIJ_PROGRAM"
       );
+      
+      if (response.statusText === "Created") {
+        getData();
+      }
     } catch (error) {
       console.log(error);
     }
-    getData();
+   
   };
 
   useEffect(() => {
@@ -165,17 +173,18 @@ const Programet = (props) => {
     ModifikoData();
   };
   let url = "/departamenti/id/programi";
-
+console.log(showAlert )
   return (
     <Wrapper>
       {loading ? (
         <Loading center />
       ) : (
         <div>
+          {showAlert && <Alert />}
           {editing ? (
             <>
               <h2>Edit program</h2>
-              {showAlert && <Alert />}
+              
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
@@ -188,7 +197,7 @@ const Programet = (props) => {
           ) : (
             <>
               <h2>Shto Programet</h2>
-              {showAlert && <Alert />}
+              
               <ShtoForm
                 eventi={placeSubmitHandler}
                 formvlera={formprogrami}

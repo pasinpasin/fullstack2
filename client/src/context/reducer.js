@@ -429,6 +429,7 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === PERDITESO_PROGRAM_ERROR) {
+    console.log(action.payload.msg)
     return {
       ...state,
       isLoading: false,

@@ -12,7 +12,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError,NotFound
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
@@ -167,6 +167,9 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
 class ProgramiViewSet(viewsets.ModelViewSet):
     queryset = Programi.objects.all()
     serializer_class = ProgramiSerializer
+
+    def error404(request):
+        raise NotFound(detail="Faqja nuk gjendet", code=404)
 
     def list(self, request, id=None):
         if id:

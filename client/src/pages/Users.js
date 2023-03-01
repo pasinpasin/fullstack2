@@ -23,13 +23,13 @@ const Users = () => {
   const { user } = useAppContext();
 
   const columnsData = [
-    { field: "emri", header: "Emri" },
-    { field: "mbiemri", header: "Mbiemri" },
+    { field: "user.first_name", header: "Emri" },
+    { field: "user.last_name", header: "Mbiemri" },
     { field: "atesia", header: "Atesia" },
-    { field: "email", header: "Email" },
+    { field: "user.email", header: "Email" },
     { field: "titulli", header: "Titulli" },
-    { field: "role", header: "Roli" },
-    { field: "fakulteti.emertimi", header: "Fakulteti" },
+    { field: "roli", header: "Roli" },
+    { field: "departamenti.fakulteti.emertimi", header: "Fakulteti" },
     { field: "departamenti.emertimi", header: "Departamenti" },
   ];
 
@@ -38,7 +38,7 @@ const Users = () => {
     try {
       const bodytosend = {};
 
-      const data = await sendRequest(
+      const response = await sendRequest(
         "/users",
         "PATCH",
         bodytosend,
@@ -64,9 +64,9 @@ const Users = () => {
 
   const getData = async () => {
     try {
-      const { data } = await sendRequest(`users`, "GET", {});
-      console.log(data.users);
-      setUsers2(data.users);
+      const response = await sendRequest(`users`, "GET", {});
+      console.log(response.data.result.items);
+      setUsers2(response.data.result.items);
     } catch (error) {
       console.log(error);
     }
@@ -89,11 +89,9 @@ const Users = () => {
           )}
           {users2 && users2.length > 0 ? (
             <>
-            <Link to={`/users/shtouser`} >
-              <button className="btn  ">
-                Shto user
-                
-              </button></Link>
+              <Link to={`/users/shtouser`}>
+                <button className="btn  ">Shto user</button>
+              </Link>
               <table>
                 <thead>
                   <tr key="kolonat">
@@ -106,7 +104,7 @@ const Users = () => {
                 </thead>
                 <tbody>
                   {users2.map((data) => (
-                    <tr key={data._id}>
+                    <tr key={data.id}>
                       {columnsData.map((data3) => (
                         <td key={data3.header} data-label={data3.header}>
                           {GetPropertyValue(data, data3.field)}
@@ -115,12 +113,12 @@ const Users = () => {
 
                       {
                         <td key="veprimet" data-label="Veprimet">
-                          <Link to={`/users/${data._id}/edit`}>
+                          <Link to={`/users/${data.id}/edit`}>
                             <FaEdit size={25} />
                           </Link>
                           <MdDelete
                             size={25}
-                            onClick={() => fshijUser(data._id)}
+                            onClick={() => fshijUser(data.id)}
                           />
                         </td>
                       }

@@ -69,6 +69,14 @@ def testEndPoint(request):
 class FakultetiViewSet(viewsets.ModelViewSet):
     queryset = Fakulteti.objects.all()
     serializer_class = FakultetiSerializer
+    
+    def list(self, request, id=None):
+        fakultetet = Fakulteti.objects.order_by('id')
+        serializer = self.get_serializer(fakultetet, many=True)
+        try:
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
 
 
 
@@ -83,11 +91,15 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             #fakid = Departamenti.active.filter(fakulteti=id)
             departamentet = Departamenti.objects.order_by('updated').filter(fakulteti=id)
             serializer = self.get_serializer(departamentet, many=True)
-            return Response(serializer.data)
+            #return Response(serializer.data)
         else:
             departamentet = Departamenti.objects.order_by('updated')
             serializer = self.get_serializer(departamentet, many=True)
-            return Response(serializer.data)
+            #return Response(serializer.data)
+        try:
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
         
     
         
@@ -227,16 +239,16 @@ class ProgramiViewSet(viewsets.ModelViewSet):
 
         if departamenti is None or emertimi is None:
                 
-            raise ValidationError("mungon departamenti ose emertimi i departamentit")
+            raise ValidationError("mungon departamenti ose emertimi i programit")
         try:
-                did = Departamenti.objects.get(emertimi=departamenti).id
+                did = Departamenti.objects.get(id=departamenti).id
 
         except Departamenti.DoesNotExist:
                 raise ValidationError("Nuk ekziston nje departament i tille")
         
-        if Departamenti.objects.filter(emertimi=emertimi,departamenti_id=did).exists():
+        if Departamenti.objects.filter(emertimi=emertimi,id=did).exists():
 
-            raise ValidationError("Departamenti me kete emer ekziston")
+            raise ValidationError("Departamenti me kete emer ekziston ne fakultetin e shkruar")
        
         
         data = {
@@ -261,11 +273,15 @@ class UsersViewSet(viewsets.ModelViewSet):
             #fakid = Departamenti.active.filter(fakulteti=id)
             pedagoget = Profile.objects.filter(departamenti_id=id)
             serializer = self.get_serializer(pedagoget, many=True)
-            return Response(serializer.data)
+            #return Response(serializer.data)
         else:
-            pedagoget = Profile.objects.order_by('updated')
+            pedagoget = Profile.objects.order_by('id')
             serializer = self.get_serializer(pedagoget, many=True)
-            return Response(serializer.data)
+        try:
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
+           
         
 
 

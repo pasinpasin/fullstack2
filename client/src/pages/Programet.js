@@ -106,8 +106,12 @@ const Programet = (props) => {
 
   const ModifikoData = async () => {
     try {
-      const bodytosend = { emertimi: `${currentProgram.programi}` };
-      
+      const bodytosend = {
+        emertimi: `${currentProgram.programi}`,
+        departamenti: `${idf.id}`,
+      };
+      console.log(bodytosend);
+
       const response = await sendRequest(
         `programi/${currentProgram.id}/`,
         "PATCH",
@@ -118,11 +122,9 @@ const Programet = (props) => {
       if (response.statusText === "Created") {
         getData();
       }
-      
     } catch (error) {
       console.log(error);
     }
-   
   };
 
   const fshijProgram = async (id) => {
@@ -133,14 +135,13 @@ const Programet = (props) => {
         {},
         "FSHIJ_PROGRAM"
       );
-      
-      if (response.statusText === "Created") {
+
+      if (response.statusText === "No Content") {
         getData();
       }
     } catch (error) {
       console.log(error);
     }
-   
   };
 
   useEffect(() => {
@@ -173,7 +174,7 @@ const Programet = (props) => {
     ModifikoData();
   };
   let url = "/departamenti/id/programi";
-console.log(showAlert )
+  console.log(showAlert);
   return (
     <Wrapper>
       {loading ? (
@@ -184,7 +185,7 @@ console.log(showAlert )
           {editing ? (
             <>
               <h2>Edit program</h2>
-              
+
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
@@ -197,7 +198,7 @@ console.log(showAlert )
           ) : (
             <>
               <h2>Shto Programet</h2>
-              
+
               <ShtoForm
                 eventi={placeSubmitHandler}
                 formvlera={formprogrami}

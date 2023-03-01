@@ -160,19 +160,9 @@ class DepartamentiSerializer(serializers.ModelSerializer):
         emertimi=validated_data.get('emertimi')
         depi = Departamenti.objects.create(**validated_data)  # saving post object
         return depi """
-        
     
 
-    
-    
 
-    
-
-    
-    
-    
-    
-    
     
 
 class ProgramiSerializer(serializers.ModelSerializer):
@@ -204,7 +194,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     departamenti=DepartamentiSerializer(read_only=True)
     class Meta:
         model = Profile
-        fields = ['id', 'atesia','roli','departamenti','titulli','user']
+        #fields = ['id', 'atesia','roli','departamenti','titulli','user']
+        fields = '__all__'
 
 
 

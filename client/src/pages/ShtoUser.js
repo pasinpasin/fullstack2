@@ -167,7 +167,7 @@ const ShtoUser = () => {
               handleChange={(e) => {
                 setFakulteti(e.target.value);
                 setDepartamentetfilter(
-                  ...departamentetfilter,
+                  //...departamentetfilter,
                   setFilter(departamentet, e.target.value)
                 );
               }}
@@ -185,6 +185,7 @@ const ShtoUser = () => {
               //lista={setFilter(departamentet, fakulteti)}
 
               lista={departamentetfilter}
+              //lista={setFilter(departamentet,e.target.value)}
             />
             <FormCheckBox
               name="roles"

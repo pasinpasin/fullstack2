@@ -190,12 +190,18 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user=UserSerializer(read_only=True)
-    departamenti=DepartamentiSerializer(read_only=True)
+    user=UserSerializer
+    departamenti=DepartamentiSerializer
     class Meta:
         model = Profile
         #fields = ['id', 'atesia','roli','departamenti','titulli','user']
         fields = '__all__'
+
+    def to_representation(self, instance):
+       ret = super().to_representation(instance)
+       ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
+       ret['user'] = UserSerializer(instance.user).data
+       return ret
 
 
 

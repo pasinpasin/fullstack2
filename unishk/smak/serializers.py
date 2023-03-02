@@ -7,6 +7,8 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework import status
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -216,6 +218,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         
         profile = Profile.objects.create(**validated_data)
         return profile
+        
     def update(self, instance, validated_data):
         # retrieve the User
         user_data = validated_data.pop('user', None)

@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
+
 class Fakulteti(models.Model):
     
     emertimi = models.CharField(max_length=250,unique=True)
@@ -42,7 +43,7 @@ class Programi(models.Model):
 
 class Profile(models.Model):
     class Titulli(models.TextChoices):
-        MSC = 'Msc', 'Msc.'
+        MSc = 'Msc', 'Msc.'
         Dr = 'Dr', 'Dr'
         ProfDr = 'Prof.Dr', 'Prof.Dr'
         Doc = 'Doc', 'Doc'
@@ -69,6 +70,8 @@ class Profile(models.Model):
                              related_name='dep_pedagog')
     def __str__(self):
         return f'Profile of {self.user.username}'
+    
+   
 
 
     

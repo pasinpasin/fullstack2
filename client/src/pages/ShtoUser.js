@@ -30,12 +30,13 @@ const ShtoUser = () => {
   const [departamentetfilter, setDepartamentetfilter] = useState([]);
   const [userloading, setUserloading] = useState(true);
   const [checked, setChecked] = useState([]);
-  const titujt = ["MSc", "Dr.", "Prof.Dr", "Doc", "Prof.Asoc. Dr"];
+  const titujt = ["Msc", "Dr.", "Prof.Dr", "Doc", "Prof.Asoc. Dr"];
   const [isdepLoading, setIsdepLoading] = useState(true);
 
   const postData = async (newuser) => {
     try {
-      const { data } = await sendRequest(`users/`, "POST", newuser);
+      const response = await sendRequest(`users/`, "POST", newuser);
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -64,14 +65,17 @@ const ShtoUser = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const newuser = {
-      email,
-      password,
-      passwordconfirm,
-      emri,
-      mbiemri,
+      user: {
+        username: email,
+        email: email,
+        first_name: emri,
+        last_name: mbiemri,
+        password: password,
+      },
+
       titulli,
       atesia,
-      fakulteti,
+
       departamenti,
     };
     postData(newuser);

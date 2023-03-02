@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Fakulteti,Departamenti,Programi,Profile
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 
 
 
@@ -32,3 +34,7 @@ class ProgramiAdmin(admin.ModelAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'atesia', 'photo', 'roli', 'departamenti']
     raw_id_fields = ['user']
+
+
+
+

@@ -190,8 +190,15 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user=UserSerializer
+    """ user = serializers.ReadOnlyField(source='user.id')
+    id = serializers.IntegerField(source='pk', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email')
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name') """
+    user=UserSerializer()
     departamenti=DepartamentiSerializer
+
     class Meta:
         model = Profile
         #fields = ['id', 'atesia','roli','departamenti','titulli','user']
@@ -202,6 +209,25 @@ class ProfileSerializer(serializers.ModelSerializer):
        ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
        ret['user'] = UserSerializer(instance.user).data
        return ret
+    def create(self, validated_data):
+        # get principal fields
+        user_data = validated_data.pop('user')
+        validated_data['user'] = User.objects.create(**user_data)
+        
+        profile = Profile.objects.create(**validated_data)
+        return profile
+    def update(self, instance, validated_data):
+        # retrieve the User
+        user_data = validated_data.pop('user', None)
+        for attr, value in user_data.items():
+            setattr(instance.user, attr, value)
+
+        # retrieve Profile
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.user.save()
+        instance.save()
+        return instance
 
 
 

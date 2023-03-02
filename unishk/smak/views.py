@@ -281,27 +281,19 @@ class UsersViewSet(viewsets.ModelViewSet):
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
-           
     def create(self, request, *args, **kwargs):
-        departamenti = request.data.get('departamenti')
         
-        emertimi = request.data.get('emertimi')
-        
-       
-        
-        
-        data = {
-            "emertimi": emertimi,
-            "departamenti": departamenti,
-            }
 
-        _serializer = self.serializer_class(data=data)  # NOQA
+        _serializer = self.serializer_class(data=request.data)  # NOQA
         if _serializer.is_valid():
             _serializer.save()
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
             print(_serializer)
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+           
+     
 
 
     

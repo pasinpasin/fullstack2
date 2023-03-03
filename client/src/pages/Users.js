@@ -14,6 +14,7 @@ import Tabela from "../components/Tabela2";
 
 function GetPropertyValue(obj1, dataToRetrieve) {
   return dataToRetrieve.split(".").reduce(function (o, k) {
+    console.log(o[k]);
     return o && o[k]; // get inner property if `o` is defined else get `o` and return
   }, obj1); // set initial value as object
 }
@@ -54,7 +55,7 @@ const Users = () => {
   const fshijUser = async (id) => {
     if (window.confirm("Jeni te sigurte?")) {
       try {
-        const data = await sendRequest(`/users/${id}`, "DELETE", {});
+        const response = await sendRequest(`/users/${id}`, "DELETE", {});
       } catch (error) {
         console.log(error);
       }
@@ -105,11 +106,35 @@ const Users = () => {
                 <tbody>
                   {users2.map((data) => (
                     <tr key={data.id}>
-                      {columnsData.map((data3) => (
+                      {/*   {columnsData.map((data3) => (
                         <td key={data3.header} data-label={data3.header}>
                           {GetPropertyValue(data, data3.field)}
                         </td>
-                      ))}
+                      ))} */}
+                      <td key="Emri" data-label="Emri">
+                        {data.user.first_name}
+                      </td>
+                      <td key="Mbiemri" data-label="Mbiemri">
+                        {data.user.last_name}
+                      </td>
+                      <td key="Atesia" data-label="Atesia">
+                        {data.atesia}
+                      </td>
+                      <td key="Email" data-label="Email">
+                        {data.user.email}
+                      </td>
+                      <td key="Titulli" data-label="itulli">
+                        {data.titulli}
+                      </td>
+                      <td key="Roli" data-label="Roli">
+                        {data.roli.join(",")}
+                      </td>
+                      <td key="Fakulteti" data-label="Fakulteti">
+                        {data.departamenti.fakulteti.emertimi}
+                      </td>
+                      <td key="Departamenti" data-label="Departamenti">
+                        {data.departamenti.emertimi}
+                      </td>
 
                       {
                         <td key="veprimet" data-label="Veprimet">

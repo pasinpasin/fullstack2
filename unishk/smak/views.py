@@ -292,7 +292,17 @@ class UsersViewSet(viewsets.ModelViewSet):
             
         else:
             print(_serializer)
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception as e:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            #any additional logic
+            serializer = self.get_serializer(instance)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     
            
      

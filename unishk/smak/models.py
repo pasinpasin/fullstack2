@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.contrib.postgres.fields import ArrayField
 
 
 class Fakulteti(models.Model):
@@ -62,14 +63,116 @@ class Profile(models.Model):
     titulli = models.CharField(max_length=10,
                               choices=Titulli.choices,
                               blank=False)
-    roli = models.CharField(max_length=10,
-                              choices=Roli.choices,
-                              default=Roli.Pedagog)
+    roli = ArrayField(
+        models.CharField(max_length=32, blank=False)
+       
+       
+    )
     departamenti = models.ForeignKey(Departamenti,
                              on_delete=models.CASCADE,
                              related_name='dep_pedagog')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f'Profile of {self.user.username}'
+    
+    
+class Planet(models.Model):
+    class Status(models.TextChoices):
+        Draft = 'Draft', 'Draft'
+        Per_Miratim = 'Per miratim', 'Per miratim'
+        Miratuar = 'Miratuar', 'Miratuar'
+    periudha = models.CharField(max_length=500,blank=False)
+    cikli = models.CharField(max_length=500,blank=False)
+    status=models.CharField(max_length=20,
+                              choices=Status.choices,
+                              blank=False, default="Draft")
+    programi = models.ForeignKey(Programi,
+                             on_delete=models.CASCADE,
+                             related_name='iperketprogramit')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ['-updated']
+        indexes = [
+            models.Index(fields=['-periudha','-programi'],),
+        ]
+    def __str__(self):
+        return self.programi
+    
+class Vitiakademik(models.Model):
+    vitiakademik = models.CharField(max_length=500,blank=False, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.vitiakademik
+    
+
+class Semestri(models.Model):
+    class SemestriCh(models.TextChoices):
+        Semestri1 = 'Semestri 1', 'Semestri 1'
+        Semestri2 = 'Semestri 2', 'Semestri 2'
+    semestri=models.CharField(max_length=20,
+                              choices=SemestriCh.choices,blank=False
+                              )
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self):
+        return self.vitiakademik
+    
+class PlanPermbajtja(models.Model):
+    
+    class TipiVeprimtarise(models.TextChoices):
+        A = 'A', 'A'
+        B = 'B', 'B'
+        C = 'C', 'C'
+        D = 'D', 'D'
+        E = 'E', 'E'
+        F = 'F', 'F'
+        m= 'm', 'm'
+    class PapoF(models.TextChoices):
+        P = 'P', 'P'
+        F = 'F', 'F'
+        
+    
+    renditja = models.IntegerField(blank=False)
+    titullari = models.CharField(max_length=500)
+    emertimi = models.CharField(max_length=500,blank=False)
+    tipiveprimtarise=models.CharField(max_length=20,
+                              choices=TipiVeprimtarise.choices,
+                              blank=False)
+    kredite = models.DecimalField(max_digits = 2,decimal_places = 1,blank=False)
+    nrjavesem1=models.IntegerField(blank=False)
+    seminaresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    leksionesem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    praktikasem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    laboratoresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    nrjavesem2=models.IntegerField(blank=False)
+    seminaresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    leksionesem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    praktikasem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    laboratoresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    plani = models.ForeignKey(Planet,
+                             on_delete=models.CASCADE,
+                             related_name='iperketplanit')
+    semestri = models.ForeignKey(Semestri,
+                             on_delete=models.CASCADE,
+                             related_name='iperketsemestrit')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ['-renditja']
+        indexes = [
+            models.Index(fields=['-plani','-semestri'],),
+        ]
+    def __str__(self):
+         return f' {self.plani.programi.emertimi} {self.plani.periudha}'
+
+    
+
     
    
 

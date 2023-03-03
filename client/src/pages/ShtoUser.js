@@ -75,7 +75,7 @@ const ShtoUser = () => {
 
       titulli,
       atesia,
-
+      roli: checked,
       departamenti,
     };
     postData(newuser);
@@ -102,7 +102,7 @@ const ShtoUser = () => {
 
     setChecked(updatedList);
   };
-  console.log(fakulteti.length);
+
   const setFilter = (departamentet, value) => {
     return departamentet.filter(
       (departament) => departament.fakulteti.id === parseInt(value)

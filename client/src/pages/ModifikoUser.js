@@ -32,8 +32,8 @@ const ModifikoUser = () => {
 
   const getData = async () => {
     try {
-      const { data } = await sendRequest(`users/${id}`, "GET", {});
-      setUser(data.user);
+      const response = await sendRequest(`users/${id}`, "GET", {});
+      setUser(response.data.result.items);
     } catch (error) {
       console.log(error);
     }
@@ -41,9 +41,9 @@ const ModifikoUser = () => {
 
   const getFakultetet = async () => {
     try {
-      const { data } = await sendRequest(`/fakulteti`, "GET", {});
-console.log(data);
-      setFakultetet(...fakultetet, data.fakultetet);
+      const response = await sendRequest("fakulteti", "GET", {});
+
+      setFakultetet(...fakultetet, response.data.result.items);
     } catch (error) {
       console.log(error);
     }
@@ -51,9 +51,9 @@ console.log(data);
 
   const getDepartamentet = async () => {
     try {
-      const { data } = await sendRequest(`/departamenti`, "GET", {});
+      const response = await sendRequest(`departamenti`, "GET", {});
 
-      setDepartamentet(...departamentet, data.departamentet);
+      setDepartamentet(...departamentet, response.data.result.items);
     } catch (error) {
       console.log(error);
     }
@@ -66,23 +66,26 @@ console.log(data);
   };
 
   useEffect(() => {
-    if (!user || user._id !== id) {
+    if (!user || user.id !== id) {
       getData();
       getFakultetet();
       getDepartamentet();
     } else {
-      setEmri(user.emri);
-      setMbimri(user.mbiemri);
+      setEmri(user.first_name);
+      setMbimri(user.last_name);
       setEmail(user.email);
-      setAtesia(user.atesia)
+      setAtesia(user.atesia);
       setPassword(user.password);
       setConfirmpassword(user.password);
       setTitulli(user.titulli);
-      setFakulteti( {emertimi:user.fakulteti,id:user.fakulteti._id});
-      setDepartamenti( user.departamenti);
+      setFakulteti({
+        emertimi: user.departamenti.fakulteti.emertimi,
+        id: user.departamenti.fakulteti.id,
+      });
+      setDepartamenti(user.departamenti);
 
-     
-      setChecked([user.role]);
+      //setChecked([user.role]);
+      setChecked(user.role);
 
       setUserloading(false);
     }
@@ -96,19 +99,15 @@ console.log(data);
     } else {
       updatedList.splice(checked.indexOf(event.target.value), 1);
     }
-   
+
     setChecked(updatedList);
   };
 
-
-  const setFilter=(departamentet)=>{
-   return  departamentet.filter(
+  const setFilter = (departamentet) => {
+    return departamentet.filter(
       (departament) => departament.fakulteti._id === fakulteti.id
-    )
-    
-  }
-
- 
+    );
+  };
 
   return (
     <>
@@ -168,18 +167,30 @@ console.log(data);
               name="fakulteti"
               value={user.fakulteti || fakulteti.emertimi}
               handleChange={(e) => {
-                setFakulteti({emertimi:e.target.value, id:e.target.children[e.target.selectedIndex].getAttribute('data-celesi')});
-                
-                console.log(e.target.children[e.target.selectedIndex].getAttribute('data-celesi'))
+                setFakulteti({
+                  emertimi: e.target.value,
+                  id: e.target.children[e.target.selectedIndex].getAttribute(
+                    "data-celesi"
+                  ),
+                });
+
+                console.log(
+                  e.target.children[e.target.selectedIndex].getAttribute(
+                    "data-celesi"
+                  )
+                );
               }}
               lista={fakultetet}
             />
             <FormrowSelect
               name="departamenti"
               value={departamenti.emertimi}
-              handleChange={(e) => {setDepartamenti(e.target.value) ; setFilter()}}
+              handleChange={(e) => {
+                setDepartamenti(e.target.value);
+                setFilter();
+              }}
               /* lista={departamentet} */
-              lista={setFilter(departamentet)} 
+              lista={setFilter(departamentet)}
             />
             <FormCheckBox
               name="roles"

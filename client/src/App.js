@@ -67,7 +67,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="departamentet"
             element={
               <ProtectedRoute>
@@ -96,7 +96,7 @@ function App() {
             path="users/shtouser"
             element={
               <ProtectedRoute>
-                <ShtoUser/>
+                <ShtoUser />
               </ProtectedRoute>
             }
           />

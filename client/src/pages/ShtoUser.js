@@ -7,7 +7,7 @@ import React from "react";
 import FormrowSelect from "../components/FormrowSelect";
 import Loading from "../components/Loading";
 import FormCheckBox from "../components/FormCheckBox";
-import Alert from "../components/Alert2";
+import Alert2 from "../components/Alert2";
 import { useNavigate } from "react-router-dom";
 
 const ShtoUser = () => {
@@ -36,7 +36,8 @@ const ShtoUser = () => {
   const postData = async (newuser) => {
     try {
       const response = await sendRequest(`users/`, "POST", newuser);
-      console.log(response);
+      //console.log(response);
+      navigate("/users");
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +80,7 @@ const ShtoUser = () => {
       departamenti,
     };
     postData(newuser);
-    navigate("/users");
+    
   };
 
   useEffect(() => {
@@ -116,9 +117,9 @@ const ShtoUser = () => {
       ) : (
         <>
           {error.alertType !== "" ?? (
-            <Alert alertType={error.alertType} alertText={error.alertText} />
+            <Alert2 alertType={error.alertType} alertText={error.alertText} />
           )}
-          <Alert alertType={error.alertType} alertText={error.alertText} />
+          <Alert2 alertType={error.alertType} alertText={error.alertText} />
           <form className="form" onSubmit={onSubmit}>
             {isLoading && <Loading center />}
             <FormRow

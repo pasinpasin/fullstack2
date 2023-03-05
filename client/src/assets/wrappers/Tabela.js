@@ -5,7 +5,7 @@ const Wrapper = styled.section`
     margin-bottom: 40px;
   }
   table {
-    width: 100%;
+    /*width: 100%; */
     table-layout: fixed;
     border-collapse: collapse;
     margin: 0 auto;

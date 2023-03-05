@@ -184,20 +184,16 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-        ]
+        fields = '__all__'
+    """ def validate_email(attr, value):
+            print(attr)
+            norm_email = value.lower()
+            if User.objects.exclude(id=self.id).filter(email=norm_email).exists():
+                raise serializers.ValidationError("Not unique email")
+            return norm_email """
+    
 
 class ProfileSerializer(serializers.ModelSerializer):
-    """ user = serializers.ReadOnlyField(source='user.id')
-    id = serializers.IntegerField(source='pk', read_only=True)
-    username = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.CharField(source='user.email')
-    first_name = serializers.CharField(source='user.first_name')
-    last_name = serializers.CharField(source='user.last_name') """
     user=UserSerializer()
     departamenti=DepartamentiSerializer
 
@@ -205,6 +201,20 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         #fields = ['id', 'atesia','roli','departamenti','titulli','user']
         fields = '__all__'
+    def validate(self, attrs):
+        
+        if (self.instance):
+            print("ketu 1")
+            qs=User.objects.filter(email=attrs['user']['email']).exclude(id=self.instance.user.id)
+            if qs.exists(): 
+                raise serializers.ValidationError("Not unique email")
+        elif User.objects.filter(email=attrs['user']['email']).exists():
+            print("ketu 2")
+            raise serializers.ValidationError("Not unique email")
+            
+
+        return attrs
+    
 
     def to_representation(self, instance):
        ret = super().to_representation(instance)
@@ -220,17 +230,23 @@ class ProfileSerializer(serializers.ModelSerializer):
         return profile
         
     def update(self, instance, validated_data):
-        # retrieve the User
-        user_data = validated_data.pop('user', None)
-        for attr, value in user_data.items():
-            setattr(instance.user, attr, value)
+            
+            # retrieve the User
+            user_data = validated_data.pop('user', None)
+            for attr, value in user_data.items():
+                setattr(instance.user, attr, value)
 
-        # retrieve Profile
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.user.save()
-        instance.save()
-        return instance
+            # retrieve Profile
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+            
+            instance.user.save()
+            instance.save()
+            return instance
+    
+   
+        
+
 
 
 

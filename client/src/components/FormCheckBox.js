@@ -6,6 +6,8 @@ const FormCheckBox = (props) => {
     "dekan",
     "kurrikula",
   ];
+  console.log(props.arr)
+  console.log( props.arr.includes('pedagog'))
 
   return (
     <div className="form-row">
@@ -23,8 +25,10 @@ const FormCheckBox = (props) => {
               id={index}
               onChange={props.handleChange}
               checked={ props.arr.includes(itemValue)}
+              
             />
             {itemValue}
+            
           </div>
         );
       })}

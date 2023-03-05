@@ -127,7 +127,7 @@ const Users = () => {
                         {data.titulli}
                       </td>
                       <td key="Roli" data-label="Roli">
-                        {data.roli.join(",")}
+                        {data.roli.join(" ")}
                       </td>
                       <td key="Fakulteti" data-label="Fakulteti">
                         {data.departamenti.fakulteti.emertimi}

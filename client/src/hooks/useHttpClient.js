@@ -4,7 +4,8 @@ import { useAppContext } from "../context/appContext";
 
 const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState({ alertType: "", alertText: "" });
+ const [error, setError] = useState({ alertType: "", alertText: "" });
+ 
   const { authTokens } = useAppContext();
 
   const authFetch = axios.create({
@@ -25,18 +26,20 @@ const useHttpClient = () => {
         url: url,
         data: body,
       });
+      console.log(response)
 
-      if (response.data.message !== "success") {
+     /*  if (response.data.message !== "success") {
         console.log(response);
-        setError({ alertType: "danger", alertText: response.data.message });
+        setError({ alertType: "danger", alertText: response.data.error.details });
         clearError();
         throw new Error(response);
       }
-
+ */
       setIsLoading(false);
       return response;
     } catch (err) {
       console.log(err);
+      setError({ alertType: "danger", alertText: err.response.data.message });
       //setError({ alertType: "danger", alertText: data.message.message });
       setIsLoading(false);
       clearError();

@@ -304,11 +304,17 @@ class UsersViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     
-           
-     
-
-
-    
+    """ def update(self, request):
+        data = self.request.data
+        user = self.request.user
+        if user.is_authenticated and user.has_perm("meals.change_menu"):
+            
+            if request.method == 'PUT':
+                serializer = MealItemSerializer(instance=self.get_object(), data=data, partial=True )
+                
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    return Response({"Success": "Your meal was updated"}) """
             
 
 

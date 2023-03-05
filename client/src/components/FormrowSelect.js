@@ -1,5 +1,5 @@
 const FormrowSelect = (props) => {
-  console.log(props.lista);
+  console.log(props.value);
   return (
     <div className="form-row">
       <label htmlFor={props.name} className="form-label">
@@ -8,6 +8,7 @@ const FormrowSelect = (props) => {
       <select
         name={props.name}
         value={props.value}
+        
         // selected={props.value}
         onChange={props.handleChange}
         className="form-select"
@@ -21,6 +22,7 @@ const FormrowSelect = (props) => {
               key={itemValue.id || itemValue}
               value={itemValue.id || itemValue}
               data-celesi={itemValue.id || itemValue}
+              
             >
               {itemValue.emertimi || itemValue}
             </option>

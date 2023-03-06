@@ -11,10 +11,12 @@ router = routers.DefaultRouter()
 router.register('departamenti', views.DepartamentiViewSet,basename='pafakultet')
 router.register('fakulteti', views.FakultetiViewSet)
 router.register('programi', views.ProgramiViewSet,basename='programi')
+router.register('programi/(?P<id>\d+)/plani', views.PlaniViewSet,basename='meplan')
 router.register('departamenti/(?P<id>\d+)/programi', views.ProgramiViewSet,basename='meprogram')
 router.register('departamenti/(?P<id>\d+)/users', views.UsersViewSet,basename='meusers')
 router.register('fakulteti/(?P<id>\d+)/departamenti', views.DepartamentiViewSet,basename='mefakultet')
 router.register('users', views.UsersViewSet,basename='users')
+router.register('plani', views.PlaniViewSet,basename='plani')
 
 
 urlpatterns = [

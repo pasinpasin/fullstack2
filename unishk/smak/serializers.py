@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Fakulteti,Departamenti,Programi,Profile
+from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -131,7 +131,7 @@ class ItemRelatedField(serializers.RelatedField):
 class FakultetiSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fakulteti
-        fields = ['id', 'emertimi']
+        fields = '__all__'
 
 class DepartamentiSerializer(serializers.ModelSerializer):
     
@@ -140,16 +140,7 @@ class DepartamentiSerializer(serializers.ModelSerializer):
     class Meta:
         model = Departamenti
         fields = '__all__'
-    """ def to_representation(self, instance):
-        representation = dict()
-        representation["id"] = instance.id
-        representation["emertimi"] = instance.emertimi
-        representation["fakulteti_id"] = instance.fakulteti.id
-        representation["fakulteti_emertimi"] = instance.fakulteti.emertimi
-        representation["created_"] = instance.created
-        representation["updated_"] = instance.updated
 
-        return representation """
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['fakulteti'] = FakultetiSerializer(instance.fakulteti).data
@@ -181,16 +172,27 @@ class ProgramiSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
+    confirmpassword = serializers.CharField(write_only=True, required=True)
     class Meta:
         model = User
         fields = '__all__'
+        
+        extra_kwargs = {'password': {'error_messages': {'blank': 'Fjalekalimi eshte i detyrueshem'}}}
     """ def validate_email(attr, value):
             print(attr)
             norm_email = value.lower()
             if User.objects.exclude(id=self.id).filter(email=norm_email).exists():
                 raise serializers.ValidationError("Not unique email")
             return norm_email """
+    def validate(self, attrs):
+        print("valido pass")
+        #print (attrs)
+        if self.instance:
+            if  attrs['password'] != attrs['confirmpassword']:
+                raise serializers.ValidationError("passw gabim"
+                    )
+
+        return attrs
     
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -201,6 +203,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         #fields = ['id', 'atesia','roli','departamenti','titulli','user']
         fields = '__all__'
+       # extra_kwargs = {'user':{'password': {'error_messages': {'blank': 'Fjalekalimi eshte i detyrueshem'}}}}
+        
     def validate(self, attrs):
         
         if (self.instance):
@@ -215,6 +219,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         return attrs
     
+    
 
     def to_representation(self, instance):
        ret = super().to_representation(instance)
@@ -222,6 +227,7 @@ class ProfileSerializer(serializers.ModelSerializer):
        ret['user'] = UserSerializer(instance.user).data
        return ret
     def create(self, validated_data):
+        extra_kwargs = {'phone': {'error_messages': {'blank': 'New blank error message'}}}
         # get principal fields
         user_data = validated_data.pop('user')
         validated_data['user'] = User.objects.create(**user_data)
@@ -243,6 +249,16 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.user.save()
             instance.save()
             return instance
+
+class PlaniSerializer(serializers.ModelSerializer):
+    programi= ProgramiSerializer
+    class Meta:
+        model = Planet
+        fields = '__all__'
+    def to_representation(self, instance):
+       ret = super().to_representation(instance)
+       ret['programi'] = ProgramiSerializer(instance.programi).data
+       return ret
     
    
         

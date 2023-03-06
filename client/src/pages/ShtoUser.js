@@ -72,6 +72,7 @@ const ShtoUser = () => {
         first_name: emri,
         last_name: mbiemri,
         password: password,
+        confirmpassword: passwordconfirm,
       },
 
       titulli,
@@ -80,7 +81,6 @@ const ShtoUser = () => {
       departamenti,
     };
     postData(newuser);
-    
   };
 
   useEffect(() => {

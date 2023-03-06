@@ -26,6 +26,7 @@ def handle_exception(exc, context):
    error_response = exception_handler(exc, context)
    if error_response is not None:
        error = error_response.data
+       print(error_response.data)
  
        if isinstance(error, list) and error:
            if isinstance(error[0], dict):
@@ -58,6 +59,12 @@ class ExceptionMiddleware(object):
        if response.status_code == 500:
            response = get_response(
                message="Internal server error, please try again later",
+               status_code=response.status_code
+           )
+           return JsonResponse(response, status=response['status_code'])
+       if response.status_code == 401:
+           response = get_response(
+               message="Nuk jeni te autorizuar",
                status_code=response.status_code
            )
            return JsonResponse(response, status=response['status_code'])

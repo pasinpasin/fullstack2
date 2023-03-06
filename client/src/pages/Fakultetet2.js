@@ -67,7 +67,7 @@ const Fakultetet2 = () => {
         "GET_FAKULTETE"
       );
 
-      setFakultetet2(response.data);
+      setFakultetet2(response.data.result.items);
 
       setLoading(false);
       console.log(response);
@@ -88,9 +88,8 @@ const Fakultetet2 = () => {
       );
       console.log(response);
       setformfakulteti("");
-      if (response.statusText === "Created") {
-        getData();
-      }
+
+      getData();
     } catch (error) {
       console.log(error);
     }
@@ -115,16 +114,16 @@ const Fakultetet2 = () => {
 
   const fshijFakultet = async (id) => {
     try {
-      const data = await sendRequest(
+      const RESPONSE = await sendRequest(
         `fakulteti/${id}`,
         "DELETE",
         {},
         "FSHIJ_FAKULTET"
       );
+      getData();
     } catch (error) {
       console.log(error);
     }
-    getData();
   };
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 from rest_framework import generics,viewsets,permissions
 from rest_framework import status
-from .models import Fakulteti,Departamenti,Programi,Profile
-from .serializers import FakultetiSerializer,DepartamentiSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer
+from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja
+from .serializers import FakultetiSerializer,DepartamentiSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
@@ -73,10 +73,11 @@ class FakultetiViewSet(viewsets.ModelViewSet):
     def list(self, request, id=None):
         fakultetet = Fakulteti.objects.order_by('id')
         serializer = self.get_serializer(fakultetet, many=True)
-        try:
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+       # try:
+        #    return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        #except Exception as e:
+        #    return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
 
 
 
@@ -96,10 +97,11 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             departamentet = Departamenti.objects.order_by('updated')
             serializer = self.get_serializer(departamentet, many=True)
             #return Response(serializer.data)
-        try:
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        """ try:
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
+            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}}) """
         
     
         
@@ -129,11 +131,14 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             }
 
         _serializer = self.serializer_class(data=data)  # NOQA
-        if _serializer.is_valid():
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        """  if _serializer.is_valid():
             _serializer.save()
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # """
         
     def update(self, request,pk=None, *args, **kwargs):
 
@@ -164,11 +169,15 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
         
         
         _serializer = self.serializer_class(instance=instance,data=data,partial=True)  # NOQA
-        if _serializer.is_valid():
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
+    """  if _serializer.is_valid():
             _serializer.save()
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # """
 
         
         
@@ -188,11 +197,14 @@ class ProgramiViewSet(viewsets.ModelViewSet):
             #fakid = Departamenti.active.filter(fakulteti=id)
             programet = Programi.objects.order_by('updated').filter(departamenti_id=id)
             serializer = self.get_serializer(programet, many=True)
-            return Response(serializer.data)
+            #return Response(serializer.data)
         else:
             programet = Programi.objects.order_by('updated')
             serializer = self.get_serializer(programet, many=True)
-            return Response(serializer.data)
+            #return Response(serializer.data)
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
+        
     def create(self, request, *args, **kwargs):
         departamenti = request.data.get('departamenti')
         
@@ -222,12 +234,16 @@ class ProgramiViewSet(viewsets.ModelViewSet):
             }
 
         _serializer = self.serializer_class(data=data)  # NOQA
-        if _serializer.is_valid():
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
+    """  if _serializer.is_valid():
             _serializer.save()
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
             print(_serializer)
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  """
         
     def update(self, request,pk=None, *args, **kwargs):
 
@@ -258,11 +274,14 @@ class ProgramiViewSet(viewsets.ModelViewSet):
         
         
         _serializer = self.serializer_class(instance=instance,data=data,partial=True)  # NOQA
-        if _serializer.is_valid():
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    """   if _serializer.is_valid():
             _serializer.save()
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # """
         
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -277,24 +296,35 @@ class UsersViewSet(viewsets.ModelViewSet):
         else:
             pedagoget = Profile.objects.order_by('id')
             serializer = self.get_serializer(pedagoget, many=True)
-        try:
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+      
+    """  try:
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
+            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}}) """
+        
+
     def create(self, request, *args, **kwargs):
         
 
         _serializer = self.serializer_class(data=request.data)  # NOQA
-        if _serializer.is_valid():
-            _serializer.save()
+        #if
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
            # return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
             
-        else:
-            print(_serializer)
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+       # else:
+           # print(_serializer)
+           # return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+           # return 
     def retrieve(self, request, *args, **kwargs):
+      
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        
+    """ def retrieve(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
         except Exception as e:
@@ -302,7 +332,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         else:
             #any additional logic
             serializer = self.get_serializer(instance)
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) """
     
     """ def update(self, request):
         data = self.request.data
@@ -315,7 +345,32 @@ class UsersViewSet(viewsets.ModelViewSet):
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
                     return Response({"Success": "Your meal was updated"}) """
-            
+
+class PlaniViewSet(viewsets.ModelViewSet):
+    queryset = Planet.objects.all()
+    serializer_class = PlaniSerializer
+    def get_queryset(self):
+         if ('id' in self.kwargs):
+            id = self.kwargs['id']
+            return  Planet.objects.filter(programi=id)
+         else:
+            print("ketu")
+            return  Planet.objects.all() 
+        
+
+    def list(self, request,id=None):
+            print("lista")
+           # planet = Planet.objects.order_by('status')ù
+            planet=self.get_queryset()
+            serializer = self.get_serializer(planet, many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
+    def retrieve(self, request, *args, **kwargs):
+      
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        
+
 
 
 

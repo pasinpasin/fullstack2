@@ -34,7 +34,6 @@ const Departamentet = () => {
   } = useAppContext();
 
   const idf = useParams();
-  
 
   const columnsData = [
     { field: "emertimi", header: "Departamenti" },
@@ -68,17 +67,21 @@ const Departamentet = () => {
 
   const getData = async () => {
     try {
-      console.log(Object.keys(idf).length)
+      console.log(Object.keys(idf).length);
       const response = await sendRequest(
-        Object.keys(idf).length>0 ? `fakulteti/${idf.id}/departamenti/`: 'departamenti',
+        Object.keys(idf).length > 0
+          ? `fakulteti/${idf.id}/departamenti/`
+          : "departamenti",
         "GET",
         {},
         "GET_DEPARTAMENTE"
       );
-      if (Object.keys(idf).length>0 )  {setfakultetiperket(`${idf.id}`)}
-      setDepartamentet2(response.data);
+      if (Object.keys(idf).length > 0) {
+        setfakultetiperket(`${idf.id}`);
+      }
+      setDepartamentet2(response.data.result.items);
       setLoading(false);
-      
+
       //console.log(data);
     } catch (error) {
       console.log(error);
@@ -101,9 +104,8 @@ const Departamentet = () => {
         "SHTO_DEPARTAMENT"
       );
       setformdepartamenti("");
-      if( response.statusText === "Created") {
-        getData();
-      }
+
+      getData();
     } catch (error) {
       console.log(error);
     }
@@ -113,31 +115,31 @@ const Departamentet = () => {
     try {
       const bodytosend = { emertimi: `${currentDepartament.departamenti}` };
 
-      const result = await sendRequest(
+      const response = await sendRequest(
         `departamenti/${currentDepartament.id}/`,
         "PATCH",
         bodytosend,
         "PERDITESO_DEPARTAMENT"
       );
+      setEditing(false);
+      getData();
     } catch (error) {
       console.log(error);
     }
-    setEditing(false);
-    getData();
   };
 
   const fshijDepartament = async (id) => {
     try {
-      const data = await sendRequest(
+      const response = await sendRequest(
         `departamenti/${id}/`,
         "DELETE",
         {},
         "FSHIJ_DEPARTAMENT"
       );
+      getData();
     } catch (error) {
       console.log(error);
     }
-    getData();
   };
 
   useEffect(() => {
@@ -190,7 +192,7 @@ const Departamentet = () => {
                 handleChange={handleChange2}
               />
             </>
-          ) : Object.keys(idf).length>0 ? 
+          ) : Object.keys(idf).length > 0 ? (
             <>
               <h2>Shto Departamentet</h2>
               {showAlert && <Alert />}
@@ -201,8 +203,10 @@ const Departamentet = () => {
                 emri="Departamenti"
                 handleChange={handleChange}
               />
-            </> : <></>
-          }
+            </>
+          ) : (
+            <></>
+          )}
 
           {departamentet2 && departamentet2.length > 0 ? (
             <Tabela

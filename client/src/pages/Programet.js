@@ -70,7 +70,8 @@ const Programet = (props) => {
         {},
         "GET_PROGRAME"
       );
-      if (response.data.length > 0) setProgramet2(response.data);
+      if (response.data.result.totalItems > 0)
+        setProgramet2(response.data.result.items);
       setLoading(false);
       //console.log(data);
     } catch (error) {
@@ -96,9 +97,8 @@ const Programet = (props) => {
       );
       console.log(response);
       setformprogrami("");
-      if (response.statusText === "Created") {
-        getData();
-      }
+
+      getData();
     } catch (error) {
       console.log(error);
     }
@@ -119,9 +119,8 @@ const Programet = (props) => {
         "PERDITESO_PROGRAM"
       );
       setEditing(false);
-      if (response.statusText === "Created") {
-        getData();
-      }
+
+      getData();
     } catch (error) {
       console.log(error);
     }
@@ -136,9 +135,7 @@ const Programet = (props) => {
         "FSHIJ_PROGRAM"
       );
 
-      if (response.statusText === "No Content") {
-        getData();
-      }
+      getData();
     } catch (error) {
       console.log(error);
     }

@@ -5,8 +5,9 @@ const Wrapper = styled.section`
     margin-bottom: 40px;
   }
   table {
-    /*width: 100%; */
-    table-layout: fixed;
+    width: 100%;
+    table-layout: auto;
+    /*table-layout: fixed; */
     border-collapse: collapse;
     margin: 0 auto;
   }

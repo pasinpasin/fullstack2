@@ -75,7 +75,8 @@ const Pedagoget = (props) => {
         "GET_PEDAGOG"
       );
       console.log(response.data);
-      if (response.data.length > 0) setUsers2(response.data);
+      if (response.data.result.totalItems > 0)
+        setUsers2(response.data.result.items);
       setLoading(false);
       console.log(response.data);
     } catch (error) {
@@ -93,16 +94,15 @@ const Pedagoget = (props) => {
       };
       console.log(bodytosend);
       //const { data } = await sendRequest(
-      const data = await sendRequest(
+      const response = await sendRequest(
         "/users",
         "POST",
         bodytosend,
         "SHTO_PEDAGOG"
       );
       setformusers("");
-      if (data.status === "success") {
-        getData();
-      }
+
+      getData();
     } catch (error) {
       console.log(error);
     }
@@ -112,7 +112,7 @@ const Pedagoget = (props) => {
     try {
       const bodytosend = { emertimi: `${currentUser.users}` };
 
-      const data = await sendRequest(
+      const response = await sendRequest(
         `/users/${currentUser.id}`,
         "PATCH",
         bodytosend,
@@ -127,7 +127,7 @@ const Pedagoget = (props) => {
 
   const fshijUser = async (id) => {
     try {
-      const data = await sendRequest(
+      const response = await sendRequest(
         `/users/${id}`,
         "DELETE",
         {},

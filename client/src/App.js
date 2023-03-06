@@ -13,6 +13,7 @@ import WelcomePage from "./pages/WelcomePage";
 import Users from "./pages/Users";
 import ModifikoUser from "./pages/ModifikoUser";
 import ShtoUser from "./pages/ShtoUser";
+import Planet from "./pages/Planet";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+         
           <Route
             path="fakulteti/:id/departamenti"
             element={
@@ -109,7 +111,24 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="planet"
+            element={
+              <ProtectedRoute>
+                <Planet />
+              </ProtectedRoute>
+            }
+          /> 
+           <Route
+            path="programi/:id/plani"
+            element={
+              <ProtectedRoute>
+                <Planet />
+              </ProtectedRoute>
+            }
+          />
         </Route>
+        
 
         <Route path="/login" element={<Login />} />
         <Route path="/krijofakultet" element={<ShtoFakultet />} />

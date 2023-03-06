@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Alert2 from "../components/Alert2";
+import TD from "../components/TD";
 import Wrapper from "../assets/wrappers/Tabela";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
@@ -21,6 +22,8 @@ const Planet = () => {
     { field: "periudha", header: "Periudha" },
     { field: "cikli", header: "Cikli" },
     { field: "status", header: "Status" },
+    { field: "fakulteti", header: "Fakulteti" },
+    { field: "departamenti", header: "Departamenti" },
   ];
 
   const [periudha, setPeriudha] = useState("");
@@ -63,14 +66,14 @@ const Planet = () => {
 
   const getData = async () => {
     try {
-      console.log(Object.keys(id).length);
+      
       const response = await sendRequest(
-        Object.keys(id).length > 0 ? `programi/${id}/plani/` : "plani",
+        id !=null ? `programi/${id}/plani/` : "plani",
         "GET",
         {}
       );
-      if (Object.keys(id).length > 0) {
-        setprogramiperket(`${id}`);
+      if (id!=null) {
+        setprogramiperket(id);
       }
       setData(response.data.result.items);
 
@@ -93,9 +96,9 @@ const Planet = () => {
       ) : (
         <div>
           {error.alertType !== "" ?? (
-            <Alert alertType={error.alertType} alertText={error.alertText} />
+            <Alert2 alertType={error.alertType} alertText={error.alertText} />
           )}
-          {users2 && users2.length > 0 ? (
+          {data && data.length > 0 ? (
             <>
               <Link to={`/users/shtouser`}>
                 <button className="btn  ">Shto user</button>
@@ -111,46 +114,37 @@ const Planet = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users2.map((data) => (
-                    <tr key={data.id}>
-                      {/*   {columnsData.map((data3) => (
-                        <td key={data3.header} data-label={data3.header}>
-                          {GetPropertyValue(data, data3.field)}
-                        </td>
-                      ))} */}
-                      <td key="Emri" data-label="Emri">
-                        {data.user.first_name}
+                  {data.map((mydata) => (
+                    <tr key={mydata.id}>
+                      <TD to={`/users/${user.id}/edit`}>{mydata.cikli}</TD>
+                      <td key="Programi" data-label="Programi">
+                        {mydata.programi.emertimi}
                       </td>
-                      <td key="Mbiemri" data-label="Mbiemri">
-                        {data.user.last_name}
+                      <td key="Periudha" data-label="Periudha">
+                        {mydata.periudha}
                       </td>
-                      <td key="Atesia" data-label="Atesia">
-                        {data.atesia}
+                      <td key="Cikli" data-label="Cikli">
+                        {mydata.cikli}
                       </td>
-                      <td key="Email" data-label="Email">
-                        {data.user.email}
+                      <td key="status" data-label="status">
+                        {mydata.status}
                       </td>
-                      <td key="Titulli" data-label="itulli">
-                        {data.titulli}
-                      </td>
-                      <td key="Roli" data-label="Roli">
-                        {data.roli.join(" ")}
-                      </td>
+                    
                       <td key="Fakulteti" data-label="Fakulteti">
-                        {data.departamenti.fakulteti.emertimi}
+                        {mydata.programi.departamenti.fakulteti.emertimi}
                       </td>
                       <td key="Departamenti" data-label="Departamenti">
-                        {data.departamenti.emertimi}
+                        {mydata.programi.departamenti.emertimi}
                       </td>
 
                       {
                         <td key="veprimet" data-label="Veprimet">
-                          <Link to={`/users/${data.id}/edit`}>
+                          <Link to={`/users/${mydata.id}/edit`}>
                             <FaEdit size={25} />
                           </Link>
                           <MdDelete
                             size={25}
-                            onClick={() => fshijUser(data.id)}
+                            onClick={() => fshij(mydata.id)}
                           />
                         </td>
                       }

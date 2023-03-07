@@ -44,22 +44,18 @@ class SemestriAdmin(admin.ModelAdmin):
 
 class PlanpermbajtjaInline(admin.TabularInline):
     model=PlanPermbajtja
-    list_display = ['renditja','emertimi','titullari','tipiveprimtarise','kredite','nrjavesem1',
-    'seminaresem1',
-    'leksionesem1',
-    'praktikasem1',
-    'laboratoresem1',
-    'nrjavesem2',
-    'seminaresem2',
-    'leksionesem2',
-    'praktikasem2',
-    'laboratoresem2', 'semestri','created','updated']
+    list_display = ['id','renditja','emertimi','titullari','tipiveprimtarise','kredite','nrjave',
+    'seminare',
+    'leksione',
+    'praktika',
+    'laboratore',
+     'semestri','created','updated']
     date_hierarchy = 'created'
-    ordering = ['updated', 'created']
+    ordering = ['renditja','updated', 'created']
 
 @admin.register(Planet)
 class PlaniAdmin(admin.ModelAdmin):
-    list_display = ['periudha','cikli','status','programi', 'created','updated']
+    list_display = ['id','periudha','cikli','status','programi', 'created','updated']
     list_filter = ['periudha','cikli','programi']
     search_fields = ['programi','periudha']
     date_hierarchy = 'created'

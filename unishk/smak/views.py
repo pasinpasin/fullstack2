@@ -1,7 +1,7 @@
 from rest_framework import generics,viewsets,permissions
 from rest_framework import status
 from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja
-from .serializers import FakultetiSerializer,DepartamentiSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer
+from .serializers import FakultetiSerializer,DepartamentiSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
@@ -369,6 +369,32 @@ class PlaniViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
+class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
+    queryset = PlanPermbajtja.objects.all()
+    serializer_class = PlanpermbajtjaSerializer
+    def get_queryset(self):
+         if ('id' in self.kwargs):
+            id = self.kwargs['id']
+            return  PlanPermbajtja.objects.filter(plani=id)
+         else:
+            print("ketu")
+            return  PlanPermbajtja.objects.all() 
+        
+
+    def list(self, request,id=None):
+            print("lista")
+           # planet = Planet.objects.order_by('status')ù
+            planpermbajtja=self.get_queryset()
+            serializer = self.get_serializer(planpermbajtja, many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
+    def retrieve(self, request, *args, **kwargs):
+      
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        
+
         
 
 

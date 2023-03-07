@@ -98,7 +98,7 @@ class Planet(models.Model):
             models.Index(fields=['-periudha','-programi'],),
         ]
     def __str__(self):
-        return self.programi
+        return self.programi.emertimi
     
 class Vitiakademik(models.Model):
     vitiakademik = models.CharField(max_length=500,blank=False, unique=True)
@@ -121,7 +121,7 @@ class Semestri(models.Model):
     
     
     def __str__(self):
-        return self.vitiakademik
+        return self.semestri
     
 class PlanPermbajtja(models.Model):
     
@@ -144,17 +144,13 @@ class PlanPermbajtja(models.Model):
     tipiveprimtarise=models.CharField(max_length=20,
                               choices=TipiVeprimtarise.choices,
                               blank=False)
-    kredite = models.DecimalField(max_digits = 2,decimal_places = 1,blank=False)
-    nrjavesem1=models.IntegerField(blank=False)
-    seminaresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    leksionesem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    praktikasem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    laboratoresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    nrjavesem2=models.IntegerField(blank=False)
-    seminaresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    leksionesem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    praktikasem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    laboratoresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    kredite = models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    nrjave=models.IntegerField(blank=False)
+    seminare=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    leksione=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    praktika=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    laboratore=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+   
     plani = models.ForeignKey(Planet,
                              on_delete=models.CASCADE,
                              related_name='iperketplanit')
@@ -169,7 +165,7 @@ class PlanPermbajtja(models.Model):
             models.Index(fields=['-plani','-semestri'],),
         ]
     def __str__(self):
-         return f' {self.plani.programi.emertimi} {self.plani.periudha}'
+         return f' {self.plani.programi.emertimi} {self.plani.periudha}' or ''
 
     
 

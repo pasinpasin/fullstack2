@@ -8,7 +8,7 @@ import TD from "../components/TD";
 import Wrapper from "../assets/wrappers/Tabela";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useParams } from "react-router-dom";
 
@@ -66,13 +66,12 @@ const Planet = () => {
 
   const getData = async () => {
     try {
-      
       const response = await sendRequest(
-        id !=null ? `programi/${id}/plani/` : "plani",
+        id != null ? `programi/${id}/plani/` : "plani",
         "GET",
         {}
       );
-      if (id!=null) {
+      if (id != null) {
         setprogramiperket(id);
       }
       setData(response.data.result.items);
@@ -116,7 +115,6 @@ const Planet = () => {
                 <tbody>
                   {data.map((mydata) => (
                     <tr key={mydata.id}>
-                      <TD to={`/users/${user.id}/edit`}>{mydata.cikli}</TD>
                       <td key="Programi" data-label="Programi">
                         {mydata.programi.emertimi}
                       </td>
@@ -129,7 +127,7 @@ const Planet = () => {
                       <td key="status" data-label="status">
                         {mydata.status}
                       </td>
-                    
+
                       <td key="Fakulteti" data-label="Fakulteti">
                         {mydata.programi.departamenti.fakulteti.emertimi}
                       </td>
@@ -146,6 +144,9 @@ const Planet = () => {
                             size={25}
                             onClick={() => fshij(mydata.id)}
                           />
+                          <Link to={`/plani/${mydata.id}/`} title="Shiko">
+                            <FaEye size={25} />
+                          </Link>
                         </td>
                       }
                     </tr>

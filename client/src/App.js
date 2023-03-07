@@ -4,6 +4,7 @@ import Fakultetet from "./pages/Fakultetet2";
 import Login from "./pages/Login";
 import Departamentet from "./pages/Departamentet";
 import Programet from "./pages/Programet";
+import Planpermbajtja from "./pages/Planpermbajtja";
 import Pedagoget from "./pages/Pedagoget";
 import DepartmentContent from "./pages/DepartmentContent";
 import ProtectedRoute from "./pages/ProtectedRoute";
@@ -60,7 +61,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-         
+
           <Route
             path="fakulteti/:id/departamenti"
             element={
@@ -118,8 +119,8 @@ function App() {
                 <Planet />
               </ProtectedRoute>
             }
-          /> 
-           <Route
+          />
+          <Route
             path="programi/:id/plani"
             element={
               <ProtectedRoute>
@@ -127,8 +128,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="plani/:id/"
+            element={
+              <ProtectedRoute>
+                <Planpermbajtja />
+              </ProtectedRoute>
+            }
+          />
         </Route>
-        
 
         <Route path="/login" element={<Login />} />
         <Route path="/krijofakultet" element={<ShtoFakultet />} />

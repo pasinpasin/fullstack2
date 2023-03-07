@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja
+from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Semestri,Vitiakademik
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -258,6 +258,29 @@ class PlaniSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['programi'] = ProgramiSerializer(instance.programi).data
+       return ret
+    
+class SemestriSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Semestri
+        fields = '__all__'
+class VitiakademikSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Vitiakademik
+        fields = '__all__'
+    
+class PlanpermbajtjaSerializer(serializers.ModelSerializer):
+    plani= PlaniSerializer
+    semestri=SemestriSerializer
+    class Meta:
+        model = PlanPermbajtja
+        fields = '__all__'
+    def to_representation(self, instance):
+       ret = super().to_representation(instance)
+       ret['plani'] = PlaniSerializer(instance.plani).data
+       ret['semestri'] = SemestriSerializer(instance.semestri).data
        return ret
     
    

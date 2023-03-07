@@ -17,6 +17,8 @@ router.register('departamenti/(?P<id>\d+)/users', views.UsersViewSet,basename='m
 router.register('fakulteti/(?P<id>\d+)/departamenti', views.DepartamentiViewSet,basename='mefakultet')
 router.register('users', views.UsersViewSet,basename='users')
 router.register('plani', views.PlaniViewSet,basename='plani')
+router.register('plani/(?P<id>\d+)/planpermbajtja', views.PlanpermbajtjaViewSet,basename='plnanimeid')
+router.register('planpermbajtja', views.PlanpermbajtjaViewSet,basename='planpermbajtja')
 
 
 urlpatterns = [

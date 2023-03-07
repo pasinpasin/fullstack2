@@ -20,17 +20,27 @@ const Semestri = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const columnsData = [
-    { field: "user.first_name", header: "Renditja" },
-    { field: "user.last_name", header: "Titullari" },
-    { field: "titulli", header: "Emertimi" },
-    { field: "departamenti.fakulteti.emertimi", header: "tipi" },
-    { field: "departamenti.emertimi", header: "Kredite" },
-    { field: "nrjave", header: "NRjave" },
-    { field: "seminare", header: "Seminare" },
-    { field: "leksione", header: "Leksione" },
-    { field: "praktika", header: "Praktika" },
-    { field: "laboratore", header: "Laboratore" },
-    { field: "semestri", header: "Semestri" },
+    { field: "renditja", header: "Renditja" },
+    { field: "titullari", header: "Titullari" },
+    { field: "emertimi", header: "Emertimi" },
+    { field: "tipi", header: "Tipi" },
+    { field: "kredite", header: "Kredite" },
+    { field: "nrjave", header: "Nrjave Sem1" },
+    { field: "seminare", header: "Seminare Sem 1" },
+    { field: "leksione", header: "Leksione Sem 1" },
+    { field: "praktika", header: "Praktika Sem 1" },
+    { field: "laboratore", header: "Laboratore Sem 1" },
+    { field: "nrjave", header: "Nrjave Sem2" },
+    { field: "seminare", header: "Seminare Sem 2" },
+    { field: "leksione", header: "Leksione Sem 2" },
+    { field: "praktika", header: "Praktika Sem 2" },
+    { field: "laboratore", header: "Laboratore Sem 2" },
+    { field: "laboratore", header: "Tot Leks" },
+    { field: "laboratore", header: "Tot Sem" },
+    { field: "laboratore", header: "Tot Lab" },
+    { field: "laboratore", header: "Tot praktika" },
+    { field: "laboratore", header: "Ore jashte audit" },
+    
   ];
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
@@ -103,6 +113,8 @@ const Semestri = (props) => {
                       <th key={column.field}> {column.header}</th>
                     ))}
 
+                 
+
                     <th key="veprimet">Veprimet</th>
                   </tr>
                 </thead>
@@ -115,6 +127,22 @@ const Semestri = (props) => {
                       <td key="Titullari" data-label="Titullari">
                         {mydata.titullari}
                       </td>
+                      <td key="emertimi" data-label="Emertimi">{mydata.emertimi}</td>
+                      <td key= "tipi" data-label="Tipi" >{mydata.tipiveprimtarise}</td>
+                      <td key="kredite" data-label= "Kredite" >{mydata.kredite}</td>
+                      <td key= "nrjave" data-label= "Nrjave" >{mydata.nrjavesem1}</td>
+                      <td key="seminare" data-label="Seminare" >{mydata.seminaresem1}</td>
+                      <td key= "leksione" data-label= "Leksione" >{mydata.leksionesem1}</td>
+                      <td key="praktika" data-label= "Praktika" >{mydata.praktikasem1}</td>
+                      <td key="laboratore" data-label= "Laboratore" >{mydata.laboratoresem1}</td>
+                      <td key= "nrjave2" data-label= "Nrjave" >{mydata.nrjavesem2}</td>
+                      <td key="seminare2" data-label="Seminare" >{mydata.seminaresem2}</td>
+                      <td key= "leksione2" data-label= "Leksione" >{mydata.leksionesem2}</td>
+                      <td key="praktika2" data-label= "Praktika" >{mydata.praktikasem2}</td>
+                      <td key="laboratore2" data-label= "Laboratore" >{mydata.laboratoresem2}</td>
+                      <td key="totleks" data-label= "totleks" >{mydata.totleksione}</td>
+                      <td key="totsem" data-label= "totsem" >{mydata.totseminare}</td>
+                      
 
                       {
                         <td key="veprimet" data-label="Veprimet">

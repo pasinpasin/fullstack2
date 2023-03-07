@@ -26,7 +26,7 @@ const Planpermbajtja = () => {
 
   const setFilter = (plani, sem) => {
     return plani.filter(
-      (planpermbajtja) => planpermbajtja.semestri.semestri === sem
+      (planpermbajtja) => planpermbajtja.viti === sem
     );
   };
   const getData = async () => {
@@ -60,6 +60,19 @@ const Planpermbajtja = () => {
     // update the state to pedagoget
     setActiveTab("tab2");
   };
+  const handleTab3 = () => {
+    // update the state to pedagoget
+    setActiveTab("tab3");
+  };
+  const handleTab4 = () => {
+    // update the state to pedagoget
+    setActiveTab("tab4");
+  };
+  const handleTab5 = () => {
+    // update the state to pedagoget
+    setActiveTab("tab5");
+  };
+ 
 
   return (
     <Wrapper>
@@ -75,22 +88,46 @@ const Planpermbajtja = () => {
               className={activeTab === "tab1" ? "active" : ""}
               onClick={handleTab1}
             >
-              Semestri 1
+              Vit 1
             </li>
             <li
               className={activeTab === "tab2" ? "active" : ""}
               onClick={handleTab2}
             >
-              Semestri 2
+              Viti 2
+            </li>
+            <li
+              className={activeTab === "tab3" ? "active" : ""}
+              onClick={handleTab3}
+            >
+              Viti 3
+            </li>
+            <li
+              className={activeTab === "tab4" ? "active" : ""}
+              onClick={handleTab4}
+            >
+              Viti 4
+            </li>
+            <li
+              className={activeTab === "tab5" ? "active" : ""}
+              onClick={handleTab5}
+            >
+              Viti 5
             </li>
           </ul>
 
           <div className="outlet">
             {activeTab === "tab1" ? (
-              <Semestri sem={setFilter(planet, "Semestri 1")} />
-            ) : (
-              <Semestri sem={setFilter(planet, "Semestri 2")} />
-            )}
+              <Semestri sem={setFilter(planet, 1)} />
+            ) : activeTab === "tab2" ? (
+              <Semestri sem={setFilter(planet, 2)} />
+            ) : activeTab === "tab3" ? (
+              <Semestri sem={setFilter(planet, 3)} />
+              ): activeTab === "tab4" ? (
+                <Semestri sem={setFilter(planet, 4)} />
+                ):  (
+                  <Semestri sem={setFilter(planet, 5)} />)
+            }
           </div>
         </div>
       )}

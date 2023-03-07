@@ -276,11 +276,13 @@ class PlanpermbajtjaSerializer(serializers.ModelSerializer):
     semestri=SemestriSerializer
     class Meta:
         model = PlanPermbajtja
-        fields = '__all__'
+        fields = (  'renditja','titullari','viti','emertimi','tipiveprimtarise','kredite','nrjavesem1','seminaresem1',
+    'leksionesem1','praktikasem1','laboratoresem1','nrjavesem2','seminaresem2','leksionesem2','praktikasem2',
+    'laboratoresem2','totleksione','totseminare','totlaboratore','totpraktika','plani','semestri1','semestri2')
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['plani'] = PlaniSerializer(instance.plani).data
-       ret['semestri'] = SemestriSerializer(instance.semestri).data
+      
        return ret
     
    

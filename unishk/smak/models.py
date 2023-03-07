@@ -140,29 +140,51 @@ class PlanPermbajtja(models.Model):
     
     renditja = models.IntegerField(blank=False)
     titullari = models.CharField(max_length=500)
+    viti = models.IntegerField()
     emertimi = models.CharField(max_length=500,blank=False)
     tipiveprimtarise=models.CharField(max_length=20,
                               choices=TipiVeprimtarise.choices,
                               blank=False)
     kredite = models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    nrjave=models.IntegerField(blank=False)
-    seminare=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    leksione=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    praktika=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    laboratore=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    nrjavesem1=models.IntegerField(blank=False)
+    seminaresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    leksionesem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    praktikasem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    laboratoresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    nrjavesem2=models.IntegerField(blank=False,default=0)
+    seminaresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    leksionesem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    praktikasem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    laboratoresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
    
     plani = models.ForeignKey(Planet,
                              on_delete=models.CASCADE,
                              related_name='iperketplanit')
-    semestri = models.ForeignKey(Semestri,
-                             on_delete=models.CASCADE,
-                             related_name='iperketsemestrit')
+    semestri1 = models.CharField(max_length=2,
+                              choices=PapoF.choices,
+                              blank=True)
+    semestri2 = models.CharField(max_length=2,
+                              choices=PapoF.choices,
+                              blank=True)
+    @property
+    def totleksione(self):
+        return self.nrjavesem1*self.leksionesem1+self.leksionesem2*self.nrjavesem2
+    @property
+    def totseminare(self):
+        return self.nrjavesem1*self.seminaresem1+self.seminaresem2*self.nrjavesem2
+    @property
+    def totlaboratore(self):
+        return self.nrjavesem1*self.laboratoresem1+self.laboratoresem2*self.nrjavesem2
+    @property
+    def totpraktika(self):
+        return self.nrjavesem1*self.praktikasem1+self.praktikasem2*self.nrjavesem2
+    
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     class Meta:
-        ordering = ['-renditja']
+        ordering = ['renditja']
         indexes = [
-            models.Index(fields=['-plani','-semestri'],),
+            models.Index(fields=['-plani'],),
         ]
     def __str__(self):
          return f' {self.plani.programi.emertimi} {self.plani.periudha}' or ''

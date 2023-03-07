@@ -44,12 +44,12 @@ class SemestriAdmin(admin.ModelAdmin):
 
 class PlanpermbajtjaInline(admin.TabularInline):
     model=PlanPermbajtja
-    list_display = ['id','renditja','emertimi','titullari','tipiveprimtarise','kredite','nrjave',
-    'seminare',
-    'leksione',
-    'praktika',
-    'laboratore',
-     'semestri','created','updated']
+    list_display = ['id','renditja','viti','emertimi','titullari','tipiveprimtarise','kredite','nrjavesem1',
+    'seminaresem1',
+    'leksionesem1',
+    'praktikasem1',
+    'laboratoresem1','nrjavesem2', 'seminaresem2','leksionesem2', 'praktikasem2','laboratoresem2',
+     'semestri1','semestri2','created','updated']
     date_hierarchy = 'created'
     ordering = ['renditja','updated', 'created']
 

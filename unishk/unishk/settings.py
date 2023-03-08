@@ -151,6 +151,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 REST_FRAMEWORK = {
+    
     #"EXCEPTION_HANDLER": "smak.util.errorhandling.api_exception_handler",
     "EXCEPTION_HANDLER": "smak.util.errorhandling2.handle_exception",
     

@@ -15,6 +15,7 @@ import Users from "./pages/Users";
 import ModifikoUser from "./pages/ModifikoUser";
 import ShtoUser from "./pages/ShtoUser";
 import Planet from "./pages/Planet";
+import Shtorresht from "./pages/Shtorresht";
 
 function App() {
   return (
@@ -133,6 +134,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Planpermbajtja />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="planpermbajtja/shtorresht/viti/:vid/plani/:pid"
+            element={
+              <ProtectedRoute>
+                <Shtorresht />
               </ProtectedRoute>
             }
           />

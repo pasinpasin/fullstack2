@@ -25,9 +25,7 @@ const Planpermbajtja = () => {
   const [planet, setPlanet] = useState();
 
   const setFilter = (plani, sem) => {
-    return plani.filter(
-      (planpermbajtja) => planpermbajtja.viti === sem
-    );
+    return plani.filter((planpermbajtja) => planpermbajtja.viti === sem);
   };
   const getData = async () => {
     try {
@@ -72,7 +70,6 @@ const Planpermbajtja = () => {
     // update the state to pedagoget
     setActiveTab("tab5");
   };
- 
 
   return (
     <Wrapper>
@@ -83,32 +80,37 @@ const Planpermbajtja = () => {
           {error.alertType !== "" ?? (
             <Alert alertType={error.alertType} alertText={error.alertText} />
           )}
-          <ul className="nav">
+          <ul className="nav" key="nav">
             <li
+              key="tab1"
               className={activeTab === "tab1" ? "active" : ""}
               onClick={handleTab1}
             >
-              Vit 1
+              Viti 1
             </li>
             <li
+              key="tab2"
               className={activeTab === "tab2" ? "active" : ""}
               onClick={handleTab2}
             >
               Viti 2
             </li>
             <li
+              key="tab3"
               className={activeTab === "tab3" ? "active" : ""}
               onClick={handleTab3}
             >
               Viti 3
             </li>
             <li
+              key="tab4"
               className={activeTab === "tab4" ? "active" : ""}
               onClick={handleTab4}
             >
               Viti 4
             </li>
             <li
+              key="tab5"
               className={activeTab === "tab5" ? "active" : ""}
               onClick={handleTab5}
             >
@@ -118,16 +120,16 @@ const Planpermbajtja = () => {
 
           <div className="outlet">
             {activeTab === "tab1" ? (
-              <Semestri sem={setFilter(planet, 1)} />
+              <Semestri sem={setFilter(planet, 1)} viti={1} planiid={id} />
             ) : activeTab === "tab2" ? (
-              <Semestri sem={setFilter(planet, 2)} />
+              <Semestri sem={setFilter(planet, 2)} viti={2} planiid={id} />
             ) : activeTab === "tab3" ? (
-              <Semestri sem={setFilter(planet, 3)} />
-              ): activeTab === "tab4" ? (
-                <Semestri sem={setFilter(planet, 4)} />
-                ):  (
-                  <Semestri sem={setFilter(planet, 5)} />)
-            }
+              <Semestri sem={setFilter(planet, 3)} viti={3} planiid={id} />
+            ) : activeTab === "tab4" ? (
+              <Semestri sem={setFilter(planet, 4)} viti={4} planiid={id} />
+            ) : (
+              <Semestri sem={setFilter(planet, 5)} viti={5} planiid={id} />
+            )}
           </div>
         </div>
       )}

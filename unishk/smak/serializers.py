@@ -273,7 +273,7 @@ class VitiakademikSerializer(serializers.ModelSerializer):
     
 class PlanpermbajtjaSerializer(serializers.ModelSerializer):
     plani= PlaniSerializer
-    semestri=SemestriSerializer
+   
     class Meta:
         model = PlanPermbajtja
         fields = (  'renditja','titullari','viti','emertimi','tipiveprimtarise','kredite','nrjavesem1','seminaresem1',

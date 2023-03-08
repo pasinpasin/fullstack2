@@ -116,23 +116,29 @@ const Planet = () => {
                   {data.map((mydata) => (
                     <tr key={mydata.id}>
                       <td key="Programi" data-label="Programi">
-                        {mydata.programi.emertimi}
+                        <Link to={`/kot`}> {mydata.programi.emertimi}</Link>
                       </td>
                       <td key="Periudha" data-label="Periudha">
-                        {mydata.periudha}
+                        <Link to={`/kot`}> {mydata.periudha}</Link>
                       </td>
                       <td key="Cikli" data-label="Cikli">
-                        {mydata.cikli}
+                        <Link to={`/kot`}> {mydata.cikli}</Link>
                       </td>
                       <td key="status" data-label="status">
-                        {mydata.status}
+                        <Link to={`/kot`}> {mydata.status}</Link>
                       </td>
 
                       <td key="Fakulteti" data-label="Fakulteti">
-                        {mydata.programi.departamenti.fakulteti.emertimi}
+                        <Link to={`/kot`}>
+                          {" "}
+                          {mydata.programi.departamenti.fakulteti.emertimi}
+                        </Link>
                       </td>
                       <td key="Departamenti" data-label="Departamenti">
-                        {mydata.programi.departamenti.emertimi}
+                        <Link to={`/kot`}>
+                          {" "}
+                          {mydata.programi.departamenti.emertimi}
+                        </Link>
                       </td>
 
                       {

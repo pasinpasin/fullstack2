@@ -11,6 +11,15 @@ const Wrapper = styled.section`
     border-collapse: collapse;
     margin: 0 auto;
   }
+  table.classname {
+    width: 100%;
+    table-layout: auto;
+    /*table-layout: fixed; */
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-family: Verdana !important;
+    font-size: small !important;
+  }
   /* Zebra striping */
   tr:nth-of-type(odd) {
     background: #f2f2f2;
@@ -26,6 +35,23 @@ const Wrapper = styled.section`
     border: 1px solid #ccc;
     text-align: left;
     text-align: center;
+  }
+
+  th.classname {
+    background: #e74c3c;
+    color: #fff;
+    font-weight: 50;
+  }
+  td.classname,
+  th.classname {
+    padding: 2px;
+    border: 1px solid #ccc;
+    text-align: left;
+    text-align: center;
+  }
+  td Link {
+    display: block;
+    width: 100%;
   }
   /*Mobile View*/
   @media only screen and (max-width: 760px) {

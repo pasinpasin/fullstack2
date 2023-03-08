@@ -120,15 +120,15 @@ const Planpermbajtja = () => {
 
           <div className="outlet">
             {activeTab === "tab1" ? (
-              <Semestri sem={setFilter(planet, 1)} viti={1} planiid={id} />
+              <Semestri sem={setFilter(planet, 1)} viti={1} planiid={id} getdata={getData}/>
             ) : activeTab === "tab2" ? (
-              <Semestri sem={setFilter(planet, 2)} viti={2} planiid={id} />
+              <Semestri sem={setFilter(planet, 2)} viti={2} planiid={id} getdata={getData} />
             ) : activeTab === "tab3" ? (
-              <Semestri sem={setFilter(planet, 3)} viti={3} planiid={id} />
+              <Semestri sem={setFilter(planet, 3)} viti={3} planiid={id} getdata={getData} />
             ) : activeTab === "tab4" ? (
-              <Semestri sem={setFilter(planet, 4)} viti={4} planiid={id} />
+              <Semestri sem={setFilter(planet, 4)} viti={4} planiid={id} getdata={getData} />
             ) : (
-              <Semestri sem={setFilter(planet, 5)} viti={5} planiid={id} />
+              <Semestri sem={setFilter(planet, 5)} viti={5} planiid={id} getdata={getData} />
             )}
           </div>
         </div>

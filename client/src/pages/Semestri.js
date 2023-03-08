@@ -16,6 +16,8 @@ import { useParams } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import useHttpClient from "../hooks/useHttpClient";
 import React from "react";
+import { FaEdit } from "react-icons/fa";
+
 
 const Semestri = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -67,7 +69,9 @@ const Semestri = (props) => {
     console.log(props.sem);
 
     setDhenat(props.sem);
+    
   }, [dhenat, props.sem]);
+ 
 
   const handleChange = (e) => {
     setformusers(e.target.value);
@@ -81,17 +85,20 @@ const Semestri = (props) => {
     });
   };
 
-  const placeSubmitHandler = (event) => {
-    event.preventDefault();
-
-    //shtoData();
+  const fshij = async (id) => {
+    if (window.confirm("Jeni te sigurte?")) {
+      try {
+        const response = await sendRequest(`/planpermbajtja/${id}`, "DELETE", {});
+      } catch (error) {
+        console.log(error);
+      }
+     props.getdata()
+    }
   };
 
-  const placeSubmitHandler2 = (event) => {
-    event.preventDefault();
+ 
 
-    //ModifikoData();
-  };
+  
   let url = "/users/id/";
 
   return (
@@ -249,18 +256,23 @@ const Semestri = (props) => {
                         key="veprimet"
                         data-label="Veprimet"
                       >
-                        {/* <Link to={`/planpermbajtja/${mydata.id}/edit`} title="Modifiko">
+                        <Link to={`/planpermbajtja/${mydata.id}/edit`} title="Modifiko">
                             <FaEdit size={25} />
                           </Link>
                           <MdDelete
                             size={25}
                             onClick={() => fshij(mydata.id)}
                           />
-                           */}
+                           
                       </td>
                     }
                   </tr>
+                 
                 ))}
+                <tr key="totalet">
+                  <td></td>
+                  <td colspan="3">Totali</td>
+                </tr>
               </tbody>
             </table>
           ) : (

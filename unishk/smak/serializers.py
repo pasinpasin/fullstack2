@@ -276,7 +276,7 @@ class PlanpermbajtjaSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = PlanPermbajtja
-        fields = (  'renditja','titullari','viti','emertimi','tipiveprimtarise','kredite','nrjavesem1','seminaresem1',
+        fields = ( 'id', 'renditja','titullari','viti','emertimi','tipiveprimtarise','kredite','nrjavesem1','seminaresem1',
     'leksionesem1','praktikasem1','laboratoresem1','nrjavesem2','seminaresem2','leksionesem2','praktikasem2',
     'laboratoresem2','totleksione','totseminare','totlaboratore','totpraktika','plani','semestri1','semestri2')
     def to_representation(self, instance):

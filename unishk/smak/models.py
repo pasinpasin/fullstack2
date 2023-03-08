@@ -139,13 +139,13 @@ class PlanPermbajtja(models.Model):
         
     
     renditja = models.IntegerField(blank=False)
-    titullari = models.CharField(max_length=500)
+    titullari = models.CharField(max_length=500,blank=True)
     viti = models.IntegerField()
     emertimi = models.CharField(max_length=500,blank=False)
     tipiveprimtarise=models.CharField(max_length=20,
                               choices=TipiVeprimtarise.choices,
                               blank=False)
-    kredite = models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    kredite = models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
     nrjavesem1=models.IntegerField(blank=False)
     seminaresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
     leksionesem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)

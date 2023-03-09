@@ -18,7 +18,6 @@ import useHttpClient from "../hooks/useHttpClient";
 import React from "react";
 import { FaEdit } from "react-icons/fa";
 
-
 const Semestri = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -49,14 +48,14 @@ const Semestri = (props) => {
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [dhenat1, setDhenat1] = useState();
+
   const [dhenat, setDhenat] = useState();
-  const [formusers, setformusers] = useState("");
+  const [totali, setTotalet] = useState();
   const initialFormState = { id: null, users: "" };
   const [currentUser, setCurrentUser] = useState(initialFormState);
 
   const editRow = (userpermodifikim) => {
-    setformusers("");
+    // setformusers("");
     setCurrentUser({
       id: userpermodifikim._id,
       users: userpermodifikim.emertimi,
@@ -69,13 +68,15 @@ const Semestri = (props) => {
     console.log(props.sem);
 
     setDhenat(props.sem);
-    
+    setTotalet(totalet(props.sem));
+
+    //setTotalet({ totkredite: calculateSum(dhenat, "kredite") });
   }, [dhenat, props.sem]);
- 
 
   const handleChange = (e) => {
-    setformusers(e.target.value);
+    // setformusers(e.target.value);
   };
+  console.log(totali);
 
   const handleChange2 = (e) => {
     console.log(e);
@@ -88,17 +89,56 @@ const Semestri = (props) => {
   const fshij = async (id) => {
     if (window.confirm("Jeni te sigurte?")) {
       try {
-        const response = await sendRequest(`/planpermbajtja/${id}`, "DELETE", {});
+        const response = await sendRequest(
+          `/planpermbajtja/${id}`,
+          "DELETE",
+          {}
+        );
       } catch (error) {
         console.log(error);
       }
-     props.getdata()
+      props.getdata();
     }
   };
 
- 
+  const totalet = (myarray) => {
+    //console.log(myarray);
+    myarray.reduce(function (previousValue, currentValue) {
+      console.log(previousValue);
+      return {
+        totkredite:
+          currentValue.tipiveprimtarise !== "m"
+            ? previousValue + currentValue.kredite
+            : previousValue,
+        totngarkesasem1:
+          currentValue.tipiveprimtarise !== "m"
+            ? previousValue +
+              currentValue.leksionesem1 +
+              currentValue.seminaresem1 +
+              currentValue.praktikasem1 +
+              currentValue.laboratoresem1
+            : previousValue.tipiveprimtarise,
+        totngarkesasem2:
+          currentValue.tipiveprimtarise !== "m"
+            ? previousValue.tipiveprimtarise +
+              currentValue.leksionesem2 +
+              currentValue.seminaresem2 +
+              currentValue.praktikasem2 +
+              currentValue.laboratoresem2
+            : previousValue.tipiveprimtarise,
+      };
+    }, 0);
+  };
+  const calculateSum = (array, property) => {
+    const total = array.reduce((accumulator, object) => {
+      return object["tipiveprimtarise"] !== "m"
+        ? accumulator + object[property]
+        : accumulator;
+    }, 0);
 
-  
+    return total;
+  };
+
   let url = "/users/id/";
 
   return (
@@ -117,17 +157,17 @@ const Semestri = (props) => {
             <button className="btn  ">Shto rresht</button>
           </Link>
           {dhenat && dhenat.length > 0 ? (
-            <table class="classname">
+            <table className="classname">
               <thead>
                 <tr key="kolonat">
                   {columnsData.map((column) => (
-                    <th class="classname" key={column.field}>
+                    <th className="classname" key={column.field}>
                       {" "}
                       {column.header}
                     </th>
                   ))}
 
-                  <th class="classname" key="veprimet1">
+                  <th className="classname" key="veprimet1">
                     Veprimet
                   </th>
                 </tr>
@@ -135,143 +175,164 @@ const Semestri = (props) => {
               <tbody>
                 {dhenat.map((mydata) => (
                   <tr key={mydata.id}>
-                    <td class="classname" key="Renditja" data-label="Renditja">
+                    <td
+                      className="classname"
+                      key="Renditja"
+                      data-label="Renditja"
+                    >
                       {mydata.renditja}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="Titullari"
                       data-label="Titullari"
                     >
                       {mydata.titullari}
                     </td>
-                    <td class="classname" key="emertimi" data-label="Emertimi">
+                    <td
+                      className="classname"
+                      key="emertimi"
+                      data-label="Emertimi"
+                    >
                       {mydata.emertimi}
                     </td>
-                    <td class="classname" key="tipi" data-label="Tipi">
+                    <td className="classname" key="tipi" data-label="Tipi">
                       {mydata.tipiveprimtarise}
                     </td>
-                    <td class="classname" key="kredite" data-label="Kredite">
+                    <td
+                      className="classname"
+                      key="kredite"
+                      data-label="Kredite"
+                    >
                       {mydata.kredite}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="nrjave1"
                       data-label="Nrjave Sem 1"
                     >
                       {mydata.nrjavesem1}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="seminare"
                       data-label="Seminare Sem 1"
                     >
                       {mydata.seminaresem1}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="leksione"
                       data-label="Leksione Sem 1"
                     >
                       {mydata.leksionesem1}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="praktika"
                       data-label="Praktika Sem 1"
                     >
                       {mydata.praktikasem1}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="laboratore"
                       data-label="Laboratore Sem 1"
                     >
                       {mydata.laboratoresem1}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="nrjave2"
                       data-label="Nrjave Sem 2"
                     >
                       {mydata.nrjavesem2}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="seminare2"
                       data-label="Seminare Sem 2"
                     >
                       {mydata.seminaresem2}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="leksione2"
                       data-label="Leksione Sem 2"
                     >
                       {mydata.leksionesem2}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="praktika2"
                       data-label="Praktika Sem 2"
                     >
                       {mydata.praktikasem2}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="laboratore2"
                       data-label="Laboratore Sem 2"
                     >
                       {mydata.laboratoresem2}
                     </td>
-                    <td class="classname" key="totleks" data-label="Tot Leks">
+                    <td
+                      className="classname"
+                      key="totleks"
+                      data-label="Tot Leks"
+                    >
                       {mydata.totleksione}
                     </td>
-                    <td class="classname" key="totsem" data-label="Tot Sem">
+                    <td className="classname" key="totsem" data-label="Tot Sem">
                       {mydata.totseminare}
                     </td>
                     <td key="totlab" data-label="Tot Lab">
                       {mydata.totseminare}
                     </td>
-                    <td class="classname" key="totprak" data-label="Tot Prakt">
+                    <td
+                      className="classname"
+                      key="totprak"
+                      data-label="Tot Prakt"
+                    >
                       {mydata.totpraktika}
                     </td>
                     <td
-                      class="classname"
+                      className="classname"
                       key="jaudit"
                       data-label="Ore jashte audit"
                     >
-                      {mydata.totseminare}
+                      {}
                     </td>
                     <td key="sem1" data-label="Sem 1">
                       {mydata.semestri1}
                     </td>
-                    <td class="classname" key="sem2" data-label="Sem 2">
+                    <td className="classname" key="sem2" data-label="Sem 2">
                       {mydata.semestri2}
                     </td>
 
                     {
                       <td
-                        class="classname"
+                        className="classname"
                         key="veprimet"
                         data-label="Veprimet"
                       >
-                        <Link to={`/planpermbajtja/${mydata.id}/edit`} title="Modifiko">
-                            <FaEdit size={25} />
-                          </Link>
-                          <MdDelete
-                            size={25}
-                            onClick={() => fshij(mydata.id)}
-                          />
-                           
+                        <Link
+                          to={`/planpermbajtja/${mydata.id}/edit`}
+                          title="Modifiko"
+                        >
+                          <FaEdit size={25} />
+                        </Link>
+                        <MdDelete size={25} onClick={() => fshij(mydata.id)} />
                       </td>
                     }
                   </tr>
-                 
                 ))}
                 <tr key="totalet">
-                  <td></td>
-                  <td colspan="3">Totali</td>
+                  <td className="classname"></td>
+                  <td className="classname" colSpan={3}>
+                    Totali
+                  </td>
+                  <td className="classname"> {totali.totkredite}</td>
                 </tr>
               </tbody>
             </table>

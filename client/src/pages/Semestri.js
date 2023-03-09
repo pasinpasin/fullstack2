@@ -69,14 +69,18 @@ const Semestri = (props) => {
 
     setDhenat(props.sem);
     setTotalet(totalet(props.sem));
+    //console.log(totali)
 
     //setTotalet({ totkredite: calculateSum(dhenat, "kredite") });
   }, [dhenat, props.sem]);
 
+
+
+
   const handleChange = (e) => {
     // setformusers(e.target.value);
   };
-  console.log(totali);
+ 
 
   const handleChange2 = (e) => {
     console.log(e);
@@ -102,33 +106,42 @@ const Semestri = (props) => {
   };
 
   const totalet = (myarray) => {
-    //console.log(myarray);
-    myarray.reduce(function (previousValue, currentValue) {
-      console.log(previousValue);
+  
+   let newobj= myarray.reduce(function (previousValue, currentValue) {
+      
       return {
         totkredite:
           currentValue.tipiveprimtarise !== "m"
-            ? previousValue + currentValue.kredite
-            : previousValue,
+            ? previousValue.totkredite + currentValue.kredite
+            : previousValue.totkredite,
         totngarkesasem1:
           currentValue.tipiveprimtarise !== "m"
-            ? previousValue +
+            ? previousValue.totngarkesasem1+
+           
               currentValue.leksionesem1 +
               currentValue.seminaresem1 +
               currentValue.praktikasem1 +
               currentValue.laboratoresem1
-            : previousValue.tipiveprimtarise,
+            :  previousValue.totngarkesasem1,
         totngarkesasem2:
           currentValue.tipiveprimtarise !== "m"
-            ? previousValue.tipiveprimtarise +
+            ?  previousValue.totngarkesasem2+
               currentValue.leksionesem2 +
               currentValue.seminaresem2 +
               currentValue.praktikasem2 +
               currentValue.laboratoresem2
-            : previousValue.tipiveprimtarise,
-      };
-    }, 0);
+            : previousValue.totngarkesasem2
+      }
+    },{totkredite:0,totngarkesasem1:0,totngarkesasem2:0});
+
+ return newobj;
+    
   };
+
+  
+ 
+
+  console.log(totalet(props.sem));
   const calculateSum = (array, property) => {
     const total = array.reduce((accumulator, object) => {
       return object["tipiveprimtarise"] !== "m"
@@ -156,7 +169,14 @@ const Semestri = (props) => {
           >
             <button className="btn  ">Shto rresht</button>
           </Link>
-          {dhenat && dhenat.length > 0 ? (
+          <input 
+    value={totali.totkredite}
+    readonly='readonly'
+    
+    name="total"
+/>
+
+          {dhenat && dhenat.length > 0 ? (<>
             <table className="classname">
               <thead>
                 <tr key="kolonat">
@@ -189,7 +209,7 @@ const Semestri = (props) => {
                     >
                       {mydata.titullari}
                     </td>
-                    <td
+                    <td width="10%"
                       className="classname"
                       key="emertimi"
                       data-label="Emertimi"
@@ -327,15 +347,32 @@ const Semestri = (props) => {
                     }
                   </tr>
                 ))}
-                <tr key="totalet">
-                  <td className="classname"></td>
-                  <td className="classname" colSpan={3}>
-                    Totali
-                  </td>
-                  <td className="classname"> {totali.totkredite}</td>
-                </tr>
+              
               </tbody>
             </table>
+            <span>ONE THING</span>
+            <table className="classname">
+              <thead>
+                <tr key="kolona2">
+                 
+                    <th className="classname" key="grupi">
+                   
+                      Grupi
+                  </th>
+                  <th className="classname" key="lenda">
+                   
+                   Lenda
+               </th>
+                  
+
+                  <th className="classname" key="veprimet2">
+                    Veprimet
+                  </th>
+                </tr>
+              </thead></table>
+            </>
+
+            
           ) : (
             "S ka user"
           )}

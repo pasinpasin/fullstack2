@@ -1,49 +1,64 @@
 from rest_framework.views import exception_handler
 from django.http import JsonResponse
+from datetime import datetime
  
-def get_response(message="", result={}, status=False, status_code=200):
+def get_response(field="",message="", result={}, status=False, status_code=200):
    return {
        "message" : message,
        "result" : result,
        "status" : status,
        "status_code" : status_code,
+       #"field": field,
+       'time' : datetime.now()
    }
  
 def get_error_message(error_dict):
    field = next(iter(error_dict))
+   
    response = error_dict[next(iter(error_dict))]
    if isinstance(response, dict):
-       response = get_error_message(response)
+       print("dict")
+       response = get_error_message(response) +" " + field
+       
    elif isinstance(response, list):
+       print(response)
        response_message = response[0]
+       
+      
        if isinstance(response_message, dict):
-           response = get_error_message(response_message)
+           response =get_error_message(response_message)  +" " + field 
+           
        else:
-           response = response[0]
-   return response
+           response = response[0] +" " + field
+   return response 
  
 def handle_exception(exc, context):
    error_response = exception_handler(exc, context)
+   
    if error_response is not None:
        error = error_response.data
-       print(error_response.data)
+       #print(error_response.data)
  
        if isinstance(error, list) and error:
            if isinstance(error[0], dict):
+               
                error_response.data = get_response(
                    message=get_error_message(error),
                    status_code=error_response.status_code,
                )
  
            elif isinstance(error[0], str):
+               
                error_response.data = get_response(
                    message=error[0],
                    status_code=error_response.status_code
                )
  
        if isinstance(error, dict):
+           
            error_response.data = get_response(
                message=get_error_message(error),
+               
                status_code=error_response.status_code
            )
    return error_response
@@ -64,7 +79,14 @@ class ExceptionMiddleware(object):
            return JsonResponse(response, status=response['status_code'])
        if response.status_code == 401:
            response = get_response(
-               message="Nuk jeni te autorizuar",
+               message="Nuk jeni te autorizuar, ju lutem kryeni login",
+               status_code=response.status_code
+           )
+           return JsonResponse(response, status=response['status_code'])
+       
+       if response.status_code == 403:
+           response = get_response(
+               message="Nuk keni te drejta per te vazhduar",
                status_code=response.status_code
            )
            return JsonResponse(response, status=response['status_code'])

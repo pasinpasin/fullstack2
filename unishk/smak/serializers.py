@@ -15,7 +15,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         # Add custom claims
-        token['username'] = user.username
+        token['id'] = user.id
         token['email'] = user.email
        
     
@@ -148,13 +148,6 @@ class DepartamentiSerializer(serializers.ModelSerializer):
 
     
 
-    """ def create(self, validated_data):
-        fakulteti_id = validated_data.get('fakulteti') 
-        emertimi=validated_data.get('emertimi')
-        depi = Departamenti.objects.create(**validated_data)  # saving post object
-        return depi """
-    
-
 
     
 
@@ -176,14 +169,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        
-        extra_kwargs = {'password': {'error_messages': {'blank': 'Fjalekalimi eshte i detyrueshem'}}}
-    """ def validate_email(attr, value):
-            print(attr)
-            norm_email = value.lower()
-            if User.objects.exclude(id=self.id).filter(email=norm_email).exists():
-                raise serializers.ValidationError("Not unique email")
-            return norm_email """
+ 
     def validate(self, attrs):
         print("valido pass")
         #print (attrs)
@@ -193,6 +179,10 @@ class UserSerializer(serializers.ModelSerializer):
                     )
 
         return attrs
+    
+    
+
+        
     
 
 class ProfileSerializer(serializers.ModelSerializer):

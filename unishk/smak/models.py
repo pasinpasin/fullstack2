@@ -74,7 +74,7 @@ class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     def __str__(self):
-        return f'Profile of {self.user.username}'
+        return f'Profile of {self.user.email}'
     
     
 class Planet(models.Model):
@@ -98,7 +98,7 @@ class Planet(models.Model):
             models.Index(fields=['-periudha','-programi'],),
         ]
     def __str__(self):
-        return self.programi.emertimi
+        return f'Viti {self.periudha} ne programin  {self.programi.emertimi}'
     
 class Vitiakademik(models.Model):
     vitiakademik = models.CharField(max_length=500,blank=False, unique=True)

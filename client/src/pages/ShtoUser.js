@@ -111,10 +111,8 @@ const ShtoUser = () => {
   };
 
   return (
-    <>
-      {userloading ? (
-        <Loading center />
-      ) : (
+    
+     
         <>
           {error.alertType !== "" ?? (
             <Alert2 alertType={error.alertType} alertText={error.alertText} />
@@ -203,8 +201,8 @@ const ShtoUser = () => {
             </button>
           </form>{" "}
         </>
-      )}
-    </>
+      
+    
   );
 };
 

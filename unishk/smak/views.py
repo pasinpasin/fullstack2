@@ -15,7 +15,47 @@ from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import ValidationError,NotFound
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.contrib import auth
 
+""" @method_decorator(ensure_csrf_cookie,name="dispatch")
+class GetCSRFToken(APIView):
+    permissions_classes=(permissions.AllowAny,)
+    def get(self,request,format=None):
+        return Response({"success":"cookie set"})
+    
+@method_decorator(ensure_csrf_cookie,name="dispatch")
+class CheckAuthenticatedView(APIView):
+     def get(self,request,format=None):
+          isauthenticated=User.is_authenticated
+          if isauthenticated:
+               return Response({"isAuthenticated":"success"})
+          else:
+               return Response({"isAuthenticated":"false"})
+          
+@method_decorator(ensure_csrf_cookie,name="dispatch")         
+class LoginView(APIView):
+     permission_classes=(permissions.AllowAny,)
+     def post(self,request,format=None):
+          data=self.request.data
+          username=data['username']
+          password=data['password']
+          user=auth.authenticate(username=username,password=password)
+          if user is not None:
+               auth.login(request,user)
+               return Response({"success":"user authenticated","username":username})
+          else:
+               return Response({"error":"error autenticating"})
+          
+#@method_decorator(ensure_csrf_cookie,name="dispatch")         
+class LogoutView(APIView):
+    # permission_classes=(permissions.IsAuthenticated,)
+     def post(self,request,format=None):
+          try:
+               auth.logout(request)
+               return Response({"success":"logged out"})
+          except:
+               return Response({"error":"Sth went wrong"})
+         """
 
 
 class VerboseCreateModelMixin(object):

@@ -46,11 +46,11 @@ const initialState = {
   alertText: "",
   alertType: "",
   //user: user ? JSON.parse(user) : null,
-  user: localStorage.getItem("authTokens")
-    ? jwt_decode(localStorage.getItem("authTokens"))
+  user: sessionStorage.getItem("authTokens")
+    ? jwt_decode(sessionStorage.getItem("authTokens"))
     : null,
-  authTokens: localStorage.getItem("authTokens")
-    ? JSON.parse(localStorage.getItem("authTokens"))
+  authTokens: sessionStorage.getItem("authTokens")
+    ? JSON.parse(sessionStorage.getItem("authTokens"))
     : null,
   userfakultet: null,
   userdepartament: null,
@@ -104,7 +104,7 @@ const AppProvider = ({ children }) => {
       refresh: state.authTokens.refresh,
     });
 
-    localStorage.setItem("authTokens", JSON.stringify(response.data));
+    sessionStorage.setItem("authTokens", JSON.stringify(response.data));
     const authTokens = response.data;
     user = jwt_decode(response.data.access);
 
@@ -134,7 +134,7 @@ const AppProvider = ({ children }) => {
 
   const loginUser = useCallback(async (currentUser) => {
     dispatch({ type: LOGIN_USER_BEGIN });
-    await delay(2000);
+    await delay(1000);
     try {
       //console.log(currentUser);
       const response = await axios.post(
@@ -143,13 +143,14 @@ const AppProvider = ({ children }) => {
 
         currentUser
       );
+      console.log(response)
 
       if (response.status === 200) {
         const { data } = response;
         const authTokens = data;
 
         const user = jwt_decode(data.access);
-        localStorage.setItem("authTokens", JSON.stringify(data));
+        sessionStorage.setItem("authTokens", JSON.stringify(data));
         dispatch({
           type: LOGIN_USER_SUCCESS,
           payload: { user, authTokens },
@@ -162,6 +163,7 @@ const AppProvider = ({ children }) => {
         });
       }
     } catch (error) {
+      console.log(error)
       if (error.response.status === 401) {
         dispatch({
           type: LOGIN_USER_ERROR,
@@ -246,7 +248,7 @@ const AppProvider = ({ children }) => {
   const logoutUser = async () => {
     //await axios.get("/api/v1/auth/getCurrentUser/logout");
 
-    localStorage.removeItem("authTokens");
+    sessionStorage.removeItem("authTokens");
 
     dispatch({ type: LOGOUT_USER });
   };
@@ -267,7 +269,7 @@ const AppProvider = ({ children }) => {
         refresh: state.authTokens.refresh,
       });
 
-      localStorage.setItem("authTokens", JSON.stringify(response.data));
+      sessionStorage.setItem("authTokens", JSON.stringify(response.data));
 
       //const authTokens = response.data;
       //const user = jwt_decode(response.data.access);
@@ -317,7 +319,7 @@ const AppProvider = ({ children }) => {
   const getCurrentUser = async () => {
     dispatch({ type: GET_CURRENT_USER_BEGIN });
 
-    const authT = JSON.parse(localStorage.getItem("authTokens"));
+    const authT = JSON.parse(sessionStorage.getItem("authTokens"));
 
     try {
       if (authT) {
@@ -343,7 +345,7 @@ const AppProvider = ({ children }) => {
             const authTokens = response.data;
 
             const user = jwt_decode(response.data.access);
-            localStorage.setItem("authTokens", JSON.stringify(response.data));
+            sessionStorage.setItem("authTokens", JSON.stringify(response.data));
             dispatch({
               type: GET_CURRENT_USER_SUCCESS,
               payload: { user, authTokens },
@@ -353,13 +355,14 @@ const AppProvider = ({ children }) => {
               type: GET_CURRENT_USER_AUTH,
             });
             logoutUser();
+            
           }
         } else {
           dispatch({
             type: GET_CURRENT_USER_SUCCESS,
             payload: {
-              user: jwt_decode(localStorage.getItem("authTokens")),
-              authTokens: JSON.parse(localStorage.getItem("authTokens")),
+              user: jwt_decode(sessionStorage.getItem("authTokens")),
+              authTokens: JSON.parse(sessionStorage.getItem("authTokens")),
             },
           });
         }

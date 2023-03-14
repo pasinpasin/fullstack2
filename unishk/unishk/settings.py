@@ -81,6 +81,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'unishk.wsgi.application'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'smak.auth.Emailauth.EmailAuthBackend',
+]
 
 
 # Database
@@ -156,10 +160,11 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "smak.util.errorhandling2.handle_exception",
     
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+       'rest_framework.permissions.IsAuthenticated',
     ],
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ),
     #"EXCEPTION_HANDLER": "smak.errorhandling2.core_exception_handler",
     

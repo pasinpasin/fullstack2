@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-pkss4grbk0k6jua*()_@&#h&+#8wixd)74rmn*bwicfai+c3r9
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ORIGIN_ALLOW_ALL = True 
 
 
 # Application definition
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'smak.apps.SmakConfig',
     'django.contrib.postgres',
+    'django_rest_passwordreset',
     
     
 
@@ -164,7 +166,7 @@ REST_FRAMEWORK = {
     ],
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication'
+        #'rest_framework.authentication.SessionAuthentication'
     ),
     #"EXCEPTION_HANDLER": "smak.errorhandling2.core_exception_handler",
     
@@ -206,9 +208,9 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
-CORS_ALLOW_ALL_ORIGINS = True  
 
 

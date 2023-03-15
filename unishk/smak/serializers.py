@@ -281,6 +281,18 @@ class PlanpermbajtjaSerializer(serializers.ModelSerializer):
       
        return ret
     
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+    
    
         
 

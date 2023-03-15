@@ -77,12 +77,12 @@ class ExceptionMiddleware(object):
                status_code=response.status_code
            )
            return JsonResponse(response, status=response['status_code'])
-       if response.status_code == 401:
+       """ if response.status_code == 401:
            response = get_response(
                message="Nuk jeni te autorizuar, ju lutem kryeni login",
                status_code=response.status_code
            )
-           return JsonResponse(response, status=response['status_code'])
+           return JsonResponse(response, status=response['status_code']) """
        
        if response.status_code == 403:
            response = get_response(

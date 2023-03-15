@@ -76,6 +76,16 @@ const AppProvider = ({ children }) => {
   });
   const activeHttpRequests = useRef([]);
 
+  const options = {
+    // buttom sections
+
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    // top section
+  };
+
   /* authFetch.interceptors.response.use(
     (response) => {
       return response;
@@ -141,9 +151,15 @@ const AppProvider = ({ children }) => {
         //"/api/v1/users/signin",
         "http://127.0.0.1:8000/token/",
 
-        currentUser
+        currentUser,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
       );
-      console.log(response)
+      console.log(response);
 
       if (response.status === 200) {
         const { data } = response;
@@ -159,26 +175,30 @@ const AppProvider = ({ children }) => {
       } else if (response.status === 401) {
         dispatch({
           type: LOGIN_USER_ERROR,
-          payload: { msg: "Username ose password gabim" },
+          payload: { msg: "Kredenciale te gabuara" },
         });
       }
     } catch (error) {
-      console.log(error)
-      if (error.response.status === 401) {
+      console.log(error);
+      if (!error?.response) {
         dispatch({
           type: LOGIN_USER_ERROR,
-          payload: { msg: "Username ose password gabim" },
+          payload: { msg: "Serveri nuk pergjigjet" },
         });
-      } else if (error.response) {
+      } else if (error.response?.status === 400) {
         dispatch({
           type: LOGIN_USER_ERROR,
-          payload: { msg: error.response.statusText },
+          payload: { msg: "Mungon username ose password" },
+        });
+      } else if (error.response?.status === 401) {
+        dispatch({
+          type: LOGIN_USER_ERROR,
+          payload: { msg: "Nuk jeni te autorizuar" },
         });
       } else {
-        console.log(error);
         dispatch({
           type: LOGIN_USER_ERROR,
-          payload: { msg: "Gabim ne lidhjen me serverin" },
+          payload: { msg: "Login failed" },
         });
       }
     }
@@ -355,7 +375,6 @@ const AppProvider = ({ children }) => {
               type: GET_CURRENT_USER_AUTH,
             });
             logoutUser();
-            
           }
         } else {
           dispatch({

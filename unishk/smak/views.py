@@ -439,9 +439,10 @@ class ChangePasswordView(generics.UpdateAPIView):
     """
     An endpoint for changing password.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated,)
+    
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -449,38 +450,23 @@ class ChangePasswordView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         self.object = self.get_object()
-        old_password = request.data.get('old_password')
-        new_password = request.data.get('new_password')
-        confirm_new_password = request.data.get('confirm_new_password')
-        if new_password != confirm_new_password:
-                
-            raise ValidationError("Shkruani 2 here fjalekalimin njesoj")
-        
-        if  not self.object.check_password(old_password):
-             raise ValidationError("Passwordi i vjeter gabim")
-        self.object.set_password(new_password)
-        self.object.save()
-
         serializer = self.get_serializer(data=request.data)
-
         if serializer.is_valid():
             # Check old password
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-            
+                 raise ValidationError("Passwordi aktuak gabim")
+            if serializer.data.get('new_password')!= serializer.data.get('confirm_new_password'):
+                 raise ValidationError("Passwordet nuk jane njesoj")
             # set_password also hashes the password that the user will get
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
-            response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
-                'data': []
-            }
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1}},status=status.HTTP_200_OK)
+            
 
-            return Response(response)
+            
+           
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
+           
 
 
 

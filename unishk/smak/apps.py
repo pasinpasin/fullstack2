@@ -5,6 +5,5 @@ class SmakConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'smak'
 
-"""   def ready(self):
-        import smak.signals
- """
+def ready(self):
+    import smak.signals

@@ -165,15 +165,17 @@ class ProgramiSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+   
     confirmpassword = serializers.CharField(write_only=True, required=True)
     class Meta:
         model = User
         fields = '__all__'
  
     def validate(self, attrs):
-        print("valido pass")
+       
         #print (attrs)
-        if self.instance:
+        if not self.instance:
+            print("valido pass")
             if  attrs['password'] != attrs['confirmpassword']:
                 raise serializers.ValidationError("passw gabim"
                     )
@@ -186,6 +188,7 @@ class UserSerializer(serializers.ModelSerializer):
     
 
 class ProfileSerializer(serializers.ModelSerializer):
+   
     user=UserSerializer()
     departamenti=DepartamentiSerializer
 
@@ -219,8 +222,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         extra_kwargs = {'phone': {'error_messages': {'blank': 'New blank error message'}}}
         # get principal fields
+        #print(validated_data)
         user_data = validated_data.pop('user')
-        validated_data['user'] = User.objects.create(**user_data)
+        user_data.pop('confirmpassword',None)
+        validated_data['user'] = User.objects.create_user(**user_data)
+        print(validated_data)
         
         profile = Profile.objects.create(**validated_data)
         return profile

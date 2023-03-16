@@ -232,6 +232,9 @@ class ProfileSerializer(serializers.ModelSerializer):
         return profile
         
     def update(self, instance, validated_data):
+            user = self.context['request'].user
+            if user.pk != instance.pk:
+                raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
             
             # retrieve the User
             user_data = validated_data.pop('user', None)
@@ -284,14 +287,31 @@ class PlanpermbajtjaSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    model = User
 
-    """
-    Serializer for password change endpoint.
-    """
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
-    confirm_new_password = serializers.CharField(required=True)
+    old_password = serializers.CharField(write_only=True,required=True)
+    new_password = serializers.CharField(write_only=True,required=True)
+    confirm_new_password = serializers.CharField(write_only=True,required=True)
+    class Meta:
+        model = User
+        fields = ('old_password', 'password', 'confirm_new_password')
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm_new_password']:
+            raise serializers.ValidationError({"new_password": "Password fields didn't match."})
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "Old password is not correct"})
+        return value
+
+    def update(self, instance, validated_data):
+
+        instance.set_password(validated_data['new_password'])
+        instance.save()
+
+        return instance
     
    
         

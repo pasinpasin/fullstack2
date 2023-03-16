@@ -32,7 +32,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('changepassword/', views.ChangePasswordView.as_view(), name='auth_change_password'),
-    path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    
     path('', include(router.urls)),
 
 

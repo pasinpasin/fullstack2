@@ -1,7 +1,7 @@
 from rest_framework import generics,viewsets,permissions
 from rest_framework import status
 from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja
-from .serializers import FakultetiSerializer,DepartamentiSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
+from .serializers import FakultetiSerializer,DepartamentiSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
@@ -338,10 +338,7 @@ class UsersViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(pedagoget, many=True)
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
       
-    """  try:
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}}) """
+  
         
 
     def create(self, request, *args, **kwargs):
@@ -354,37 +351,12 @@ class UsersViewSet(viewsets.ModelViewSet):
            # return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
             
-       # else:
-           # print(_serializer)
-           # return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-           # return 
+      
     def retrieve(self, request, *args, **kwargs):
       
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        
-    """ def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-        except Exception as e:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            #any additional logic
-            serializer = self.get_serializer(instance)
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) """
-    
-    """ def update(self, request):
-        data = self.request.data
-        user = self.request.user
-        if user.is_authenticated and user.has_perm("meals.change_menu"):
-            
-            if request.method == 'PUT':
-                serializer = MealItemSerializer(instance=self.get_object(), data=data, partial=True )
-                
-                if serializer.is_valid(raise_exception=True):
-                    serializer.save()
-                    return Response({"Success": "Your meal was updated"}) """
 
 class PlaniViewSet(viewsets.ModelViewSet):
     queryset = Planet.objects.all()
@@ -436,31 +408,29 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
         
 
 class ChangePasswordView(generics.UpdateAPIView):
-    """
-    An endpoint for changing password.
-    """
-    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
+    
     serializer_class = ChangePasswordSerializer
-    model = User
     
 
     def get_object(self, queryset=None):
+       # if queryset is None:
+          #  queryset = self.get_queryset()
         obj = self.request.user
-        return obj
+        return obj 
+        
+        
+       # return queryset.get(pk=self.request.user.pk)
 
     def update(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            # Check old password
-            if not self.object.check_password(serializer.data.get("old_password")):
-                 raise ValidationError("Passwordi aktuak gabim")
-            if serializer.data.get('new_password')!= serializer.data.get('confirm_new_password'):
-                 raise ValidationError("Passwordet nuk jane njesoj")
-            # set_password also hashes the password that the user will get
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1}},status=status.HTTP_200_OK)
+        instance = self.get_object() #per ke  do ta bash update
+        print(instance)
+        serializer = self.get_serializer(instance=instance,data=request.data)  
+        print(serializer)
+        #serializer = self.serializer_class(instance=instance,data=request.data,partial=True)  # NOQA
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
             
 
             

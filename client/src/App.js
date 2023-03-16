@@ -15,6 +15,7 @@ import Users from "./pages/Users";
 import ModifikoUser from "./pages/ModifikoUser";
 import ShtoUser from "./pages/ShtoUser";
 import Planet from "./pages/Planet";
+import ForgotPassword from "./pages/ForgotPassword";
 import Shtorresht from "./pages/Shtorresht";
 
 function App() {
@@ -148,6 +149,7 @@ function App() {
         </Route>
 
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/krijofakultet" element={<ShtoFakultet />} />
       </Routes>
     </BrowserRouter>

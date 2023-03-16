@@ -8,6 +8,7 @@ import FormRow from "../components/FormRow";
 import Logo from "../components/Logo";
 import { Navigate } from "react-router-dom";
 import Loading from "../components/Loading";
+import { Link } from "react-router-dom";
 
 const initialState = {
   email: "",
@@ -70,9 +71,7 @@ const Login = () => {
             {isLoading ? "loading..." : "Login"}
           </button>
           <p>
-            {values.isMember
-              ? "Keni harruar fjalekalimin"
-              : "Already a member?"}
+          <Link to='/forgot-password'>Keni harruar fjalekalimin?</Link>
           </p>
         </form>
       </Wrapper>

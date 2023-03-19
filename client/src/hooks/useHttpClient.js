@@ -28,20 +28,37 @@ const useHttpClient = () => {
       });
       console.log(response)
 
-     /*  if (response.data.message !== "success") {
+      /*  if (response.data.message !== "success") {
         console.log(response);
         setError({ alertType: "danger", alertText: response.data.error.details });
         clearError();
-        throw new Error(response);
-      }
- */
+        throw new Error(response); */
+      
+ 
       setIsLoading(false);
       return response;
     } catch (err) {
+      
       console.log(err);
-      setError({ alertType: "danger", alertText: err.response.data.message });
-      //setError({ alertType: "danger", alertText: data.message.message });
+      if (!err?.response) {
+        console.log("ketu 1")
+        setError({ alertType: "danger", alertText: "Gabim ne server" });
+      }
+      else if (error.response?.status === 400) {
+        console.log("ketu 2")
+        setError({ alertType: "danger", alertText: err.response.data.message });
+      }
+      else if (error.response?.status === 401) {
+        console.log("ketu 3")
+        setError({ alertType: "danger", alertText: "Nuk ejni te loguar" });
+      } else {
+        console.log("ketu 4")
+        setError({ alertType: "danger", alertText: "Mugon lidhja me server" });
+      }
+        
       setIsLoading(false);
+   
+     
       clearError();
       throw err;
     }

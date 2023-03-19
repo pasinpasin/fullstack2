@@ -88,11 +88,12 @@ const Users = () => {
           {error.alertType !== "" ?? (
             <Alert alertType={error.alertType} alertText={error.alertText} />
           )}
-          {users2 && users2.length > 0 ? (
-            <>
-              <Link to={`/users/shtouser`}>
+          <Link to={`/users/shtouser`}>
                 <button className="btn  ">Shto user</button>
               </Link>
+          {users2 && users2.length > 0 ? (
+            <>
+              
               <table>
                 <thead>
                   <tr key="kolonat">

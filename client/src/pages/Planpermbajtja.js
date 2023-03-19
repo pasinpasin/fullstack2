@@ -23,7 +23,7 @@ const Planpermbajtja = () => {
 
   const { id } = useParams();
   const [planet, setPlanet] = useState();
-
+  const [zgjedhje, setZgjedhje] = useState();
   const setFilter = (plani, sem) => {
     return plani.filter((planpermbajtja) => planpermbajtja.viti === sem);
   };
@@ -33,9 +33,16 @@ const Planpermbajtja = () => {
         `plani/${id}/planpermbajtja`,
         "GET",
         {}
+        
       );
+      const response2 = await sendRequest(
+        `lendemezgjedhje/${id}`,
+        "GET",
+        {});
       console.log(response.data.result.items);
+      setZgjedhje(response2.data.result.items)
       setPlanet(response.data.result.items);
+      
       //console.log(setFilter(planet, "Semestri 1"));
     } catch (error) {
       console.log(error);
@@ -120,15 +127,15 @@ const Planpermbajtja = () => {
 
           <div className="outlet">
             {activeTab === "tab1" ? (
-              <Semestri sem={setFilter(planet, 1)} viti={1} planiid={id} getdata={getData}/>
+              <Semestri sem={setFilter(planet, 1)}  zgjedhje={setFilter(zgjedhje, 1)} viti={1} planiid={id} getdata={getData}/>
             ) : activeTab === "tab2" ? (
-              <Semestri sem={setFilter(planet, 2)} viti={2} planiid={id} getdata={getData} />
+              <Semestri sem={setFilter(planet, 2)} zgjedhje={setFilter(zgjedhje, 2)} viti={2} planiid={id} getdata={getData} />
             ) : activeTab === "tab3" ? (
-              <Semestri sem={setFilter(planet, 3)} viti={3} planiid={id} getdata={getData} />
+              <Semestri sem={setFilter(planet, 3)} zgjedhje={setFilter(zgjedhje, 3)} viti={3} planiid={id} getdata={getData} />
             ) : activeTab === "tab4" ? (
-              <Semestri sem={setFilter(planet, 4)} viti={4} planiid={id} getdata={getData} />
+              <Semestri sem={setFilter(planet, 4)} zgjedhje={setFilter(zgjedhje, 4)} viti={4} planiid={id} getdata={getData} />
             ) : (
-              <Semestri sem={setFilter(planet, 5)} viti={5} planiid={id} getdata={getData} />
+              <Semestri sem={setFilter(planet, 5)} zgjedhje={setFilter(zgjedhje, 5)} viti={5} planiid={id} getdata={getData} />
             )}
           </div>
         </div>

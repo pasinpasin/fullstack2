@@ -1,12 +1,13 @@
 from rest_framework import generics,viewsets,permissions
 from rest_framework import status
-from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja
-from .serializers import FakultetiSerializer,DepartamentiSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
+from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Lendemezgjedhje
+from .serializers import FakultetiSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect
 from django.utils.decorators import method_decorator
@@ -124,26 +125,45 @@ class FakultetiViewSet(viewsets.ModelViewSet):
 
 
 class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
-    queryset = Departamenti.objects.all()
-    serializer_class = DepartamentiSerializer
-
-    def list(self, request, id=None):
-        if id:
-            #fakid = Departamenti.active.filter(fakulteti=id)
-            departamentet = Departamenti.objects.order_by('updated').filter(fakulteti=id)
-            serializer = self.get_serializer(departamentet, many=True)
-            #return Response(serializer.data)
-        else:
-            departamentet = Departamenti.objects.order_by('updated')
-            serializer = self.get_serializer(departamentet, many=True)
-            #return Response(serializer.data)
-        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        """ try:
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}}) """
-        
     
+    serializer_class = DepartamentiSerializer
+    def get_queryset(self):
+         id=self.kwargs.get("id", None)
+         userporfile=Profile.objects.get(user=self.request.user)
+         if id!=None:
+            print(id)
+            #id = self.kwargs['id']
+            return Departamenti.objects.order_by('updated').filter(fakulteti=id,emertimi=userporfile.departamenti.emertimi)
+         else:
+              print("pa id")
+              return Departamenti.objects.order_by('updated').filter(emertimi=userporfile.departamenti.emertimi)
+
+    def list(self, request, *args, **kwargs):
+        deps = self.serializer_class(self.get_queryset(), many=True)
+        return Response({'message':'success','error':False,'code':200,'result':{'items':deps.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+      
+    """  
+    serializer_class = DepartamentiSerializer
+    serializer_class2=ProfileSerializer
+    def get_queryset(self):
+         id = (self.kwargs['id'],None)
+         userporfile=Profile.objects.get(user=self.request.user)
+         
+         if id is not None:
+              return Departamenti.objects.order_by('updated').filter(fakulteti=id,emertimi=userporfile.departamenti.emertimi)
+         else:
+              return Departamenti.objects.order_by('updated').filter(emertimi=userporfile.departamenti.emertimi)
+              
+              
+         
+    
+    
+    def list(self, request, *args, **kwargs):
+        
+        deps = self.serializer_class(self.get_queryset(), many=True)
+        return Response({'message':'success','error':False,'code':200,'result':{'items':deps.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+      
+     """
         
     
     def create(self, request, *args, **kwargs):
@@ -433,9 +453,40 @@ class ChangePasswordView(generics.UpdateAPIView):
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
             
 
-            
-           
+class LendeMeZgjedhjeViewSet(viewsets.ModelViewSet):
+    queryset = Lendemezgjedhje.objects.all()
+    serializer_class = LendeMeZgjedhjeSerializer
+    lookup_field = 'lenda__id'
 
+    def list(self, request, *args, **kwargs):
+            
+           # planet = Planet.objects.order_by('status')ù
+            lendemezgjedhje=self.get_queryset()
+            serializer = self.get_serializer(lendemezgjedhje, many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
+    def retrieve(self, request, *args, **kwargs):
+      
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        
+class LendeMeZgjedhjeListAPI(generics.ListAPIView):
+    model = Lendemezgjedhje
+    serializer_class = LendeMeZgjedhjeSerializer
+    def get_queryset(self):
+         if ('pid' in self.kwargs):
+            
+            planiid=self.kwargs['pid']
+            return  Lendemezgjedhje.objects.filter(lenda__plani__id=planiid)
+    def list(self, request, *args, **kwargs):
+            
+           # planet = Planet.objects.order_by('status')ù
+            lendemezgjedhje=self.get_queryset()
+            serializer = self.get_serializer(lendemezgjedhje, many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
+
+        
+    
            
 
 

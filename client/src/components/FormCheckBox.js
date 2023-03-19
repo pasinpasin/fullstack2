@@ -1,10 +1,10 @@
 const FormCheckBox = (props) => {
   const checkList = [
-    "admin",
-    "pedagog",
-    "shefdepartamenti",
-    "dekan",
-    "kurrikula",
+    "Admin",
+    "Pedagog",
+    "ShefDep",
+    "Dekan",
+    "Kurrikula",
   ];
   console.log(props.arr)
   console.log( props.arr.includes('pedagog'))

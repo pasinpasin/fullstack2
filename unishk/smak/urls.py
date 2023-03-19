@@ -19,6 +19,7 @@ router.register('users', views.UsersViewSet,basename='users')
 router.register('plani', views.PlaniViewSet,basename='plani')
 router.register('plani/(?P<id>\d+)/planpermbajtja', views.PlanpermbajtjaViewSet,basename='plnanimeid')
 router.register('planpermbajtja', views.PlanpermbajtjaViewSet,basename='planpermbajtja')
+router.register(r'lendemezgjedhje', views.LendeMeZgjedhjeViewSet,basename='LendeMeZgjedhje')
 
 
 
@@ -32,7 +33,9 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('changepassword/', views.ChangePasswordView.as_view(), name='auth_change_password'),
-    
+    path('lendemezgjedhje_plani/<int:pid>/', views.LendeMeZgjedhjeListAPI.as_view(),name='zgjedhje2'),
+   #path('fakulteti/<int:id>/departamenti/', views.DepartamentiViewSet.as_view(),name='mefakultet'),
+   #path('departamenti/', views.DepartamentiViewSet.as_view(),name='pafakultet'),
     path('', include(router.urls)),
 
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Semestri,Vitiakademik
+from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Semestri,Vitiakademik,Lendemezgjedhje
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -133,26 +133,29 @@ class FakultetiSerializer(serializers.ModelSerializer):
         model = Fakulteti
         fields = '__all__'
 
+
+
 class DepartamentiSerializer(serializers.ModelSerializer):
     
     fakulteti= FakultetiSerializer
+    #userprofile= serializers.SerializerMethodField()
     
     class Meta:
         model = Departamenti
-        fields = '__all__'
-
+        fields = ('id', 'emertimi','fakulteti')
+   
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['fakulteti'] = FakultetiSerializer(instance.fakulteti).data
-       return ret
-
-    
+     
+       return ret    
 
 
     
 
 class ProgramiSerializer(serializers.ModelSerializer):
     departamenti= DepartamentiSerializer
+    
     class Meta:
         model = Programi
         fields = '__all__'
@@ -190,7 +193,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
    
     user=UserSerializer()
-    departamenti=DepartamentiSerializer
+    departamenti=DepartamentiSerializer()
 
     class Meta:
         model = Profile
@@ -216,7 +219,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
        ret = super().to_representation(instance)
-       ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
+       #ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
        ret['user'] = UserSerializer(instance.user).data
        return ret
     def create(self, validated_data):
@@ -248,6 +251,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.user.save()
             instance.save()
             return instance
+    
+
 
 class PlaniSerializer(serializers.ModelSerializer):
     programi= ProgramiSerializer
@@ -281,6 +286,21 @@ class PlanpermbajtjaSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['plani'] = PlaniSerializer(instance.plani).data
+      
+       return ret
+    
+class LendeMeZgjedhjeSerializer(serializers.ModelSerializer):
+   # plani= PlaniSerializer
+    lenda=PlanpermbajtjaSerializer
+   
+    class Meta:
+        model = Lendemezgjedhje
+        fields = '__all__'
+        depth = 1 
+    def to_representation(self, instance):
+       ret = super().to_representation(instance)
+       #ret['plani'] = PlaniSerializer(instance.plani).data
+       ret['lenda'] = PlanpermbajtjaSerializer(instance.lenda).data
       
        return ret
     

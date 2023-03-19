@@ -51,6 +51,7 @@ const Semestri = (props) => {
   const [loading, setLoading] = useState(true);
 
   const [dhenat, setDhenat] = useState();
+  const [zgjedhjet, setZgjedhjet] = useState();
   const [totali, setTotalet] = useState();
   const initialFormState = { id: null, users: "" };
   const [currentUser, setCurrentUser] = useState(initialFormState);
@@ -69,14 +70,14 @@ const Semestri = (props) => {
 
   useEffect(() => {
     console.log(props.sem);
-
+    setZgjedhjet(props.zgjedhje)
     setDhenat(props.sem);
     setTotalet(totalet(props.sem));
     //console.log(totali)
     setListelendesh(props.sem.map((lendet) => lendet.emertimi));
 
     //setTotalet({ totkredite: calculateSum(dhenat, "kredite") });
-  }, [dhenat, props.sem]);
+  }, [dhenat,props.zgjedhje, props.sem]);
 
   const handleChange = (e) => {
     // setformusers(e.target.value);
@@ -366,23 +367,25 @@ const Semestri = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dhenat.map((mydata) => (
+                  {zgjedhjet.map((mydata) => (
                     <tr key={mydata.id}>
                       <td
                         className="classname"
-                        key="Renditja"
-                        data-label="Renditja"
+                        key="Grupi"
+                        data-label="Grupi"
                       >
-                        <FormrowSelect
+                        {mydata.lenda.emertimi}
+                        
+                     {/*   { <FormrowSelect
                           handleChange={(e) => {
                             setLenda(e.target.value);
                           }}
                           className="form-select"
                           lista={listelendesh}
-                        ></FormrowSelect>
+                        ></FormrowSelect> } */}
                       </td>
 
-                      <td></td>
+                      <td>{mydata.emertimi}</td>
 
                       <td
                         className="classname"

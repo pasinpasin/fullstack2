@@ -84,7 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'unishk.wsgi.application'
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    #'django.contrib.auth.backends.ModelBackend',
     'smak.auth.Emailauth.EmailAuthBackend',
 ]
 

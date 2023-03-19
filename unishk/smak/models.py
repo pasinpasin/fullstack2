@@ -64,7 +64,7 @@ class Profile(models.Model):
                               choices=Titulli.choices,
                               blank=False)
     roli = ArrayField(
-        models.CharField(max_length=32, blank=False)
+        models.CharField(choices=Roli.choices,max_length=32), blank=False
        
        
     )
@@ -136,6 +136,7 @@ class PlanPermbajtja(models.Model):
     class PapoF(models.TextChoices):
         P = 'P', 'P'
         F = 'F', 'F'
+    
         
     
     renditja = models.IntegerField(blank=False)
@@ -188,6 +189,17 @@ class PlanPermbajtja(models.Model):
         ]
     def __str__(self):
          return f' {self.plani.programi.emertimi} {self.plani.periudha}' or ''
+    
+class Lendemezgjedhje(models.Model):
+    emertimi = models.CharField(max_length=500,blank=False)
+   
+    lenda = models.ForeignKey(PlanPermbajtja,
+                             on_delete=models.CASCADE,
+                             related_name='i_perket_lendes')
+
+    
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     
 

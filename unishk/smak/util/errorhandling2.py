@@ -17,8 +17,8 @@ def get_error_message(error_dict):
    
    response = error_dict[next(iter(error_dict))]
    if isinstance(response, dict):
-       print("dict")
-       response = get_error_message(response) +" " + field
+       
+       response = get_error_message(response) 
        
    elif isinstance(response, list):
        print(response)
@@ -26,10 +26,10 @@ def get_error_message(error_dict):
        
       
        if isinstance(response_message, dict):
-           response =get_error_message(response_message)  +" " + field 
+           response =get_error_message(response_message) 
            
        else:
-           response = response[0] +" " + field
+           response = response[0] 
    return response 
  
 def handle_exception(exc, context):
@@ -37,7 +37,7 @@ def handle_exception(exc, context):
    
    if error_response is not None:
        error = error_response.data
-       #print(error_response.data)
+       print(error_response.data)
  
        if isinstance(error, list) and error:
            if isinstance(error[0], dict):

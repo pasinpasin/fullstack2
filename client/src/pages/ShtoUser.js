@@ -30,7 +30,7 @@ const ShtoUser = () => {
   const [departamentetfilter, setDepartamentetfilter] = useState([]);
   const [userloading, setUserloading] = useState(true);
   const [checked, setChecked] = useState([]);
-  const titujt = ["Msc", "Dr.", "Prof.Dr", "Doc", "Prof.Asoc. Dr"];
+  const titujt = ["Msc", "Dr", "Prof.Dr", "Doc", "Prof.Asoc. Dr"];
   const [isdepLoading, setIsdepLoading] = useState(true);
 
   const postData = async (newuser) => {
@@ -111,15 +111,17 @@ const ShtoUser = () => {
   };
 
   return (
-    
-     
-        <>
+    <>
+    {isLoading ? (
+      <Loading center />
+    ) : (
+      <>
           {error.alertType !== "" ?? (
             <Alert2 alertType={error.alertType} alertText={error.alertText} />
           )}
           <Alert2 alertType={error.alertType} alertText={error.alertText} />
           <form className="form" onSubmit={onSubmit}>
-            {isLoading && <Loading center />}
+            
             <FormRow
               type="email"
               name="email"
@@ -199,11 +201,12 @@ const ShtoUser = () => {
             <button type="submit" className="btn btn-block ">
               Ruaj
             </button>
-          </form>{" "}
-        </>
+          
+          </form> </>)}
+        
       
     
-  );
+          </>);
 };
 
 export default ShtoUser;

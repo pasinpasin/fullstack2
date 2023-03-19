@@ -90,6 +90,9 @@ const Planet = () => {
 
   return (
     <Wrapper>
+      <Link to={`/planet/shtoplan`}>
+                <button className="btn btn-lg ">Shto plan</button>
+              </Link>
       {isLoading ? (
         <Loading center />
       ) : (
@@ -99,9 +102,7 @@ const Planet = () => {
           )}
           {data && data.length > 0 ? (
             <>
-              <Link to={`/users/shtouser`}>
-                <button className="btn  ">Shto user</button>
-              </Link>
+              
               <table>
                 <thead>
                   <tr key="kolonat">

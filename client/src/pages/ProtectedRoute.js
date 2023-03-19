@@ -5,7 +5,7 @@ function ProtectedRoute({ children }) {
   const { user, userLoading } = useAppContext();
   console.log(userLoading);
 
-  if (userLoading) return <Loading center />;
+  if (userLoading) return <Loading right />;
 
   if (!user) {
     return <Navigate to="/login" />;

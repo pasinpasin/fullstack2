@@ -1,4 +1,5 @@
 from rest_framework import generics,viewsets,permissions
+from django.db.models import Count,Sum
 from rest_framework import status
 from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Lendemezgjedhje
 from .serializers import FakultetiSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
@@ -348,7 +349,18 @@ class PlaniViewSet(viewsets.ModelViewSet):
             return  Planet.objects.filter(programi=id)
          else:
             print("ketu")
-            return  Planet.objects.all() 
+            return  Planet.objects.all()   @action(detail=True, methods=["get","post","put"],url_path=r'lendemezgjedhje')
+    def gjeneropdf(self, request ,pk=None):
+        if request.method == 'GET':
+            plani = self.get_object()
+            totkredite = PlanPermbajtja.objects.filter(plani=plani.id).count()
+            print(plani)
+            planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),total2=Sum('kredite')).order_by('tipiveprimtarise') 
+            
+            
+            serializer = LendeMeZgjedhjeSerializer(planpermbajtja,many=True)
+            #return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
         
 
     def list(self, request,id=None):

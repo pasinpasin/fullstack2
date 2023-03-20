@@ -2,7 +2,7 @@ from rest_framework import generics,viewsets,permissions
 from rest_framework import status
 from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Lendemezgjedhje
 from .serializers import FakultetiSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes,action
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny
@@ -18,45 +18,6 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib import auth
 
-""" @method_decorator(ensure_csrf_cookie,name="dispatch")
-class GetCSRFToken(APIView):
-    permissions_classes=(permissions.AllowAny,)
-    def get(self,request,format=None):
-        return Response({"success":"cookie set"})
-    
-@method_decorator(ensure_csrf_cookie,name="dispatch")
-class CheckAuthenticatedView(APIView):
-     def get(self,request,format=None):
-          isauthenticated=User.is_authenticated
-          if isauthenticated:
-               return Response({"isAuthenticated":"success"})
-          else:
-               return Response({"isAuthenticated":"false"})
-          
-@method_decorator(ensure_csrf_cookie,name="dispatch")         
-class LoginView(APIView):
-     permission_classes=(permissions.AllowAny,)
-     def post(self,request,format=None):
-          data=self.request.data
-          username=data['username']
-          password=data['password']
-          user=auth.authenticate(username=username,password=password)
-          if user is not None:
-               auth.login(request,user)
-               return Response({"success":"user authenticated","username":username})
-          else:
-               return Response({"error":"error autenticating"})
-          
-#@method_decorator(ensure_csrf_cookie,name="dispatch")         
-class LogoutView(APIView):
-    # permission_classes=(permissions.IsAuthenticated,)
-     def post(self,request,format=None):
-          try:
-               auth.logout(request)
-               return Response({"success":"logged out"})
-          except:
-               return Response({"error":"Sth went wrong"})
-         """
 
 
 class VerboseCreateModelMixin(object):
@@ -412,6 +373,7 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
          else:
             print("ketu")
             return  PlanPermbajtja.objects.all() 
+  
         
 
     def list(self, request,id=None):
@@ -425,7 +387,28 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        
+    
+    @action(detail=True, methods=["get","post","put"],url_path=r'lendemezgjedhje')
+    def get_lendemezgjedhje(self, request ,pk=None):
+        if request.method == 'GET':
+            lenda = self.get_object()
+            print(lenda)
+            lendamezgjedhje=Lendemezgjedhje.objects.filter(lenda__id=lenda.id)
+            print(lendamezgjedhje.query)
+            serializer = LendeMeZgjedhjeSerializer(lendamezgjedhje,many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        elif request.method == 'POST':
+            emertimi = request.data.get('emertimi')
+            lenda = self.get_object()
+            data = {
+            "emertimi": emertimi,
+            "lenda": lenda.id,
+            }
+            serializer = LendeMeZgjedhjeSerializer(data=data)  # NOQA
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
 
 class ChangePasswordView(generics.UpdateAPIView):
     queryset = User.objects.all()
@@ -453,22 +436,29 @@ class ChangePasswordView(generics.UpdateAPIView):
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
             
 
-class LendeMeZgjedhjeViewSet(viewsets.ModelViewSet):
-    queryset = Lendemezgjedhje.objects.all()
-    serializer_class = LendeMeZgjedhjeSerializer
-    lookup_field = 'lenda__id'
+class LendeMeZgjedhjeView(APIView):
+    """  def get(self, request, pk=None, format=None) -> Response:
+        
+            lendemezgjedhje = get_object_or_404(Lendemezgjedhje.objects.all(), pk=pk)
+            serializer = LendeMeZgjedhjeSerializer(lendemezgjedhje)
+            return Response(serializer.data,
+                            status=status.HTTP_200_OK) 
+    """
 
-    def list(self, request, *args, **kwargs):
-            
-           # planet = Planet.objects.order_by('status')ù
-            lendemezgjedhje=self.get_queryset()
-            serializer = self.get_serializer(lendemezgjedhje, many=True)
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
-    def retrieve(self, request, *args, **kwargs):
-      
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    def delete(self, request, pk=None, format=None):
+        
+            lendemezgjedhje = get_object_or_404(Lendemezgjedhje.objects.all(), pk=pk)
+            lendemezgjedhje.delete()
+            return Response({'message':'success','error':False,'code':204},status=status.HTTP_204_NO_CONTENT)
+    def patch(self, request, pk=None, format=None):
+        
+        lendemezgjedhje = get_object_or_404(Lendemezgjedhje.objects.all(), pk=pk)
+        serializer = LendeMeZgjedhjeSerializer(lendemezgjedhje, data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        
+  
         
 class LendeMeZgjedhjeListAPI(generics.ListAPIView):
     model = Lendemezgjedhje

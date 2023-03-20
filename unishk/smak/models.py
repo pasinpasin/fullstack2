@@ -188,7 +188,8 @@ class PlanPermbajtja(models.Model):
             models.Index(fields=['-plani'],),
         ]
     def __str__(self):
-         return f' {self.plani.programi.emertimi} {self.plani.periudha}' or ''
+         #return f' {self.plani.programi.emertimi} {self.plani.periudha}' or ''
+         return str(self.id)
     
 class Lendemezgjedhje(models.Model):
     emertimi = models.CharField(max_length=500,blank=False)

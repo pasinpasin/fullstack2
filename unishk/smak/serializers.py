@@ -295,8 +295,8 @@ class LendeMeZgjedhjeSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = Lendemezgjedhje
-        fields = '__all__'
-        depth = 1 
+        fields = ('id','emertimi','lenda','created','updated')
+        #depth = 1 
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        #ret['plani'] = PlaniSerializer(instance.plani).data

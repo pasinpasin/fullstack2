@@ -18,6 +18,10 @@ from rest_framework.exceptions import ValidationError,NotFound
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib import auth
+from django.template.loader import render_to_string
+import weasyprint
+from django.http import HttpResponse
+
 
 
 
@@ -349,17 +353,35 @@ class PlaniViewSet(viewsets.ModelViewSet):
             return  Planet.objects.filter(programi=id)
          else:
             print("ketu")
-            return  Planet.objects.all()   @action(detail=True, methods=["get","post","put"],url_path=r'lendemezgjedhje')
+            return  Planet.objects.all()   
+         
+    @action(detail=True, methods=["get"])
     def gjeneropdf(self, request ,pk=None):
         if request.method == 'GET':
             plani = self.get_object()
-            totkredite = PlanPermbajtja.objects.filter(plani=plani.id).count()
             print(plani)
-            planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),total2=Sum('kredite')).order_by('tipiveprimtarise') 
+            totkredite = PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').aggregate(totKredite=Sum('kredite'))
+            
+            planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),totkrediteveprimtari=Sum('kredite'),percent=(Sum('kredite')/totkredite['totKredite'])*100).order_by('tipiveprimtarise')
+            planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
+            serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
+           
+            finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
+            html = render_to_string('planet/plani.html',
+                            {'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}})
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = f'filename=plani_{plani.id}.pdf'
+            weasyprint.HTML(string=html).write_pdf(response)
+           
+            return response
+
+
+            
+            #serializer=PlaniSerializer(data={"veprimtaritabele":planpermbajtja})
+
             
             
-            serializer = LendeMeZgjedhjeSerializer(planpermbajtja,many=True)
-            #return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+            #return Response({'message':'success','error':False,'code':200,'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}},status=status.HTTP_200_OK)
     
         
 

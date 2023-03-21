@@ -83,382 +83,110 @@
               </div>
             </td>
             <td width="10%">
-              <div class="staff" >
+              <div class="staff " >
                 <b>%</b>
               </div>
             </td>
           </tr>
-       <xsl:for-each select="KategoriteLende">
-         <xsl:for-each select="KategoriaLende">
-             <xsl:variable name="rows" select="count(LendaP)"/>
-             <xsl:for-each select="LendaP">
-               <tr bgcolor="#eef1f7" >
-               <xsl:if test="not(preceding-sibling::LendaP)">
-                 <td width="40%" rowspan="{$rows}" style="page-break-inside:avoid;">
-                   <xsl:value-of select="../@kat_persh"/>
-                 </td>
-               </xsl:if>
-               <td width="30%" >
-                 <xsl:value-of select="@emerLende"/>
-               </td>
-               <td width="10%" align="center">
-                 <xsl:value-of select="@kredite"/>
-               </td>
-               <xsl:if test="not(preceding-sibling::LendaP)">
-                 <td  width="10%" rowspan="{$rows}" align="center">
-                   <xsl:value-of select="../@totkredite"/>
-                 </td>
-                 <td  width="10%" rowspan="{$rows}" align="center">
-                   <xsl:value-of select="../@perqindje"/>%
-                 </td>
-               </xsl:if>
-               </tr>
-             </xsl:for-each>
-         </xsl:for-each>
-         
-       </xsl:for-each>
-          <xsl:variable name="totalKredite" select="sum(KategoriteLende/KategoriaLende/@totkredite)" />
-          <xsl:variable name="totalPerqindje" select="sum(KategoriteLende/KategoriaLende/@perqindje)" />
+          { % with varA=0 % } 
+          { % with varB=0 % } 
+          { % with varC=0 % } 
+          { % with varD=0 % } 
+          { % with varE=0 % } 
+        { % for lende in result.obj2 % }
+          <tr bgcolor="#ccd4e6">
+              { % for tipi in result.obj1 % }
+                { % if lende.tipiveprimtarise == tipi.tipiveprimtarise % }
+
+                    { % if lende.tipiveprimtarise == "A" }
+                      {{ varA|add:"1" }}
+                        { % if varA == "1" % }
+                            <td rowspan="{{tipi.total}}" width="40%">LENDE BAZE-pergatitje metodologiike dhe kulture e pergjithshme (Simboli A)</td>
+                            <td width="30%">{{lende.emertimi}}</td>
+                          <td width="10%">{{lende.kredite}}</td>
+                            <td rowspan="{{tipi.total}}" width="10%" >{{tipi.totkrediteveprimtari}}</td>
+                            <td rowspan="{{tipi.total}}" width="10%" >{{tipi.percent}}/td>
+                          { % else % }
+                            <td width="30%">{{lende.emertimi}}</td>
+                            <td width="10%">{{lende.kredite}}</td>
+                         { % endif % }
+                      { % elif lende.tipiveprimtarise == "B" % }
+                        {{ varB|add:"1" }}
+                          {% if varB == "1" %}
+                            <td rowspan="{{tipi.total}}" width="40%">LËNDË KARAKTERIZUESE-përgatitje për disiplinën shkencore (Simboli B)</td>
+                            <td width="30%">{{lende.emertimi}}</td>
+                            <td width="10%">{{lende.kredite}}</td>
+                            <td rowspan="{{tipi.total}} width="10%" ">{{tipi.totkrediteveprimtari}}</td>
+                            <td rowspan="{{tipi.total}} width="10%" ">{{tipi.percent}}/td>
+                          {% else %}
+                            <td width="30%">{{lende.emertimi}}</td>
+                            <td width="10%">{{lende.kredite}}</td>
+                          {% endif %}
+
+                      { % elif lende.tipiveprimtarise == "C" % }
+                      {{ varC|add:"1" }}
+                      {% if varC == "1" % }
+                        
+                          <td rowspan="{{tipi.total}}" width="40%">LËNDË NDËRDISIPLINORE/INTEGRUESE-nëndidiplina, profile dhe grup-lëndë me zgjedhje (Simboli C)</td>
+                          <td width="30%">{{lende.emertimi}}</td>
+                          <td width="10%">{{lende.kredite}}</td>
+                          <td rowspan="{{tipi.total}}" width="10%" >{{tipi.totkrediteveprimtari}}</td>
+                            <td rowspan="{{tipi.total}}" width="10%" >{{tipi.percent}}/td>
+                        { % else % }
+                          <td width="30%">{{lende.emertimi}}</td>
+                          <td width="10%">{{lende.kredite}}</td>
+                        { % endif % }
+                      { % elif lende.tipiveprimtarise == "D" % }
+                      {{ varD|add:"1" }}
+                        {% if varD == "1" %}
+                          <td rowspan="{{tipi.total}}" width="40%">LËNDË PLOTËSUESE-gjuhë të huaja, njohuri informatike, praktika profesionale (Simboli D)</td>
+                          <td width="30%">{{lende.emertimi}}</td>
+                          <td width="10%">{{lende.kredite}}</td>
+                          <td rowspan="{{tipi.total}}" width="10%" >{{tipi.totkrediteveprimtari}}</td>
+                          <td rowspan="{{tipi.total}}" width="10%" >{{tipi.percent}}/td>
+                        { % else % }
+                          <td width="30%">{{lende.emertimi}}</td>
+                          <td width="10%">{{lende.kredite}}</td>
+                        { % endif % }
+                      { % else % }
+                        {{ varE|add:"1" }}
+                        {% if varE == "1" %}
+                            <td rowspan="{{tipi.total}}" width="40%">DETYRIME PËRMBYLLËSE. (Simboli E)</td>
+                            <td width="30%">{{lende.emertimi}}</td>
+                            <td width="10%">{{lende.kredite}}</td>
+                            <td rowspan="{{tipi.total}}" width="10%" >{{tipi.totkrediteveprimtari}}</td>
+                            <td rowspan="{{tipi.total}}" width="10%" >{{tipi.percent}}/td>
+                          {% else %}
+                            <td width="30%">{{lende.emertimi}}</td>
+                            <td width="10%">{{lende.kredite}}</td>
+                        {% endif %}
+                    {% endif %}
+                    
+
+                { % endif % }
+              { % endfor % }
+              </tr>
+        { % endfor % } 
+        
+        
+        
           <tr bgcolor="#eef1f7" style="page-break-inside:avoid;">
             <th colspan="3" align="left">
               Totali
             </th>
-
+            {{totkredite.totkredite}}
             <th  width="10%">
-              <xsl:value-of select="$totalKredite"/>
+              
             </th>
             <th  width="10%">
-              <xsl:value-of select="round($totalPerqindje)"/>%
+              {{finaltotal_percent}}
             </th>
           </tr>
         </table>
         
       
         
-        <table class="maintab" width="100%">
-        
-          <tr>
-            <td colspan="3">
-              
-                <xsl:for-each select="Vitet">
-                  <xsl:if test="Viti">
-                    <xsl:for-each select="Viti">
-                      <xsl:variable name="rows" select="count(Lendet/Lenda)"/>
-                      <!--Petrika-->
-                      <xsl:if test="$rows>1">
-                       <h1 style="page-break-before:always;"></h1>
-                      <table class="maintab" width="100%">
-                        <tr >
-                          <td colspan="5" align="center">
-                            <b>Viti <xsl:value-of select="@nr"/></b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td align="left" colspan="5">
-                           
-                            <xsl:if test="@totalKredite>60">
-                              <span>
-                                <b>
-                                  Numri Total i krediteve: 
-                                  <span style="color:#bf4040;">
-                                    <b><xsl:value-of select="@totalKredite"/></b>
-                                </span>
-                                </b>
-                              </span>
-                            </xsl:if>
-                            <xsl:if test="@totalKredite&lt;=60">
-                              <span>
-                                <b>
-                                  Numri Total i krediteve
-                                  <span style="color:#0080ff;">
-                                    <b><xsl:value-of select="@totalKredite"/></b>
-                                </span>
-                                </b>
-                              </span>
-                            </xsl:if>
-                          </td>
-                         
-                        </tr>
-                        <tr>
-                          <td width="25%"></td>
-                          <td align="center" width="24%">
-                            <b>Semestri I</b></td>
-                          <td width="2%"></td>
-                          <td align="center" width="24%">
-                            <b>Semestri II</b>
-                          </td>
-                          <td width="25%"></td>
-                        </tr>
-                        <tr>
-                          <td width="25%"></td>
-                          <td align="center" width="24%"> 
-                            Numri i javeve:<b> <xsl:value-of select="@nrJave1"/></b>
-                            
-                           </td>
-                          <td width="2%"></td>
-                          <td align="center"  width="24%">
-                              Numri i javeve: <b><xsl:value-of select="@nrJave2"/></b>
-                           
-                            <br></br>
-                          </td>
-                          <td width="25%"></td>
-                        </tr>
-                        <tr>
-                          <td width="25%"></td>
-                          <td align="center"  width="24%">
-                            <xsl:if test="@ngarkesa1>25">
-                              <span>
-                                Ngarkesa mesimore:  <span style="color:#bf4040;">
-                                  <b><xsl:value-of select="@ngarkesa1"/></b>
-                              </span>
-                              </span>
-                            </xsl:if>
-                            <xsl:if test="@ngarkesa1&lt;=25">
-                              <span>
-                                Ngarkesa mesimore: <span style="color:#0080ff;">
-                                  <b><xsl:value-of select="@ngarkesa1"/></b> 
-                              </span>
-                              </span>
-                            </xsl:if>
-                        
-                          </td>
-                          <td width="2%"></td>
-                          <td align="center"  width="24%">
-                           
-                            <xsl:if test="@ngarkesa2>25">
-                              <span>
-                                Ngarkesa mesimore: <span style="color:#bf4040;">
-                                  <b> <xsl:value-of select="@ngarkesa2"/></b>
-                              </span>
-                              </span>
-                            </xsl:if>
-                            <xsl:if test="@ngarkesa2&lt;=25">
-                              <span>
-                                Ngarkesa mesimore: <span style="color:#0080ff;">
-                                  <b><xsl:value-of select="@ngarkesa2"/></b>
-                              </span>
-                              </span>
-                            </xsl:if>
-                            <br></br>
-                          </td>
-                          <td width="25%"></td>
-                        </tr>
-                        
-                      </table>
-                      <br></br>
-                     <table class="maintab" width="100%">
-                      <xsl:if test="Lendet">
-                        <xsl:for-each select="Lendet">
-                          <tr>
-                            <th bgcolor="#ccd4e6" rowspan="2">Nr</th>
-                            <th bgcolor="#ccd4e6" rowspan="2">Emertimi Lendes</th>
-                            <th bgcolor="#ccd4e6" rowspan="2">Titullari Lendes</th>
-                            <th bgcolor="#ccd4e6" rowspan="2">Tipi Veprimtarise</th>
-                            <th bgcolor="#ccd4e6" rowspan="2">Kredite</th>
-                            <th  bgcolor="#ccd4e6" colspan="5">Semestri I</th>
-                            <th  bgcolor="#ccd4e6" colspan="5">Semestri II</th>
-                            <th  bgcolor="#ccd4e6" colspan="4">Totali</th>
-                            <th bgcolor="#ccd4e6" width="4%" rowspan="2">Ore jashte<br></br>auditorit</th>
-                            <th  bgcolor="#ccd4e6" colspan="2">Semestri</th>
-                          </tr>
-                          <tr>
-                            
-                            <th  bgcolor="#ccd4e6" width="4%">Nr Jave</th>
-                            <th bgcolor="#ccd4e6">Leks</th>
-                            <th bgcolor="#ccd4e6">Sem</th>
-                            <th bgcolor="#ccd4e6">Lab</th>
-                            <th bgcolor="#ccd4e6" width="3%">Prakt</th>
-                            <th  bgcolor="#ccd4e6" width="4%">Nr Jave</th>
-                            <th bgcolor="#ccd4e6">Leks</th>
-                            <th bgcolor="#ccd4e6">Sem</th>
-                            <th bgcolor="#ccd4e6">Lab</th>
-                            <th bgcolor="#ccd4e6" width="3%">Prakt</th>
-                            <th bgcolor="#ccd4e6">Leks</th>
-                            <th bgcolor="#ccd4e6">Sem</th>
-                            <th bgcolor="#ccd4e6">Lab</th>
-                            <th bgcolor="#ccd4e6">Prakt</th>
-                            <th bgcolor="#ccd4e6"> I </th>
-                            <th bgcolor="#ccd4e6">II</th>
-                          </tr>
-                          <xsl:for-each select="Lenda">
-                            <tr style="page-break-inside:avoid;">
-                            <xsl:choose>
-                              <xsl:when test="@emerLende='Total'">
-                                <xsl:attribute name="style">
-                                  <xsl:text>font-weight:bold;</xsl:text>
-                                </xsl:attribute>
-                              </xsl:when>
-                              
-                            </xsl:choose>
-                            
-                              <td bgcolor="#eef1f7">
-                                <xsl:value-of select="@Nr"/>
-                              </td>                             
-                              <td bgcolor="#eef1f7">
-                                <xsl:value-of select="@emerLende"/>
-                              </td>
-                              <td bgcolor="#eef1f7">
-                                <xsl:value-of select="@Titullari"/>
-                              </td>
-                              <td bgcolor="#eef1f7">
-                                <xsl:value-of select="@tipi"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@kredite"/>
-                              </td>
-                              <td  bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@nrjave1"/>
-                              </td>
-                              <td bgcolor="#eef1f7"  align="center">
-                                <xsl:value-of select="@leks1"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@sem1"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@lab1"/>
-                              </td>
-                              <td bgcolor="#eef1f7"  align="center">
-                                <xsl:value-of select="@praktika1"/>
-                              </td>
-                              <td  bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@nrjave2"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@leks2"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@sem2"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@lab2"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@praktika2"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@lex"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@sem"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@lab"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@praktika"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@jashteAuditor"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@semestri1"/>
-                              </td>
-                              <td bgcolor="#eef1f7" align="center">
-                                <xsl:value-of select="@semestri2"/>
-                              </td>
-                            </tr>
-
-                          </xsl:for-each>
-                        </xsl:for-each>
-                      </xsl:if>
-                      <xsl:if test="LendetZgjedhje">
-                        <xsl:for-each select="LendetZgjedhje">
-                          <xsl:choose>
-                            <xsl:when test="Lenda">
-                              <tr >
-                                <td colspan="21" align="Center">
-                                  <br></br>
-                                  <table width="50%" style="page-break-inside:avoid;">
-                                    <tr>
-                                      <th bgcolor="#ccd4e6">Nr</th>
-                                      <th bgcolor="#ccd4e6">Emërtimi i Lëndës</th>
-                                      <th bgcolor="#ccd4e6">Tipi i Veprimtarisë</th>
-                                    </tr>
-                                    <xsl:for-each select="Lenda">
-                                      <tr>
-                                        <td bgcolor="#eef1f7">
-                                          <xsl:value-of select="@Nr"/>
-                                        </td>
-                                        <td bgcolor="#eef1f7">
-                                          <xsl:value-of select="@emerLende"/>
-                                        </td>
-                                        <td bgcolor="#eef1f7">
-                                          <xsl:value-of select="@veprimtaria"/>
-                                        </td>
-
-                                      </tr>
-
-                                    </xsl:for-each>
-                                  </table>
-                                  <br></br>
-                                </td>
-
-
-                              </tr>
-
-                              <!--<xsl:if test="Seminare">
-                           
-                          </xsl:if>-->
-                            </xsl:when>
-                            <xsl:otherwise>
-                              <tr>
-                                <td colspan="21">
-                                  <br></br>
-                                </td>
-                              </tr>
-                            </xsl:otherwise>
-                          </xsl:choose>
-                        </xsl:for-each>
-                      </xsl:if>
-                     </table>
-
-                      
-                      </xsl:if>
-                      
-                    </xsl:for-each>
-                  </xsl:if>
-                </xsl:for-each>
-
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3"  align="right">
-              
-			<div class="staffname2" >
-                  <xsl:value-of select="@shefi3" />
-                </div>
-                <br></br>
-                <br></br>
-				<div class="staffname2" >
-                  <xsl:value-of select="@shefi2" />
-                </div>
-                <br></br>
-                <br></br>
-				<br></br>
-                
-			  
-			  
-			  
-			  
-              <div class="footerdiv">
-                <div class="staffname2" >
-                  Rektori
-                </div>
-                <br></br>
-                <br></br>
-                <div class="staffname2" >
-                  <xsl:value-of select="@shefi" />
-                </div>
-                <br></br>
-                <br></br>
-
-              </div>
-            </td>
-          </tr>
-        </table>
-      </xsl:for-each>
-  </xsl:template>
+    
 
 </body>
   </html>

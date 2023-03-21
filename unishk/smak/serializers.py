@@ -9,6 +9,8 @@ from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
+from decimal import Decimal
+from django.db.models import Count,Sum
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -256,9 +258,13 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class PlaniSerializer(serializers.ModelSerializer):
     programi= ProgramiSerializer
+   
+    #percent= serializers.DecimalField(max_digits=4, decimal_places=2)
     class Meta:
         model = Planet
         fields = '__all__'
+    
+
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['programi'] = ProgramiSerializer(instance.programi).data

@@ -35,6 +35,7 @@ urlpatterns = [
     path('changepassword/', views.ChangePasswordView.as_view(), name='auth_change_password'),
     path('lendemezgjedhje_plani/<int:pid>/', views.LendeMeZgjedhjeListAPI.as_view(),name='zgjedhje2'),
     path('lendemezgjedhje/<int:pk>/', views.LendeMeZgjedhjeView.as_view()),
+    
    #path('fakulteti/<int:id>/departamenti/', views.DepartamentiViewSet.as_view(),name='mefakultet'),
    #path('departamenti/', views.DepartamentiViewSet.as_view(),name='pafakultet'),
     path('', include(router.urls)),

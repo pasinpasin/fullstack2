@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,6 +68,14 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'unishk.urls'
 
 TEMPLATES = [
+     { 
+        'BACKEND':'django.template.backends.jinja2.Jinja2',
+	    'DIRS': [BASE_DIR / 'smak/templates/jinja2'],
+        'APP_DIRS': True,
+        "OPTIONS": {
+			"environment": "unishk.jinja2.environment"
+		}
+        },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],

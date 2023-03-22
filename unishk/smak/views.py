@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes,action
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.renderers import JSONRenderer,TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from django.contrib.auth.models import User
@@ -14,6 +15,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
+from django.shortcuts import render
 from rest_framework.exceptions import ValidationError,NotFound
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -345,6 +347,7 @@ class UsersViewSet(viewsets.ModelViewSet):
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
 
 class PlaniViewSet(viewsets.ModelViewSet):
+    
     queryset = Planet.objects.all()
     serializer_class = PlaniSerializer
     def get_queryset(self):
@@ -355,7 +358,7 @@ class PlaniViewSet(viewsets.ModelViewSet):
             print("ketu")
             return  Planet.objects.all()   
          
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["get"],renderer_classes=[TemplateHTMLRenderer])
     def gjeneropdf(self, request ,pk=None):
         if request.method == 'GET':
             plani = self.get_object()
@@ -367,13 +370,15 @@ class PlaniViewSet(viewsets.ModelViewSet):
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
            
             finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
-            html = render_to_string('planet/plani.html',
+           # return render(request, 'planet/plani.html',{'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}} )
+            return Response({'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}}, template_name='plani.html.j2')
+        """  html = render_to_string('planet/plani.html',
                             {'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}})
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = f'filename=plani_{plani.id}.pdf'
             weasyprint.HTML(string=html).write_pdf(response)
            
-            return response
+            return response """
 
 
             
@@ -381,7 +386,7 @@ class PlaniViewSet(viewsets.ModelViewSet):
 
             
             
-            #return Response({'message':'success','error':False,'code':200,'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}},status=status.HTTP_200_OK)
+        #return Response({'message':'success','error':False,'code':200,'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}},status=status.HTTP_200_OK)
     
         
 
@@ -396,7 +401,7 @@ class PlaniViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-    
+  
 class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
     queryset = PlanPermbajtja.objects.all()
     serializer_class = PlanpermbajtjaSerializer

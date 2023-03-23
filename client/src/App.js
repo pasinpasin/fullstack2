@@ -17,6 +17,7 @@ import ShtoUser from "./pages/ShtoUser";
 import Planet from "./pages/Planet";
 import ForgotPassword from "./pages/ForgotPassword";
 import Shtorresht from "./pages/Shtorresht";
+import Planipdf from "./pages/Planipdf";
 
 function App() {
   return (
@@ -143,6 +144,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Shtorresht />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="plani/:pid/pdf"
+            element={
+              <ProtectedRoute>
+                <Planipdf />
               </ProtectedRoute>
             }
           />

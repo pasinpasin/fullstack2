@@ -9,6 +9,7 @@ import Wrapper from "../assets/wrappers/Tabela";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { FaEdit, FaEye } from "react-icons/fa";
+import { VscFilePdf } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
 import { useParams } from "react-router-dom";
 
@@ -91,8 +92,8 @@ const Planet = () => {
   return (
     <Wrapper>
       <Link to={`/planet/shtoplan`}>
-                <button className="btn btn-lg ">Shto plan</button>
-              </Link>
+        <button className="btn btn-lg ">Shto plan</button>
+      </Link>
       {isLoading ? (
         <Loading center />
       ) : (
@@ -102,7 +103,6 @@ const Planet = () => {
           )}
           {data && data.length > 0 ? (
             <>
-              
               <table>
                 <thead>
                   <tr key="kolonat">
@@ -153,6 +153,12 @@ const Planet = () => {
                           />
                           <Link to={`/plani/${mydata.id}/`} title="Shiko">
                             <FaEye size={25} />
+                          </Link>
+                          <Link
+                            to={`/plani/${mydata.id}/pdf`}
+                            title="Shiko PDF"
+                          >
+                            <VscFilePdf size={25} />
                           </Link>
                         </td>
                       }

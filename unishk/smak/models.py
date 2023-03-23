@@ -98,7 +98,7 @@ class Planet(models.Model):
             models.Index(fields=['-periudha','-programi'],),
         ]
     def __str__(self):
-        return f'Viti {self.periudha} ne programin  {self.programi.emertimi}'
+        return f'Viti {self.periudha},{self.programi.emertimi},{self.cikli}'
     
 class Vitiakademik(models.Model):
     vitiakademik = models.CharField(max_length=500,blank=False, unique=True)

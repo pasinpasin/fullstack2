@@ -1,127 +1,145 @@
 import { useState, useEffect } from "react";
 
 const PlanipdfComponent = (props) => {
-   const [varA, setVarA] = useState(0);
-  const [varB, setVarB] = useState(0);
-  const [varC, setVarC] = useState(0);
-  const [varD, setVarD] = useState(0);
-  const [varE, setVarE] = useState(0); 
-
- 
- 
-
-  const increment = (chr,totali,teksti,emertimi,kredite,percent,totkrediteveprimtari) => {
-    let vA=0,vB=0,vC=0,vD=0,vE=0;
+  let vA = 0,
+    vB = 0,
+    vC = 0,
+    vD = 0,
+    vE = 0;
+  const increment = (
+    chr,
+    totali,
+    teksti,
+    emertimi,
+    kredite,
+    percent,
+    totkrediteveprimtari
+  ) => {
     if (chr === "A") {
-     //setVarA((prev) => prev + 1);
-     setVarA((varA) => varA + 1)
-     //vA++
-       return( varA===1 ? ( <>  <td rowspan="{totali}" width="40%">
-                              {teksti}
-                            </td>
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td>
-                            <td rowspan="{ totali }" width="10%">
-                              {totkrediteveprimtari}
-                            </td>
-                            <td rowspan="{ totali }" width="10%">
-                              {percent}
-                            </td> </>
-                          
-                        )  :( <>
-                          
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td></>
-                           ))
+      vA++;
+      return vA === 1 ? (
+        <>
+          <td rowSpan={totali} width="40%">
+            {teksti}
+          </td>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+          <td rowSpan={totali} width="10%">
+            {totkrediteveprimtari}
+          </td>
+          <td rowSpan={totali} width="10%">
+            {percent}
+          </td>
+        </>
+      ) : (
+        <>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+        </>
+      );
     } else if (chr === "B") {
-     // setVarB((prev) => prev + 1);
-     setVarB((varB) => varB + 1)
-     console.log(vB)
-       return( varB===1 ? ( <> <td rowspan={totali} width="40%">
-                              {teksti}
-                            </td>
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td>
-                            <td rowspan={totali} width="10%">
-                              {totkrediteveprimtari}
-                            </td>
-                            <td rowspan={totali} width="10%">
-                              {percent}
-                            </td> </>
-                          
-                        )  :( <>
-                          
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td></>
-                           ))
+      vB++;
+      console.log(vB);
+      return vB === 1 ? (
+        <>
+          {" "}
+          <td rowSpan={totali} width="40%">
+            {teksti}
+          </td>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+          <td rowSpan={totali} width="10%">
+            {totkrediteveprimtari}
+          </td>
+          <td rowSpan={totali} width="10%">
+            {percent}
+          </td>{" "}
+        </>
+      ) : (
+        <>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+        </>
+      );
     } else if (chr === "C") {
-      //setVarC((prev) => prev + 1);
-      setVarC((varC) => varC + 1)
-       return( vC===1 ? ( <> <td rowspan="{totali}" width="40%">
-                              {teksti}
-                            </td>
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td>
-                            <td rowspan="{ totali }" width="10%">
-                              {totkrediteveprimtari}
-                            </td>
-                            <td rowspan="{ totali }" width="10%">
-                              {percent}
-                            </td> </>
-                          
-                        )  :( <>
-                          
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td></>
-                           ))
-    } else if (chr === "C") {
+      vC++;
+      return vC === 1 ? (
+        <>
+          {" "}
+          <td rowSpan={totali} width="40%">
+            {teksti}
+          </td>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+          <td rowSpan={totali} width="10%">
+            {totkrediteveprimtari}
+          </td>
+          <td rowSpan={totali} width="10%">
+            {percent}
+          </td>{" "}
+        </>
+      ) : (
+        <>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+        </>
+      );
+    } else if (chr === "D") {
       //setVarD((prev) => prev + 1);
-      vD++
-       return( vD===1 ? ( <> <td rowspan="{totali}" width="40%">
-                              {teksti}
-                            </td>
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td>
-                            <td rowspan="{ totali }" width="10%">
-                              {totkrediteveprimtari}
-                            </td>
-                            <td rowspan="{ totali }" width="10%">
-                              {percent}
-                            </td> </>
-                          
-                        )  :( <>
-                          
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td></>
-                           ))
-    } else{
+      vD++;
+      return vD === 1 ? (
+        <>
+          {" "}
+          <td rowSpan={totali} width="40%">
+            {teksti}
+          </td>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+          <td rowSpan={totali} width="10%">
+            {totkrediteveprimtari}
+          </td>
+          <td rowSpan={totali} width="10%">
+            {percent}
+          </td>{" "}
+        </>
+      ) : (
+        <>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+        </>
+      );
+    } else {
       //setVarE((prev) => prev + 1);
-      vE++
-       return( vE===1 ? ( <> <td rowspan="{totali}" width="40%">
-                              {teksti}
-                            </td>
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td>
-                            <td rowspan="{ totali }" width="10%">
-                              {totkrediteveprimtari}
-                            </td>
-                            <td rowspan="{ totali }" width="10%">
-                              {percent}
-                            </td> </>
-                          
-                        )  :( <>
-                          
-                            <td width="30%">{emertimi}</td>
-                            <td width="10%">{kredite}</td></>
-                           ))
+      vE++;
+      return vE === 1 ? (
+        <>
+          {" "}
+          <td rowSpan={totali} width="40%">
+            {teksti}
+          </td>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+          <td rowSpan={totali} width="10%">
+            {totkrediteveprimtari}
+          </td>
+          <td rowSpan={totali} width="10%">
+            {percent}
+          </td>{" "}
+        </>
+      ) : (
+        <>
+          <td width="30%">{emertimi}</td>
+          <td width="10%">{kredite}</td>
+        </>
+      );
     }
   };
 
   return (
     <>
-      <table class="maintab" width="100%">
-        <tbody>
-          <tr>
+      <table className="maintab" width="100%">
+        <tbody key="tbody2">
+          <tr key="key1">
             <td align="center" colSpan="4">
               <img
                 src="https://smak.unishk.edu.al/unireports/headerImage.png"
@@ -130,36 +148,38 @@ const PlanipdfComponent = (props) => {
             </td>
           </tr>
 
-          <tr>
+          <tr key="key2">
             <td>
-              <span class="staff">
+              <span className="staff">
                 {props.data.plani.programi.departamenti.fakulteti.emertimi}
               </span>
             </td>
             <td colSpan="2">
-              <div class="staff">
+              <div className="staff">
                 <b>{props.data.plani.programi.emertimi}</b>
               </div>
             </td>
             <td colSpan="2">
-              <div class="staff">Viti Akademik {props.data.plani.periudha}</div>
+              <div className="staff">
+                Viti Akademik {props.data.plani.periudha}
+              </div>
             </td>
           </tr>
 
-          <tr>
+          <tr key="key3">
             <td width="30%"></td>
             <td colSpan="2"></td>
             <td width="30%"></td>
           </tr>
-          <tr>
+          <tr key="key4">
             <td width="30%">
-              <div class="fakultname">
+              <div className="fakultname">
                 {props.data.plani.programi.departamenti.emertimi}
               </div>
             </td>
 
             <td align="center" width="30%">
-              <span class="staff">Cikli: {props.data.plani.cikli}</span>
+              <span className="staff">Cikli: {props.data.plani.cikli}</span>
             </td>
           </tr>
         </tbody>
@@ -167,73 +187,112 @@ const PlanipdfComponent = (props) => {
 
       <br></br>
 
-      <table class="maintab" width="100%">
-        <thead>
+      <table className="maintab" width="100%">
+        <thead key="thead1">
           <tr bgcolor="#ccd4e6">
             <th width="40%">
-              <span class="staff">
+              <span className="staff">
                 <b>Tipi i veprimtarisë dhe simboli përcaktues</b>
               </span>
             </th>
             <td width="30%">
-              <div class="staff">
+              <div className="staff">
                 <b>Fusha disiplinore apo veprimtari të tjera formuese</b>
               </div>
             </td>
             <td width="10%">
-              <div class="staff">
+              <div className="staff">
                 <b>Kredite</b>
               </div>
             </td>
             <td width="10%">
-              <div class="staff">
+              <div className="staff">
                 <b>Totali krediteve</b>
               </div>
             </td>
             <td width="10%">
-              <div class="staff ">
+              <div className="staff ">
                 <b>%</b>
               </div>
             </td>
           </tr>
         </thead>
-        <tbody>
+        <tbody key="tbody1">
           {props.data.obj1.map((tipi) =>
             props.data.obj2.map((lende) => (
               <>
-              {lende.tipiveprimtarise === tipi.tipiveprimtarise ? (
+                {lende.tipiveprimtarise === tipi.tipiveprimtarise ? (
                   <>
-                    <tr bgcolor="#ccd4e6">
-                      {lende.tipiveprimtarise === "A"  ? 
-                        increment("A",tipi.totali,"lenda A",lende.emertimi,lende.kredite,tipi.percent,tipi.totkrediteveprimtari) 
-                         : lende.tipiveprimtarise === "B" ? 
-                         increment("B",tipi.totali,"lenda B",lende.emertimi,lende.kredite,tipi.percent,tipi.totkrediteveprimtari) 
-                       : lende.tipiveprimtarise === "C" ? 
-                          increment("C",tipi.totali,"lenda C",lende.emertimi,lende.kredite,tipi.percent,tipi.totkrediteveprimtari) 
-                        
-                       : lende.tipiveprimtarise === "D" ? 
-                          increment("D",tipi.totali,"lenda D",lende.emertimi,lende.kredite,tipi.percent,tipi.totkrediteveprimtari) 
-                      :   
-                      increment("E",tipi.totali,"lenda E",lende.emertimi,lende.kredite,tipi.percent,tipi.totkrediteveprimtari) }
-                      
+                    <tr bgcolor="#ccd4e6" key={lende.id}>
+                      {lende.tipiveprimtarise === "A"
+                        ? increment(
+                            "A",
+                            tipi.total,
+                            "LËNDË BAZË-përgatitje metodologjike dhe kulturë e përgjithshme (Simboli A)",
+                            lende.emertimi,
+                            lende.kredite,
+                            tipi.percent,
+                            tipi.totkrediteveprimtari
+                          )
+                        : lende.tipiveprimtarise === "B"
+                        ? increment(
+                            "B",
+                            tipi.total,
+                            "LËNDË KARAKTERIZUESE-përgatitje për disiplinën shkencore (Simboli B)",
+                            lende.emertimi,
+                            lende.kredite,
+                            tipi.percent,
+                            tipi.totkrediteveprimtari
+                          )
+                        : lende.tipiveprimtarise === "C"
+                        ? increment(
+                            "C",
+                            tipi.total,
+                            "LËNDË NDËRDISIPLINORE/INTEGRUESE-nëndidiplina, profile dhe grup-lëndë me zgjedhje (Simboli C)",
+                            lende.emertimi,
+                            lende.kredite,
+                            tipi.percent,
+                            tipi.totkrediteveprimtari
+                          )
+                        : lende.tipiveprimtarise === "D"
+                        ? increment(
+                            "D",
+                            tipi.total,
+                            "LËNDË PLOTËSUESE-gjuhë të huaja, njohuri informatike, praktika profesionale (Simboli D)",
+                            lende.emertimi,
+                            lende.kredite,
+                            tipi.percent,
+                            tipi.totkrediteveprimtari
+                          )
+                        : increment(
+                            "E",
+                            tipi.total,
+                            "DETYRIME PËRMBYLLËSE. (Simboli E)",
+                            lende.emertimi,
+                            lende.kredite,
+                            tipi.percent,
+                            tipi.totkrediteveprimtari
+                          )}
                     </tr>
-                   
                   </>
                 ) : (
                   <></>
                 )}
-                </>
-             
+              </>
             ))
           )}
-           <tr bgcolor="#eef1f7">
-                      <th colSpan="3" align="left">
-                        Totali
-                      </th>
-                      {props.data.totkredite.totKredite}
-                      <th width="10%"></th>
-                      <th width="10%">{props.data.finaltotal_percent}</th>
-                    </tr>
+          <tr bgcolor="#eef1f7" key="totali">
+            <th colSpan="3" align="left">
+              Totali
+            </th>
+
+            <th width="10%" align="left">
+              {props.data.totkredite.totKredite}
+            </th>
+            <th width="10%" align="left">
+              {props.data.finaltotal_percent}
+            </th>
+          </tr>
         </tbody>
       </table>
     </>

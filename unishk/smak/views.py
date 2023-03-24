@@ -2,7 +2,7 @@ from rest_framework import generics,viewsets,permissions
 from django.db.models import Count,Sum
 from rest_framework import status
 from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Lendemezgjedhje
-from .serializers import FakultetiSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
+from .serializers import FakultetiSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,TotaletSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
 from rest_framework.decorators import api_view, permission_classes,action
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
@@ -368,10 +368,11 @@ class PlaniViewSet(viewsets.ModelViewSet):
             planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),totkrediteveprimtari=Sum('kredite'),percent=(Sum('kredite')/totkredite['totKredite'])*100).order_by('tipiveprimtarise')
             planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
-           
-            finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
+            serializer3=TotaletSerializer(planpermbajtja,many=True)
+            serializer2=PlaniSerializer(plani,many=False)
+            finaltotal_percent=sum(item['percent'] for item in serializer3.data)
            # return render(request, 'planet/plani.html',{'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}} )
-        return Response({'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":plani}}, template_name='plani.html.j2')
+        return Response({'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data}}, template_name='plani.html.j2')
         """  html = render_to_string('planet/plani.html',
                             {'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}})
             response = HttpResponse(content_type='application/pdf')
@@ -386,19 +387,22 @@ class PlaniViewSet(viewsets.ModelViewSet):
     def gjeneroobjpdf(self, request ,pk=None):
         if request.method == 'GET':
             plani = self.get_object()
-            print(plani)
+            
             totkredite = PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').aggregate(totKredite=Sum('kredite'))
             
             planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),totkrediteveprimtari=Sum('kredite'),percent=(Sum('kredite')/totkredite['totKredite'])*100).order_by('tipiveprimtarise')
             planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
+            
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
+            serializer3=TotaletSerializer(planpermbajtja,many=True)
             serializer2=PlaniSerializer(plani,many=False)
-            finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
+            finaltotal_percent=sum(item['percent'] for item in serializer3.data)
+            #finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
           
 
             
             
-        return Response({'message':'success','error':False,'code':200,'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data}},status=status.HTTP_200_OK)
+        return Response({'message':'success','error':False,'code':200,'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data}},status=status.HTTP_200_OK)
        
 
     def list(self, request,id=None):

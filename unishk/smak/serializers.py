@@ -259,10 +259,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 class PlaniSerializer(serializers.ModelSerializer):
     programi= ProgramiSerializer
    
-    #percent= serializers.DecimalField(max_digits=4, decimal_places=2)
+   
+              
     class Meta:
         model = Planet
         fields = '__all__'
+      
     
 
     def to_representation(self, instance):
@@ -275,14 +277,20 @@ class SemestriSerializer(serializers.ModelSerializer):
     class Meta:
         model = Semestri
         fields = '__all__'
-class VitiakademikSerializer(serializers.ModelSerializer):
+
+class TotaletSerializer(serializers.Serializer):
+
+    percent= serializers.DecimalField(max_digits=4, decimal_places=2)
+    tipiveprimtarise=serializers.CharField(read_only=True)
+    total=serializers.DecimalField(max_digits=4, decimal_places=2)
+    totkrediteveprimtari=serializers.DecimalField(max_digits=4, decimal_places=2)
     
-    class Meta:
-        model = Vitiakademik
-        fields = '__all__'
+
     
 class PlanpermbajtjaSerializer(serializers.ModelSerializer):
     plani= PlaniSerializer
+
+ 
    
     class Meta:
         model = PlanPermbajtja

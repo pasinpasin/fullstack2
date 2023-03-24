@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'smak.apps.SmakConfig',
     'django.contrib.postgres',
     'django_rest_passwordreset',
+    "debug_toolbar",
     
     
 
@@ -58,9 +59,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
     
     
 ]
@@ -150,6 +153,12 @@ TIME_ZONE = 'Europe/Rome'
 USE_I18N = True
 
 USE_TZ = True
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 
 # Static files (CSS, JavaScript, Images)

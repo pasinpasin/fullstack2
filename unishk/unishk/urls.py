@@ -30,6 +30,7 @@ from typing import Any
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('__debug__/', include('debug_toolbar.urls')),
     path('',include('smak.urls')),
 ]
 

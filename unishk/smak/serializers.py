@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
+from rest_framework.generics import ListAPIView
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
@@ -264,6 +265,7 @@ class PlaniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Planet
         fields = '__all__'
+        #depth = 1
       
     
 
@@ -284,6 +286,15 @@ class TotaletSerializer(serializers.Serializer):
     tipiveprimtarise=serializers.CharField(read_only=True)
     total=serializers.DecimalField(max_digits=4, decimal_places=2)
     totkrediteveprimtari=serializers.DecimalField(max_digits=4, decimal_places=2)
+
+
+    
+class NgarkesavjetoreSerializer(serializers.Serializer):
+    ngarkesasem1=serializers.DecimalField(max_digits=3, decimal_places=1)
+    ngarkesasem2=serializers.DecimalField(max_digits=3, decimal_places=1)
+    totkreditepervit=serializers.DecimalField(max_digits=3, decimal_places=1)
+    viti=serializers.IntegerField()
+
     
 
     
@@ -297,11 +308,13 @@ class PlanpermbajtjaSerializer(serializers.ModelSerializer):
         fields = ( 'id', 'renditja','titullari','viti','emertimi','tipiveprimtarise','kredite','nrjavesem1','seminaresem1',
     'leksionesem1','praktikasem1','laboratoresem1','nrjavesem2','seminaresem2','leksionesem2','praktikasem2',
     'laboratoresem2','totleksione','totseminare','totlaboratore','totpraktika','plani','semestri1','semestri2')
-    def to_representation(self, instance):
+        
+        
+        """  def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['plani'] = PlaniSerializer(instance.plani).data
       
-       return ret
+       return ret """
     
 class LendeMeZgjedhjeSerializer(serializers.ModelSerializer):
    # plani= PlaniSerializer
@@ -317,6 +330,26 @@ class LendeMeZgjedhjeSerializer(serializers.ModelSerializer):
        ret['lenda'] = PlanpermbajtjaSerializer(instance.lenda).data
       
        return ret
+    
+"""class LendeMeZgjedhjeQuerySerializer(serializers.Serializer):
+    emertimi = serializers.CharField(max_length=256, required=True)
+    lenda_id = serializers.IntegerField()
+    id=serializers.IntegerField(required=True)
+
+    class Meta:
+        fields = ('id','emertimi', 'lenda_id')
+ 
+class StatListView(ListAPIView):
+    queryset = Stat.objects.raw("SELECT parameter1, COUNT(*) FROM 
+               statistic_stat GROUP BY parameter1 order by count(*) desc 
+               LIMIT 10")
+    serializer_class = StatSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        # the serializer didn't take my RawQuerySet, so made it into a list
+        serializer = StatSerializer(list(queryset), many=True)
+        return Response(serializer.data) """
     
 
 

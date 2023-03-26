@@ -1,8 +1,9 @@
 from rest_framework import generics,viewsets,permissions
 from django.db.models import Count,Sum
+from django.conf import settings
 from rest_framework import status
 from .models import Fakulteti,Departamenti,Programi,Profile,Planet,PlanPermbajtja,Lendemezgjedhje
-from .serializers import FakultetiSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,TotaletSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
+from .serializers import FakultetiSerializer,NgarkesavjetoreSerializer,DepartamentiSerializer,LendeMeZgjedhjeSerializer,TotaletSerializer,UserSerializer,MyTokenObtainPairSerializer,RegisterSerializer,ProgramiSerializer,ProfileSerializer,PlaniSerializer,PlanpermbajtjaSerializer,ChangePasswordSerializer
 from rest_framework.decorators import api_view, permission_classes,action
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import BasicAuthentication
@@ -11,6 +12,7 @@ from rest_framework.renderers import JSONRenderer,TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from django.contrib.auth.models import User
+from django.db.models import DateTimeField, ExpressionWrapper, F
 from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
@@ -22,6 +24,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib import auth
 from django.template.loader import render_to_string
 import weasyprint
+from django.db.models import Prefetch
 from django.http import HttpResponse
 
 
@@ -367,19 +370,23 @@ class PlaniViewSet(viewsets.ModelViewSet):
             
             planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),totkrediteveprimtari=Sum('kredite'),percent=(Sum('kredite')/totkredite['totKredite'])*100).order_by('tipiveprimtarise')
             planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
+            ngarkesavjetore=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('viti').annotate(ngarkesasem1=Sum(F('seminaresem1') + F('leksionesem1')+F('laboratoresem1') + F('praktikasem1')),ngarkesasem2=Sum(F('seminaresem2') + F('leksionesem2')+F('laboratoresem2') + F('praktikasem2')),totkreditepervit=Sum('kredite')).order_by('viti')
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
             serializer3=TotaletSerializer(planpermbajtja,many=True)
+            serializer4=NgarkesavjetoreSerializer(ngarkesavjetore, many=True)
             serializer2=PlaniSerializer(plani,many=False)
             finaltotal_percent=sum(item['percent'] for item in serializer3.data)
+            zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id))).all()
+            serializer5=LendeMeZgjedhjeSerializer(zgjedhje,many=True)
            # return render(request, 'planet/plani.html',{'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}} )
-        return Response({'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data}}, template_name='plani.html.j2')
-        """  html = render_to_string('planet/plani.html',
-                            {'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}})
+            #######return Response({'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data,"obj3":serializer4.data,"zgjedhje":serializer5.data}}, template_name='plani.html.j2')
+            html = render_to_string('plani.html.j2',
+                            {'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data,"obj3":serializer4.data,"zgjedhje":serializer5.data}})
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = f'filename=plani_{plani.id}.pdf'
-            weasyprint.HTML(string=html).write_pdf(response)
+            weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')])
            
-            return response """
+            return response
 
 
          
@@ -387,22 +394,24 @@ class PlaniViewSet(viewsets.ModelViewSet):
     def gjeneroobjpdf(self, request ,pk=None):
         if request.method == 'GET':
             plani = self.get_object()
-            
+            print(plani)
             totkredite = PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').aggregate(totKredite=Sum('kredite'))
-            
+            ngarkesavjetore= PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('viti').annotate(ngarkesasem1=Sum(F('seminaresem1') + F('leksionesem1')+F('laboratoresem1') + F('praktikasem1')),ngarkesasem2=Sum(F('seminaresem2') + F('leksionesem2')+F('laboratoresem2') + F('praktikasem2')),totkreditepervit=Sum('kredite')).order_by('viti')
             planpermbajtja=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('tipiveprimtarise').annotate(total=Count('tipiveprimtarise'),totkrediteveprimtari=Sum('kredite'),percent=(Sum('kredite')/totkredite['totKredite'])*100).order_by('tipiveprimtarise')
             planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
             
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
-            serializer3=TotaletSerializer(planpermbajtja,many=True)
+            serializer3=TotaletSerializer(planpermbajtja, many=True)
+            #serializer3.is_valid(raise_exception=True)
+            serializer4=NgarkesavjetoreSerializer(ngarkesavjetore, many=True)
             serializer2=PlaniSerializer(plani,many=False)
             finaltotal_percent=sum(item['percent'] for item in serializer3.data)
             #finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
-          
-
+            zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id))).all()
+            serializer5=LendeMeZgjedhjeSerializer(zgjedhje,many=True)
             
             
-        return Response({'message':'success','error':False,'code':200,'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data}},status=status.HTTP_200_OK)
+        return Response({'message':'success','error':False,'code':200,'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data,"obj3":serializer4.data,"zgjedhje":serializer5.data}},status=status.HTTP_200_OK)
        
 
     def list(self, request,id=None):

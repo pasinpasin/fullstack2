@@ -138,25 +138,28 @@ const PlanipdfComponent = (props) => {
   };
   const getPDF = async () => {
     try {
-      const resp = await axios.get(`http://127.0.0.1:8000/plani/${props.data.plani.id}/gjeneropdf`, {
-        responseType: 'blob',
-        headers: { Authorization: `Bearer ${authTokens?.access}` },
-      })
-  
-      // create temp download url
-      const downloadUrl = window.URL.createObjectURL(resp.data)
-  
-      // open pdf file on new tab
-      window.open(downloadUrl, '__blank')
-  
-      // remove temp url
-      window.URL.revokeObjectURL(downloadUrl)
-  
-      return resp
+      const resp = await axios.get(
+        `http://127.0.0.1:8000/plani/${props.data.plani.id}/gjeneropdf`,
+        {
+          responseType: "blob",
+          headers: { Authorization: `Bearer ${authTokens?.access}` },
+        }
+      );
+      console.log(resp);
+      var url = window.URL.createObjectURL(resp.data);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "kot";
+      document.body.appendChild(a); // append the element to the dom
+      a.click();
+      a.remove(); // afterwards, remove the element
+
+      return resp;
     } catch (e) {
-      throw e
+      throw e;
     }
   };
+
 
   return (
     <>

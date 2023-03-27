@@ -30,6 +30,8 @@ from django.http import HttpResponse
 
 
 
+
+
 class VerboseCreateModelMixin(object):
     """
     Create a model instance and return either created object or the validation errors.
@@ -361,10 +363,12 @@ class PlaniViewSet(viewsets.ModelViewSet):
             print("ketu")
             return  Planet.objects.all()   
          
-    @action(detail=True, methods=["get"],renderer_classes=[TemplateHTMLRenderer])
+    @action(detail=True, methods=["get"],#renderer_classes=[TemplateHTMLRenderer]
+            )
     def gjeneropdf(self, request ,pk=None):
         if request.method == 'GET':
             plani = self.get_object()
+           
             
             totkredite = PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').aggregate(totKredite=Sum('kredite'))
             
@@ -372,21 +376,25 @@ class PlaniViewSet(viewsets.ModelViewSet):
             planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
             ngarkesavjetore=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('viti').annotate(ngarkesasem1=Sum(F('seminaresem1') + F('leksionesem1')+F('laboratoresem1') + F('praktikasem1')),ngarkesasem2=Sum(F('seminaresem2') + F('leksionesem2')+F('laboratoresem2') + F('praktikasem2')),totkreditepervit=Sum('kredite')).order_by('viti')
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
+            print(serializer.data)
             serializer3=TotaletSerializer(planpermbajtja,many=True)
             serializer4=NgarkesavjetoreSerializer(ngarkesavjetore, many=True)
             serializer2=PlaniSerializer(plani,many=False)
             finaltotal_percent=sum(item['percent'] for item in serializer3.data)
             zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id))).all()
             serializer5=LendeMeZgjedhjeSerializer(zgjedhje,many=True)
-           # return render(request, 'planet/plani.html',{'result':{"obj1":planpermbajtja, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent}} )
+           
             #######return Response({'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data,"obj3":serializer4.data,"zgjedhje":serializer5.data}}, template_name='plani.html.j2')
             html = render_to_string('plani.html.j2',
                             {'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data,"obj3":serializer4.data,"zgjedhje":serializer5.data}})
+            
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = f'filename=plani_{plani.id}.pdf'
-            weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')])
+            weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')],presentational_hints=True)
            
             return response
+            
+            
 
 
          
@@ -441,9 +449,11 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
 
     def list(self, request,id=None):
             print("lista")
-           # planet = Planet.objects.order_by('status')ù
+           
             planpermbajtja=self.get_queryset()
             serializer = self.get_serializer(planpermbajtja, many=True)
+            print(serializer.data)
+            
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
     def retrieve(self, request, *args, **kwargs):
       
@@ -538,7 +548,7 @@ class LendeMeZgjedhjeListAPI(generics.ListAPIView):
             serializer = self.get_serializer(lendemezgjedhje, many=True)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
 
-        
+
     
            
 

@@ -176,7 +176,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = BASE_DIR / 'static'
 
 REST_FRAMEWORK = {
-    'COERCE_DECIMAL_TO_STRING': False,
+   'COERCE_DECIMAL_TO_STRING': False,
     #"EXCEPTION_HANDLER": "smak.util.errorhandling.api_exception_handler",
     "EXCEPTION_HANDLER": "smak.util.errorhandling2.handle_exception",
     

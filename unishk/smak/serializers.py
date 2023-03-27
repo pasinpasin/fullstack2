@@ -284,7 +284,7 @@ class TotaletSerializer(serializers.Serializer):
 
     percent= serializers.DecimalField(max_digits=4, decimal_places=2)
     tipiveprimtarise=serializers.CharField(read_only=True)
-    total=serializers.DecimalField(max_digits=4, decimal_places=2)
+    total=serializers.IntegerField()
     totkrediteveprimtari=serializers.DecimalField(max_digits=4, decimal_places=2)
 
 

@@ -63,149 +63,149 @@
 
   <!-- shto kodin per kategorite-->
   <table class="maintab" width="100%">
-   
-      <tr bgcolor="#ccd4e6">
-        <th width="40%">
-          <span class="staff">
-            <b>Tipi i veprimtarisë dhe simboli përcaktues</b>
-          </span>
-        </th>
-        <td width="30%">
-          <div class="staff">
-            <b>Fusha disiplinore apo veprimtari të tjera formuese</b>
-          </div>
-        </td>
-        <td width="10%">
-          <div class="staff">
-            <b>Kredite</b>
-          </div>
-        </td>
-        <td width="10%">
-          <div class="staff">
-            <b>Totali krediteve</b>
-          </div>
-        </td>
-        <td width="10%">
-          <div class="staff ">
-            <b>%</b>
-          </div>
-        </td>
-      </tr>
-    
+
+    <tr bgcolor="#ccd4e6">
+      <th width="40%">
+        <span class="staff">
+          <b>Tipi i veprimtarisë dhe simboli përcaktues</b>
+        </span>
+      </th>
+      <td width="30%">
+        <div class="staff">
+          <b>Fusha disiplinore apo veprimtari të tjera formuese</b>
+        </div>
+      </td>
+      <td width="10%">
+        <div class="staff">
+          <b>Kredite</b>
+        </div>
+      </td>
+      <td width="10%">
+        <div class="staff">
+          <b>Totali krediteve</b>
+        </div>
+      </td>
+      <td width="10%">
+        <div class="staff ">
+          <b>%</b>
+        </div>
+      </td>
+    </tr>
+
     {%- set varA = namespace(value=0) -%}
     {%- set varB = namespace(value=0) -%}
     {%- set varC = namespace(value=0) -%}
     {%- set varD = namespace(value=0) -%}
     {%- set varE = namespace(value=0) -%}
 
-    
-      {%- for tipi in result.obj1 -%}
 
-      {%- for lende in result.obj2 if lende.tipiveprimtarise == tipi.tipiveprimtarise -%}
+    {%- for tipi in result.obj1 -%}
 
-      <tr bgcolor="#ccd4e6">
-        {%- if lende.tipiveprimtarise == "A" -%}
-        {%- set varA.value = varA.value + 1 -%}
+    {%- for lende in result.obj2 if lende.tipiveprimtarise == tipi.tipiveprimtarise -%}
 
-        {%- if varA.value == 1 -%}
+    <tr bgcolor="#ccd4e6">
+      {%- if lende.tipiveprimtarise == "A" -%}
+      {%- set varA.value = varA.value + 1 -%}
 
-        <td rowspan="{{ tipi.total }}" width="40%">LENDE BAZE-pergatitje metodologiike dhe kulture e pergjithshme
-          (Simboli
-          A)</td>
-        <td width="30%">{{ lende.emertimi }}</td>
-        <td width="10%">{{ lende.kredite }}</td>
-        <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
-        <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
-      </tr>
-      {%- else -%}
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite  }}</td>
-      </tr>
-      {%- endif -%}
-      {%- elif lende.tipiveprimtarise == "B" -%}
-      {%- set varB.value = varB.value + 1 -%}
-      {%- if varB.value == 1 -%}
-      <td rowspan="{{ tipi.total }}" width="40%">LËNDË KARAKTERIZUESE-përgatitje për disiplinën shkencore (Simboli B)
-      </td>
+      {%- if varA.value == 1 -%}
+
+      <td rowspan="{{ tipi.total }}" width="40%">LENDE BAZE-pergatitje metodologiike dhe kulture e pergjithshme
+        (Simboli
+        A)</td>
       <td width="30%">{{ lende.emertimi }}</td>
       <td width="10%">{{ lende.kredite }}</td>
       <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
       <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
-      </tr>
-      {%- else -%}
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      </tr>
-      {%- endif -%}
+    </tr>
+    {%- else -%}
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    </tr>
+    {%- endif -%}
+    {%- elif lende.tipiveprimtarise == "B" -%}
+    {%- set varB.value = varB.value + 1 -%}
+    {%- if varB.value == 1 -%}
+    <td rowspan="{{ tipi.total }}" width="40%">LËNDË KARAKTERIZUESE-përgatitje për disiplinën shkencore (Simboli B)
+    </td>
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ ("%.2f"|format(lende.kredite)).rstrip('0').rstrip('.') }}</td>
+    <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
+    <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
+    </tr>
+    {%- else -%}
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ ("%.2f"|format(lende.kredite)).rstrip('0').rstrip('.') }}</td>
+    </tr>
+    {%- endif -%}
 
-      {%- elif lende.tipiveprimtarise == "C" -%}
-      {%- set varC.value = varC.value + 1 -%}
-      {%- if varC.value == 1 -%}
+    {%- elif lende.tipiveprimtarise == "C" -%}
+    {%- set varC.value = varC.value + 1 -%}
+    {%- if varC.value == 1 -%}
 
-      <td rowspan="{{ tipi.total }}" width="40%">LËNDË NDËRDISIPLINORE/INTEGRUESE-nëndidiplina, profile dhe grup-lëndë
-        me zgjedhje (Simboli C)</td>
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
-      <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
-      </tr>
-      {%- else -%}
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      </tr>
-      {%- endif -%}
-      {%- elif lende.tipiveprimtarise == "D" -%}
-      {%- set varD.value = varD.value + 1 -%}
-      {%- if varD.value == 1 -%}
-      <td rowspan="{{ tipi.total }}" width="40%">LËNDË PLOTËSUESE-gjuhë të huaja, njohuri informatike, praktika
-        profesionale (Simboli D)</td>
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      <td rowspan="{{tipi.total}}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
-      <td rowspan="{{tipi.total}}" width="10%">{{ tipi.percent }}</td>
-      </tr>
-      {%- else -%}
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      </tr>
-      {%- endif -%}
-      {%- else -%}
-      {%- set varE.value = varE.value + 1 -%}
-      {%- if varE.value == 1 -%}
-      <td rowspan="{{ tipi.total }}" width="40%">DETYRIME PËRMBYLLËSE. (Simboli E)</td>
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
-      <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }} </td>
-      </tr>
-      {%- else -%}
-      <td width="30%">{{ lende.emertimi }}</td>
-      <td width="10%">{{ lende.kredite }}</td>
-      </tr>
-      {%- endif -%}
-
-
-
-      {%- endif -%}
-      {%- endfor -%}
-
-      {%- endfor -%}
+    <td rowspan="{{ tipi.total }}" width="40%">LËNDË NDËRDISIPLINORE/INTEGRUESE-nëndidiplina, profile dhe grup-lëndë
+      me zgjedhje (Simboli C)</td>
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
+    <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
+    </tr>
+    {%- else -%}
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    </tr>
+    {%- endif -%}
+    {%- elif lende.tipiveprimtarise == "D" -%}
+    {%- set varD.value = varD.value + 1 -%}
+    {%- if varD.value == 1 -%}
+    <td rowspan="{{ tipi.total }}" width="40%">LËNDË PLOTËSUESE-gjuhë të huaja, njohuri informatike, praktika
+      profesionale (Simboli D)</td>
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    <td rowspan="{{tipi.total}}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
+    <td rowspan="{{tipi.total}}" width="10%">{{ tipi.percent }}</td>
+    </tr>
+    {%- else -%}
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    </tr>
+    {%- endif -%}
+    {%- else -%}
+    {%- set varE.value = varE.value + 1 -%}
+    {%- if varE.value == 1 -%}
+    <td rowspan="{{ tipi.total }}" width="40%">DETYRIME PËRMBYLLËSE. (Simboli E)</td>
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
+    <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }} </td>
+    </tr>
+    {%- else -%}
+    <td width="30%">{{ lende.emertimi }}</td>
+    <td width="10%">{{ lende.kredite }}</td>
+    </tr>
+    {%- endif -%}
 
 
 
-      <tr bgcolor="#eef1f7" style="page-break-inside:avoid;">
-        <th colspan="3" align="left">
-          Totali
-        </th>
-        {{result.totkredite.totKredite}}
-        <th width="10%">
+    {%- endif -%}
+    {%- endfor -%}
 
-        </th>
-        <th width="10%">
-          {{result.finaltotal_percent}}
-        </th>
-      </tr>
-   
+    {%- endfor -%}
+
+
+
+    <tr bgcolor="#eef1f7" style="page-break-inside:avoid;">
+      <th colspan="3" align="left">
+        Totali
+      </th>
+      {{result.totkredite.totKredite}}
+      <th width="10%">
+
+      </th>
+      <th width="10%">
+        {{result.finaltotal_percent}}
+      </th>
+    </tr>
+
   </table>
 
   <br></br>
@@ -274,7 +274,7 @@
 
               {%- else -%}
               Ngarkesa mesimore: <span style="color:#0080ff;">
-                <b>{{ ngarkesa.ngarkesasem1 }}/b>
+                <b>{{ ngarkesa.ngarkesasem1 }}</b>
               </span>
               </span>
 
@@ -311,6 +311,7 @@
           <tr>
             <th bgcolor="#ccd4e6" rowspan="2">Nr</th>
             <th bgcolor="#ccd4e6" rowspan="2">Emertimi Lendes</th>
+            <th bgcolor="#ccd4e6" rowspan="2">Titullari</th>
             <th bgcolor="#ccd4e6" rowspan="2">Tipi Veprimtarise</th>
             <th bgcolor="#ccd4e6" rowspan="2">Kredite</th>
             <th bgcolor="#ccd4e6" colspan="5">Semestri I</th>
@@ -347,10 +348,13 @@
               {{ lendet.emertimi }}
             </td>
             <td bgcolor="#eef1f7">
+              {{ lendet.titullari }}
+            </td>
+            <td bgcolor="#eef1f7">
               {{ lendet.tipiveprimtarise }}
             </td>
             <td bgcolor="#eef1f7" align="center">
-              {{ ("%.2f"|format(lendet.kredite)).rstrip('0').rstrip('.')  }}
+              {{ ("%.2f"|format(lendet.kredite)).rstrip('0').rstrip('.') }}
             </td>
             <td bgcolor="#eef1f7" align="center">
               {{ lendet.nrjavesem1 }}
@@ -411,14 +415,14 @@
           <tr>
             <td colspan="21" align="Center">
               <br></br>
-              <table width="50%" style="break-after: page;">
+              <table width="50%">
                 <tr>
 
                   <th bgcolor="#ccd4e6">Emërtimi i Lëndës</th>
                   <th bgcolor="#ccd4e6">Tipi i Veprimtarisë</th>
                 </tr>
                 {%- for lendemezgjedhje in result.zgjedhje if lendemezgjedhje.lenda.viti==ngarkesa.viti -%}
-                <tr >
+                <tr>
                   <td bgcolor="#eef1f7">
                     {{ lendemezgjedhje.emertimi }}
                   </td>

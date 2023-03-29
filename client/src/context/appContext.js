@@ -428,6 +428,7 @@ const AppProvider = ({ children }) => {
         logoutUser,
         ListoFakultetet,
         sendRequest,
+        getCurrentUser,
       }}
     >
       {children}

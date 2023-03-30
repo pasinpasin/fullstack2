@@ -13,8 +13,12 @@ import {
   DISABLE_USER_ERROR,
   LOGOUT_USER,
 } from "../constants/userConstants";
+import axios from "axios"
+import jwt_decode from "jwt-decode";
+import dayjs from "dayjs";
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (currentuser) => async (dispatch) => {
+
   try {
     dispatch({
       type: LOGIN_USER_BEGIN,
@@ -23,21 +27,24 @@ export const login = (email, password) => async (dispatch) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
     };
 
     const { data } = await axios.post(
-      "/api/users/login",
-      { email, password },
+      "http://127.0.0.1:8000/token/",
+      currentuser,
       config
     );
+    console.log(data);
 
+    const user = jwt_decode(data.access);
+    sessionStorage.setItem("authTokens", JSON.stringify(data));
+    const authTokens = data;
     dispatch({
       type: LOGIN_USER_SUCCESS,
-      payload: data,
+      payload: { user, authTokens },
     });
-
-    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: LOGIN_USER_ERROR,

@@ -14,27 +14,21 @@ import Tabela from "../components/Tabela";
 import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 import useAxios from "../hooks/useAxios";
+import {
+  listFakultete,
+ 
+} from '../actions/fakultetiActions'
+
 
 const Fakultetet2 = () => {
+  const dispatch = useDispatch()
+  const fakulteteList = useSelector((state) => state.fakultetilist)  //marre nga store.js
   //const [values, setValues] = useState(initialState);
   //const navigate = useNavigate();
 
-  const {
-    user,
-    token,
-    isLoading,
-    userLoading,
-    showAlert,
-    displayAlert,
-    alertType,
-    alertText,
-    loginUser,
-    ListoFakultetet,
-    dispatch,
-    // fakultetet,
-    sendRequest,
-  } = useAppContext();
+
   let api = useAxios();
+  const { loading, error, fakultetet } = fakulteteList
 
   const columnsData = [
     { field: "emertimi", header: "Fakulteti" },
@@ -42,7 +36,7 @@ const Fakultetet2 = () => {
   ];
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
+
   const [fakultetet2, setFakultetet2] = useState();
   const [formfakulteti, setformfakulteti] = useState("");
   const initialFormState = { id: null, fakulteti: "" };
@@ -81,7 +75,7 @@ const Fakultetet2 = () => {
         // payload: { fakultetet }
       });
       setFakultetet2(data.result.items);
-      setLoading(false);
+      //setLoading(false);
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -95,61 +89,10 @@ const Fakultetet2 = () => {
       });
     }
   });
-
-  const shtoData = async () => {
-    try {
-      const bodytosend = { emertimi: `${formfakulteti}` };
-      //const { data } = await sendRequest(
-      const response = await sendRequest(
-        "fakulteti/",
-        "POST",
-        bodytosend,
-        "SHTO_FAKULTET"
-      );
-      console.log(response);
-      setformfakulteti("");
-
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const ModifikoData = async () => {
-    try {
-      const bodytosend = { emertimi: `${currentFakultet.fakulteti}` };
-
-      const response = await sendRequest(
-        `fakulteti/${currentFakultet.id}/`,
-        "PATCH",
-        bodytosend,
-        "PERDITESO_FAKULTET"
-      );
-    } catch (error) {
-      console.log(error);
-    }
-    setEditing(false);
-    getData();
-  };
-
-  const fshijFakultet = async (id) => {
-    try {
-      const RESPONSE = await sendRequest(
-        `fakulteti/${id}`,
-        "DELETE",
-        {},
-        "FSHIJ_FAKULTET"
-      );
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     console.log("u thirr effect fakulteti");
 
-    getData();
+   dispatch(listFakultete())
   }, []);
 
   const handleChange = (e) => {
@@ -167,26 +110,26 @@ const Fakultetet2 = () => {
   const placeSubmitHandler = (event) => {
     event.preventDefault();
 
-    shtoData();
+   //shtoData();
   };
 
   const placeSubmitHandler2 = (event) => {
     event.preventDefault();
 
-    ModifikoData();
+   // ModifikoData();
   };
   let url = "/fakulteti/id/departamenti";
 
   return (
     <Wrapper>
-      {isLoading ? (
+      {loading ? (
         <Loading center />
       ) : (
         <div>
           {editing ? (
             <>
               <h2>Edit fakultet</h2>
-              {showAlert && <Alert />}
+              {error && <Alert />}
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
@@ -198,7 +141,7 @@ const Fakultetet2 = () => {
           ) : (
             <>
               <h2>Shto Fakultetet</h2>
-              {showAlert && <Alert />}
+              {error && <Alert />}
               <ShtoForm
                 eventi={placeSubmitHandler}
                 formvlera={formfakulteti}
@@ -208,11 +151,11 @@ const Fakultetet2 = () => {
             </>
           )}
 
-          {fakultetet2 && fakultetet2.length > 0 ? (
+          {fakultetet && fakultetet.length > 0 ? (
             <Tabela
               kol={columns}
-              data2={fakultetet2}
-              fshij={fshijFakultet}
+              data2={fakultetet}
+             // fshij={fshijFakultet}
               modifiko={editRow}
               url={url}
             />

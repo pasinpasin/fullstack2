@@ -9,6 +9,11 @@ import Logo from "../components/Logo";
 import { Navigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  login,
+ 
+} from '../actions/userActions'
 
 const initialState = {
   email: "",
@@ -16,12 +21,17 @@ const initialState = {
   isMember: true,
   username: "",
 };
+
+
 const Login = () => {
   const [values, setValues] = useState(initialState);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const userlogin = useSelector((state) => state.userLoginReduce)  //marre nga store.js
 
-  const { user, isLoading, userLoading, showAlert, displayAlert, loginUser } =
-    useAppContext();
+  const { loading, user, authTokens,error } = userlogin;
+
+ 
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -35,14 +45,15 @@ const Login = () => {
     const { username, password } = values;
     if (!username || !password) {
       //console.log("je ketu");
-      displayAlert();
+      //displayAlert();
       return;
     }
     const currentUser = { username, password };
+    dispatch(login(currentUser))
 
-    loginUser(currentUser);
+    //loginUser({ email:username, password:password });
   };
-  if (userLoading) return <Loading center />;
+  if (loading) return <Loading center />;
 
   return (
     <>
@@ -51,7 +62,7 @@ const Login = () => {
         <form className="form" onSubmit={onSubmit}>
           {<Logo />}
           <h3>{"Login"}</h3>
-          {showAlert && <Alert />}
+          {error && <Alert />}
 
           {/* email input */}
           <FormRow
@@ -67,8 +78,8 @@ const Login = () => {
             value={values.password}
             handleChange={handleChange}
           />
-          <button type="submit" className="btn btn-block " disabled={isLoading}>
-            {isLoading ? "loading..." : "Login"}
+          <button type="submit" className="btn btn-block " disabled={loading}>
+            {loading ? "loading..." : "Login"}
           </button>
           <p>
           <Link to='/forgot-password'>Keni harruar fjalekalimin?</Link>

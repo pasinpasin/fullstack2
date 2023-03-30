@@ -1,7 +1,6 @@
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import Wrapper from "../assets/wrappers/Tabela";
@@ -13,9 +12,10 @@ import axios from "axios";
 import Tabela from "../components/Tabela";
 import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import useAxios from "../hooks/useAxios";
+import { useParams } from "react-router-dom";
+import Dashboard from "./Dashboard";
 
-const Fakultetet2 = () => {
+const Departamentet = () => {
   //const [values, setValues] = useState(initialState);
   //const navigate = useNavigate();
 
@@ -23,91 +23,87 @@ const Fakultetet2 = () => {
     user,
     token,
     isLoading,
-    userLoading,
     showAlert,
     displayAlert,
     alertType,
     alertText,
     loginUser,
-    ListoFakultetet,
-    dispatch,
-    // fakultetet,
+    ListoDepartamentet,
+    // departamentet,
     sendRequest,
   } = useAppContext();
-  let api = useAxios();
+
+  const idf = useParams();
 
   const columnsData = [
-    { field: "emertimi", header: "Fakulteti" },
+    { field: "emertimi", header: "Departamenti" },
     { field: "veprimet", header: "Veprimet" },
   ];
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [fakultetet2, setFakultetet2] = useState();
-  const [formfakulteti, setformfakulteti] = useState("");
-  const initialFormState = { id: null, fakulteti: "" };
-  const [currentFakultet, setCurrentFakultet] = useState(initialFormState);
+  const [departamentet2, setDepartamentet2] = useState();
+  const [formdepartamenti, setformdepartamenti] = useState("");
+  const initialFormState = { id: null, departamenti: "" };
+  const [currentDepartament, setCurrentDepartament] =
+    useState(initialFormState);
+  const [fakultetiperket, setfakultetiperket] = useState("");
+  console.log(fakultetiperket);
 
-  const editRow = (fakultetpermodifikim) => {
-    setformfakulteti("");
-    setCurrentFakultet({
-      id: fakultetpermodifikim.id,
-      fakulteti: fakultetpermodifikim.emertimi,
+  const editRow = (departamentpermodifikim) => {
+    setformdepartamenti("");
+    setCurrentDepartament({
+      id: departamentpermodifikim.id,
+      departamenti: departamentpermodifikim.emertimi,
     });
-    //setformfakulteti(fakultetpermodifikim.emertimi);
+    //setformdepartamenti(departamentpermodifikim.emertimi);
     setEditing(true);
   };
-  //console.log(currentFakultet);
+  //console.log(currentDepartament);
 
-  const shtoFakultet = (fakultet) => {
-    setFakultetet2([...fakultetet2, fakultet]);
+  const shtoDepartament = (departament) => {
+    setDepartamentet2([...departamentet2, departament]);
   };
 
-  const getData = useCallback(async () => {
+  const getData = async () => {
     try {
-      // const response = await sendRequest(
-      //   "fakulteti",
-      //   "GET",
-      //   {},
-      //   "GET_FAKULTETE"
-      // );
-      dispatch({
-        type: "GET_FAKULTETE_BEGIN",
-      });
-      const { data } = await api.get("fakulteti");
-      dispatch({
-        type: "GET_FAKULTETE_SUCCESS",
-        payload: { data },
-        // payload: { fakultetet }
-      });
-      setFakultetet2(data.result.items);
+      console.log(Object.keys(idf).length);
+      const response = await sendRequest(
+        Object.keys(idf).length > 0
+          ? `fakulteti/${idf.id}/departamenti/`
+          : "departamenti",
+        "GET",
+        {},
+        "GET_DEPARTAMENTE"
+      );
+      if (Object.keys(idf).length > 0) {
+        setfakultetiperket(`${idf.id}`);
+      }
+      setDepartamentet2(response.data.result.items);
       setLoading(false);
-      console.log(data);
+
+      //console.log(data);
     } catch (error) {
       console.log(error);
-      dispatch({
-        type: "GET_FAKULTETE_ERROR",
-        payload: {
-          msg:
-            error.response.data.error.details.detail ||
-            error.response.data.error.details,
-        },
-      });
+      setLoading(false);
     }
-  });
+  };
 
   const shtoData = async () => {
     try {
-      const bodytosend = { emertimi: `${formfakulteti}` };
+      const bodytosend = {
+        emertimi: `${formdepartamenti}`,
+        fakulteti: `${fakultetiperket}`,
+      };
+      console.log(bodytosend);
       //const { data } = await sendRequest(
       const response = await sendRequest(
-        "fakulteti/",
+        "departamenti/",
         "POST",
         bodytosend,
-        "SHTO_FAKULTET"
+        "SHTO_DEPARTAMENT"
       );
-      console.log(response);
-      setformfakulteti("");
+      setformdepartamenti("");
 
       getData();
     } catch (error) {
@@ -117,28 +113,28 @@ const Fakultetet2 = () => {
 
   const ModifikoData = async () => {
     try {
-      const bodytosend = { emertimi: `${currentFakultet.fakulteti}` };
+      const bodytosend = { emertimi: `${currentDepartament.departamenti}` };
 
       const response = await sendRequest(
-        `fakulteti/${currentFakultet.id}/`,
+        `departamenti/${currentDepartament.id}/`,
         "PATCH",
         bodytosend,
-        "PERDITESO_FAKULTET"
+        "PERDITESO_DEPARTAMENT"
       );
+      setEditing(false);
+      getData();
     } catch (error) {
       console.log(error);
     }
-    setEditing(false);
-    getData();
   };
 
-  const fshijFakultet = async (id) => {
+  const fshijDepartament = async (id) => {
     try {
-      const RESPONSE = await sendRequest(
-        `fakulteti/${id}`,
+      const response = await sendRequest(
+        `departamenti/${id}/`,
         "DELETE",
         {},
-        "FSHIJ_FAKULTET"
+        "FSHIJ_DEPARTAMENT"
       );
       getData();
     } catch (error) {
@@ -147,20 +143,20 @@ const Fakultetet2 = () => {
   };
 
   useEffect(() => {
-    console.log("u thirr effect fakulteti");
+    console.log("u thirr depi");
 
     getData();
   }, []);
 
   const handleChange = (e) => {
-    setformfakulteti(e.target.value);
+    setformdepartamenti(e.target.value);
   };
 
   const handleChange2 = (e) => {
     console.log(e);
-    setCurrentFakultet({
-      id: currentFakultet.id,
-      fakulteti: e.target.value,
+    setCurrentDepartament({
+      id: currentDepartament.id,
+      departamenti: e.target.value,
     });
   };
 
@@ -175,49 +171,53 @@ const Fakultetet2 = () => {
 
     ModifikoData();
   };
-  let url = "/fakulteti/id/departamenti";
+  let url = "/departamenti/id/programi";
 
   return (
     <Wrapper>
-      {isLoading ? (
+      {loading ? (
         <Loading center />
       ) : (
         <div>
           {editing ? (
             <>
-              <h2>Edit fakultet</h2>
+              <h2>Edit departament</h2>
               {showAlert && <Alert />}
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
+                emri="Departamenti"
                 //editrow={editRow}
-                formvlera={currentFakultet.fakulteti}
+                formvlera={currentDepartament.departamenti}
                 handleChange={handleChange2}
               />
             </>
-          ) : (
+          ) : Object.keys(idf).length > 0 ? (
             <>
-              <h2>Shto Fakultetet</h2>
+              <h2>Shto Departamentet</h2>
               {showAlert && <Alert />}
               <ShtoForm
                 eventi={placeSubmitHandler}
-                formvlera={formfakulteti}
+                formvlera={formdepartamenti}
                 loading={loading}
+                emri="Departamenti"
                 handleChange={handleChange}
               />
             </>
+          ) : (
+            <></>
           )}
 
-          {fakultetet2 && fakultetet2.length > 0 ? (
+          {departamentet2 && departamentet2.length > 0 ? (
             <Tabela
               kol={columns}
-              data2={fakultetet2}
-              fshij={fshijFakultet}
+              data2={departamentet2}
+              fshij={fshijDepartament}
               modifiko={editRow}
               url={url}
             />
           ) : (
-            "S ka fakultete"
+            "S ka departamente"
           )}
         </div>
       )}
@@ -225,4 +225,4 @@ const Fakultetet2 = () => {
   );
 };
 
-export default Fakultetet2;
+export default Departamentet;

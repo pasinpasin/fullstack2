@@ -1,7 +1,6 @@
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import Wrapper from "../assets/wrappers/Tabela";
@@ -13,9 +12,10 @@ import axios from "axios";
 import Tabela from "../components/Tabela";
 import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import useAxios from "../hooks/useAxios";
+import { useParams } from "react-router-dom";
+import Dashboard from "./Dashboard";
 
-const Fakultetet2 = () => {
+const Programet = (props) => {
   //const [values, setValues] = useState(initialState);
   //const navigate = useNavigate();
 
@@ -23,91 +23,80 @@ const Fakultetet2 = () => {
     user,
     token,
     isLoading,
-    userLoading,
     showAlert,
     displayAlert,
     alertType,
     alertText,
     loginUser,
-    ListoFakultetet,
-    dispatch,
-    // fakultetet,
+    ListoProgramet,
+    // programet,
     sendRequest,
   } = useAppContext();
-  let api = useAxios();
+
+  const idf = useParams();
 
   const columnsData = [
-    { field: "emertimi", header: "Fakulteti" },
+    { field: "emertimi", header: "Programi" },
     { field: "veprimet", header: "Veprimet" },
   ];
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [fakultetet2, setFakultetet2] = useState();
-  const [formfakulteti, setformfakulteti] = useState("");
-  const initialFormState = { id: null, fakulteti: "" };
-  const [currentFakultet, setCurrentFakultet] = useState(initialFormState);
+  const [programet2, setProgramet2] = useState();
+  const [formprogrami, setformprogrami] = useState("");
+  const initialFormState = { id: null, programi: "" };
+  const [currentProgram, setCurrentProgram] = useState(initialFormState);
 
-  const editRow = (fakultetpermodifikim) => {
-    setformfakulteti("");
-    setCurrentFakultet({
-      id: fakultetpermodifikim.id,
-      fakulteti: fakultetpermodifikim.emertimi,
+  const editRow = (programpermodifikim) => {
+    setformprogrami("");
+    setCurrentProgram({
+      id: programpermodifikim.id,
+      programi: programpermodifikim.emertimi,
     });
-    //setformfakulteti(fakultetpermodifikim.emertimi);
+    //setformprogrami(programpermodifikim.emertimi);
     setEditing(true);
   };
-  //console.log(currentFakultet);
+  //console.log(currentProgram);
 
-  const shtoFakultet = (fakultet) => {
-    setFakultetet2([...fakultetet2, fakultet]);
+  const shtoProgram = (program) => {
+    setProgramet2([...programet2, program]);
   };
 
-  const getData = useCallback(async () => {
+  const getData = async () => {
     try {
-      // const response = await sendRequest(
-      //   "fakulteti",
-      //   "GET",
-      //   {},
-      //   "GET_FAKULTETE"
-      // );
-      dispatch({
-        type: "GET_FAKULTETE_BEGIN",
-      });
-      const { data } = await api.get("fakulteti");
-      dispatch({
-        type: "GET_FAKULTETE_SUCCESS",
-        payload: { data },
-        // payload: { fakultetet }
-      });
-      setFakultetet2(data.result.items);
+      const response = await sendRequest(
+        `departamenti/${idf.id}/programi`,
+        "GET",
+        {},
+        "GET_PROGRAME"
+      );
+      if (response.data.result.totalItems > 0)
+        setProgramet2(response.data.result.items);
       setLoading(false);
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       console.log(error);
-      dispatch({
-        type: "GET_FAKULTETE_ERROR",
-        payload: {
-          msg:
-            error.response.data.error.details.detail ||
-            error.response.data.error.details,
-        },
-      });
+      setLoading(false);
     }
-  });
+  };
 
   const shtoData = async () => {
     try {
-      const bodytosend = { emertimi: `${formfakulteti}` };
+      const bodytosend = {
+        emertimi: `${formprogrami}`,
+        //fakulteti: `${props.fid}`,
+        departamenti: `${idf.id}`,
+      };
+
       //const { data } = await sendRequest(
       const response = await sendRequest(
-        "fakulteti/",
+        "programi/",
         "POST",
         bodytosend,
-        "SHTO_FAKULTET"
+        "SHTO_PROGRAM"
       );
       console.log(response);
-      setformfakulteti("");
+      setformprogrami("");
 
       getData();
     } catch (error) {
@@ -117,29 +106,35 @@ const Fakultetet2 = () => {
 
   const ModifikoData = async () => {
     try {
-      const bodytosend = { emertimi: `${currentFakultet.fakulteti}` };
+      const bodytosend = {
+        emertimi: `${currentProgram.programi}`,
+        departamenti: `${idf.id}`,
+      };
+      console.log(bodytosend);
 
       const response = await sendRequest(
-        `fakulteti/${currentFakultet.id}/`,
+        `programi/${currentProgram.id}/`,
         "PATCH",
         bodytosend,
-        "PERDITESO_FAKULTET"
+        "PERDITESO_PROGRAM"
       );
+      setEditing(false);
+
+      getData();
     } catch (error) {
       console.log(error);
     }
-    setEditing(false);
-    getData();
   };
 
-  const fshijFakultet = async (id) => {
+  const fshijProgram = async (id) => {
     try {
-      const RESPONSE = await sendRequest(
-        `fakulteti/${id}`,
+      const response = await sendRequest(
+        `programi/${id}/`,
         "DELETE",
         {},
-        "FSHIJ_FAKULTET"
+        "FSHIJ_PROGRAM"
       );
+
       getData();
     } catch (error) {
       console.log(error);
@@ -147,20 +142,20 @@ const Fakultetet2 = () => {
   };
 
   useEffect(() => {
-    console.log("u thirr effect fakulteti");
+    console.log("u thirr programet");
 
     getData();
   }, []);
 
   const handleChange = (e) => {
-    setformfakulteti(e.target.value);
+    setformprogrami(e.target.value);
   };
 
   const handleChange2 = (e) => {
     console.log(e);
-    setCurrentFakultet({
-      id: currentFakultet.id,
-      fakulteti: e.target.value,
+    setCurrentProgram({
+      id: currentProgram.id,
+      programi: e.target.value,
     });
   };
 
@@ -175,49 +170,52 @@ const Fakultetet2 = () => {
 
     ModifikoData();
   };
-  let url = "/fakulteti/id/departamenti";
-
+  let url = "/departamenti/id/programi";
+  console.log(showAlert);
   return (
     <Wrapper>
-      {isLoading ? (
+      {loading ? (
         <Loading center />
       ) : (
         <div>
+          {showAlert && <Alert />}
           {editing ? (
             <>
-              <h2>Edit fakultet</h2>
-              {showAlert && <Alert />}
+              <h2>Edit program</h2>
+
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
+                emri="Programi"
                 //editrow={editRow}
-                formvlera={currentFakultet.fakulteti}
+                formvlera={currentProgram.programi}
                 handleChange={handleChange2}
               />
             </>
           ) : (
             <>
-              <h2>Shto Fakultetet</h2>
-              {showAlert && <Alert />}
+              <h2>Shto Programet</h2>
+
               <ShtoForm
                 eventi={placeSubmitHandler}
-                formvlera={formfakulteti}
+                formvlera={formprogrami}
                 loading={loading}
+                emri="Programi"
                 handleChange={handleChange}
               />
             </>
           )}
 
-          {fakultetet2 && fakultetet2.length > 0 ? (
+          {programet2 && programet2.length > 0 ? (
             <Tabela
               kol={columns}
-              data2={fakultetet2}
-              fshij={fshijFakultet}
+              data2={programet2}
+              fshij={fshijProgram}
               modifiko={editRow}
               url={url}
             />
           ) : (
-            "S ka fakultete"
+            "S ka programe"
           )}
         </div>
       )}
@@ -225,4 +223,4 @@ const Fakultetet2 = () => {
   );
 };
 
-export default Fakultetet2;
+export default Programet;

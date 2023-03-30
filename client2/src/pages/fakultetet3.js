@@ -1,7 +1,6 @@
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import Wrapper from "../assets/wrappers/Tabela";
@@ -13,9 +12,61 @@ import axios from "axios";
 import Tabela from "../components/Tabela";
 import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import useAxios from "../hooks/useAxios";
+import { VALIDATOR_REQUIRE } from "../utils/validator";
 
-const Fakultetet2 = () => {
+import FormRow2 from "../components/FormRow2";
+import React, { useReducer, useCallback } from "react";
+import { validate } from "../utils/validator";
+
+const inputReducer = (state, action) => {
+  switch (action.type) {
+    case "CHANGE":
+      console.log([action.validators]);
+
+      return {
+        ...state,
+        value: action.val,
+        isValid: validate(action.val, [action.validators]),
+      };
+    case "TOUCH": {
+      // console.log(state.isValid)
+      return {
+        ...state,
+        isTouched: true,
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+const formReducer = (state, action) => {
+  console.log("form");
+  switch (action.type) {
+    case "INPUT_CHANGE":
+      let formIsValid = true;
+      for (const inputId in state.inputs) {
+        if (inputId === action.inputId) {
+          formIsValid = formIsValid && action.isValid;
+        } else {
+          formIsValid = formIsValid && state.inputs[inputId].isValid;
+        }
+      }
+
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.inputId]: { value: action.value, isValid: action.isValid },
+        },
+        isValid: formIsValid,
+      };
+    default:
+      return state;
+  }
+};
+
+const Fakultetet3 = () => {
   //const [values, setValues] = useState(initialState);
   //const navigate = useNavigate();
 
@@ -23,18 +74,15 @@ const Fakultetet2 = () => {
     user,
     token,
     isLoading,
-    userLoading,
     showAlert,
     displayAlert,
     alertType,
     alertText,
     loginUser,
     ListoFakultetet,
-    dispatch,
     // fakultetet,
     sendRequest,
   } = useAppContext();
-  let api = useAxios();
 
   const columnsData = [
     { field: "emertimi", header: "Fakulteti" },
@@ -51,7 +99,7 @@ const Fakultetet2 = () => {
   const editRow = (fakultetpermodifikim) => {
     setformfakulteti("");
     setCurrentFakultet({
-      id: fakultetpermodifikim.id,
+      id: fakultetpermodifikim._id,
       fakulteti: fakultetpermodifikim.emertimi,
     });
     //setformfakulteti(fakultetpermodifikim.emertimi);
@@ -63,53 +111,36 @@ const Fakultetet2 = () => {
     setFakultetet2([...fakultetet2, fakultet]);
   };
 
-  const getData = useCallback(async () => {
+  const getData = async () => {
     try {
-      // const response = await sendRequest(
-      //   "fakulteti",
-      //   "GET",
-      //   {},
-      //   "GET_FAKULTETE"
-      // );
-      dispatch({
-        type: "GET_FAKULTETE_BEGIN",
-      });
-      const { data } = await api.get("fakulteti");
-      dispatch({
-        type: "GET_FAKULTETE_SUCCESS",
-        payload: { data },
-        // payload: { fakultetet }
-      });
-      setFakultetet2(data.result.items);
+      const { data } = await sendRequest(
+        "/fakulteti",
+        "GET",
+        {},
+        "GET_FAKULTETE"
+      );
+      setFakultetet2(data.fakultetet);
       setLoading(false);
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       console.log(error);
-      dispatch({
-        type: "GET_FAKULTETE_ERROR",
-        payload: {
-          msg:
-            error.response.data.error.details.detail ||
-            error.response.data.error.details,
-        },
-      });
     }
-  });
+  };
 
   const shtoData = async () => {
     try {
       const bodytosend = { emertimi: `${formfakulteti}` };
       //const { data } = await sendRequest(
-      const response = await sendRequest(
-        "fakulteti/",
+      const data = await sendRequest(
+        "/fakulteti",
         "POST",
         bodytosend,
         "SHTO_FAKULTET"
       );
-      console.log(response);
       setformfakulteti("");
-
-      getData();
+      if (data.status === "success") {
+        getData();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -119,8 +150,8 @@ const Fakultetet2 = () => {
     try {
       const bodytosend = { emertimi: `${currentFakultet.fakulteti}` };
 
-      const response = await sendRequest(
-        `fakulteti/${currentFakultet.id}/`,
+      const data = await sendRequest(
+        `/fakulteti/${currentFakultet.id}`,
         "PATCH",
         bodytosend,
         "PERDITESO_FAKULTET"
@@ -134,20 +165,20 @@ const Fakultetet2 = () => {
 
   const fshijFakultet = async (id) => {
     try {
-      const RESPONSE = await sendRequest(
-        `fakulteti/${id}`,
+      const data = await sendRequest(
+        `/fakulteti/${id}`,
         "DELETE",
         {},
         "FSHIJ_FAKULTET"
       );
-      getData();
     } catch (error) {
       console.log(error);
     }
+    getData();
   };
 
   useEffect(() => {
-    console.log("u thirr effect fakulteti");
+    console.log("u thirr");
 
     getData();
   }, []);
@@ -177,9 +208,51 @@ const Fakultetet2 = () => {
   };
   let url = "/fakulteti/id/departamenti";
 
+  const [formState, dispatchfrm] = useReducer(formReducer, {
+    inputs: {
+      fakulteti: {
+        value: "",
+        isValid: false,
+      },
+    },
+    isValid: false,
+  });
+
+  const [inputState, dispatch] = useReducer(inputReducer, {
+    value: "",
+    isTouched: false,
+    isValid: false,
+  });
+
+  const changeHandler = (event) => {
+    // console.log(event.target.dataset.validators);
+
+    setformfakulteti(event.target.value);
+    console.log(event.target.getAttribute("data-validators"));
+    dispatch({
+      type: "CHANGE",
+      val: event.target.value,
+      validators: event.target.dataset.validators,
+    });
+    // console.log(inputState.isValid);
+  };
+
+  const touchHandler = (event) => {
+    dispatch({
+      type: "TOUCH",
+    });
+
+    dispatchfrm({
+      type: "INPUT_CHANGE",
+      value: event.target.value,
+      isValid: inputState.isValid,
+      inputId: event.target.name,
+    });
+  };
+
   return (
     <Wrapper>
-      {isLoading ? (
+      {loading ? (
         <Loading center />
       ) : (
         <div>
@@ -199,12 +272,25 @@ const Fakultetet2 = () => {
             <>
               <h2>Shto Fakultetet</h2>
               {showAlert && <Alert />}
-              <ShtoForm
-                eventi={placeSubmitHandler}
-                formvlera={formfakulteti}
-                loading={loading}
-                handleChange={handleChange}
-              />
+              <form className="form" onSubmit={placeSubmitHandler}>
+                <FormRow2
+                  type="text"
+                  name="fakulteti"
+                  id="fakulteti"
+                  errorText="Please enter a valid title."
+                  changeHandler={changeHandler}
+                  touchHandler={touchHandler}
+                  validators={[VALIDATOR_REQUIRE]}
+                />
+
+                <button
+                  type="submit"
+                  disabled={!formState.isValid}
+                  className="btn btn-block "
+                >
+                  Ruaj
+                </button>
+              </form>
             </>
           )}
 
@@ -225,4 +311,4 @@ const Fakultetet2 = () => {
   );
 };
 
-export default Fakultetet2;
+export default Fakultetet3;

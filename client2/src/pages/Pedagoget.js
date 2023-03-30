@@ -1,7 +1,6 @@
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import Wrapper from "../assets/wrappers/Tabela";
@@ -10,12 +9,13 @@ import { NavLink } from "react-router-dom";
 import ShtoForm from "../components/ShtoForm";
 import ModifikoForm from "../components/ModifikoForm";
 import axios from "axios";
-import Tabela from "../components/Tabela";
+import Tabela from "../components/Tabela2";
 import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import useAxios from "../hooks/useAxios";
+import { useParams } from "react-router-dom";
+import Dashboard from "./Dashboard";
 
-const Fakultetet2 = () => {
+const Pedagoget = (props) => {
   //const [values, setValues] = useState(initialState);
   //const navigate = useNavigate();
 
@@ -23,91 +23,84 @@ const Fakultetet2 = () => {
     user,
     token,
     isLoading,
-    userLoading,
     showAlert,
     displayAlert,
     alertType,
     alertText,
     loginUser,
-    ListoFakultetet,
-    dispatch,
-    // fakultetet,
+    ListoUsers,
+    // users,
     sendRequest,
   } = useAppContext();
-  let api = useAxios();
+
+  const idf = useParams();
+  console.log(idf);
 
   const columnsData = [
-    { field: "emertimi", header: "Fakulteti" },
-    { field: "veprimet", header: "Veprimet" },
+    { field: "user.first_name", header: "Emri" },
+    { field: "user.last_name", header: "Mbiemri" },
+    { field: "titulli", header: "Titulli" },
+    { field: "departamenti.fakulteti.emertimi", header: "Fakulteti" },
+    { field: "departamenti.emertimi", header: "Departamenti" },
   ];
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [fakultetet2, setFakultetet2] = useState();
-  const [formfakulteti, setformfakulteti] = useState("");
-  const initialFormState = { id: null, fakulteti: "" };
-  const [currentFakultet, setCurrentFakultet] = useState(initialFormState);
+  const [users2, setUsers2] = useState();
+  const [formusers, setformusers] = useState("");
+  const initialFormState = { id: null, users: "" };
+  const [currentUser, setCurrentUser] = useState(initialFormState);
 
-  const editRow = (fakultetpermodifikim) => {
-    setformfakulteti("");
-    setCurrentFakultet({
-      id: fakultetpermodifikim.id,
-      fakulteti: fakultetpermodifikim.emertimi,
+  const editRow = (userpermodifikim) => {
+    setformusers("");
+    setCurrentUser({
+      id: userpermodifikim._id,
+      users: userpermodifikim.emertimi,
     });
-    //setformfakulteti(fakultetpermodifikim.emertimi);
+    //setformusers(userpermodifikim.emertimi);
     setEditing(true);
   };
-  //console.log(currentFakultet);
+  //console.log(currentUser);
 
-  const shtoFakultet = (fakultet) => {
-    setFakultetet2([...fakultetet2, fakultet]);
+  const shtoUser = (user) => {
+    setUsers2([...users2, user]);
   };
 
-  const getData = useCallback(async () => {
+  const getData = async () => {
     try {
-      // const response = await sendRequest(
-      //   "fakulteti",
-      //   "GET",
-      //   {},
-      //   "GET_FAKULTETE"
-      // );
-      dispatch({
-        type: "GET_FAKULTETE_BEGIN",
-      });
-      const { data } = await api.get("fakulteti");
-      dispatch({
-        type: "GET_FAKULTETE_SUCCESS",
-        payload: { data },
-        // payload: { fakultetet }
-      });
-      setFakultetet2(data.result.items);
+      const response = await sendRequest(
+        `departamenti/${idf.id}/users/`,
+        "GET",
+        {},
+        "GET_PEDAGOG"
+      );
+      console.log(response.data);
+      if (response.data.result.totalItems > 0)
+        setUsers2(response.data.result.items);
       setLoading(false);
-      console.log(data);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
-      dispatch({
-        type: "GET_FAKULTETE_ERROR",
-        payload: {
-          msg:
-            error.response.data.error.details.detail ||
-            error.response.data.error.details,
-        },
-      });
+      setLoading(false);
     }
-  });
+  };
 
   const shtoData = async () => {
     try {
-      const bodytosend = { emertimi: `${formfakulteti}` };
+      const bodytosend = {
+        emertimi: `${formusers}`,
+        fakulteti: `${props.fid}`,
+        departamenti: `${idf.id}`,
+      };
+      console.log(bodytosend);
       //const { data } = await sendRequest(
       const response = await sendRequest(
-        "fakulteti/",
+        "/users",
         "POST",
         bodytosend,
-        "SHTO_FAKULTET"
+        "SHTO_PEDAGOG"
       );
-      console.log(response);
-      setformfakulteti("");
+      setformusers("");
 
       getData();
     } catch (error) {
@@ -117,13 +110,13 @@ const Fakultetet2 = () => {
 
   const ModifikoData = async () => {
     try {
-      const bodytosend = { emertimi: `${currentFakultet.fakulteti}` };
+      const bodytosend = { emertimi: `${currentUser.users}` };
 
       const response = await sendRequest(
-        `fakulteti/${currentFakultet.id}/`,
+        `/users/${currentUser.id}`,
         "PATCH",
         bodytosend,
-        "PERDITESO_FAKULTET"
+        "PERDITESO_PEDAGOG"
       );
     } catch (error) {
       console.log(error);
@@ -132,35 +125,35 @@ const Fakultetet2 = () => {
     getData();
   };
 
-  const fshijFakultet = async (id) => {
+  const fshijUser = async (id) => {
     try {
-      const RESPONSE = await sendRequest(
-        `fakulteti/${id}`,
+      const response = await sendRequest(
+        `/users/${id}`,
         "DELETE",
         {},
-        "FSHIJ_FAKULTET"
+        "FSHIJ_PEDAGOG"
       );
-      getData();
     } catch (error) {
       console.log(error);
     }
+    getData();
   };
 
   useEffect(() => {
-    console.log("u thirr effect fakulteti");
+    console.log("u thirr users");
 
     getData();
   }, []);
 
   const handleChange = (e) => {
-    setformfakulteti(e.target.value);
+    setformusers(e.target.value);
   };
 
   const handleChange2 = (e) => {
     console.log(e);
-    setCurrentFakultet({
-      id: currentFakultet.id,
-      fakulteti: e.target.value,
+    setCurrentUser({
+      id: currentUser.id,
+      users: e.target.value,
     });
   };
 
@@ -175,49 +168,51 @@ const Fakultetet2 = () => {
 
     ModifikoData();
   };
-  let url = "/fakulteti/id/departamenti";
+  let url = "/users/id/";
 
   return (
     <Wrapper>
-      {isLoading ? (
+      {loading ? (
         <Loading center />
       ) : (
         <div>
           {editing ? (
             <>
-              <h2>Edit fakultet</h2>
+              <h2>Edit user</h2>
               {showAlert && <Alert />}
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
+                emri="Useri"
                 //editrow={editRow}
-                formvlera={currentFakultet.fakulteti}
+                formvlera={currentUser.users}
                 handleChange={handleChange2}
               />
             </>
           ) : (
             <>
-              <h2>Shto Fakultetet</h2>
+              <h2>Shto Users</h2>
               {showAlert && <Alert />}
               <ShtoForm
                 eventi={placeSubmitHandler}
-                formvlera={formfakulteti}
+                formvlera={formusers}
                 loading={loading}
+                emri="Useri"
                 handleChange={handleChange}
               />
             </>
           )}
 
-          {fakultetet2 && fakultetet2.length > 0 ? (
+          {users2 && users2.length > 0 ? (
             <Tabela
               kol={columns}
-              data2={fakultetet2}
-              fshij={fshijFakultet}
+              data2={users2}
+              fshij={fshijUser}
               modifiko={editRow}
               url={url}
             />
           ) : (
-            "S ka fakultete"
+            "S ka usere"
           )}
         </div>
       )}
@@ -225,4 +220,4 @@ const Fakultetet2 = () => {
   );
 };
 
-export default Fakultetet2;
+export default Pedagoget;

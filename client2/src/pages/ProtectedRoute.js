@@ -1,16 +1,17 @@
 import { Navigate } from "react-router-dom";
-import { useAppContext } from "../context/appContext";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../components/Loading";
 function ProtectedRoute({ children }) {
-  const { user, userLoading } = useAppContext();
-  console.log(userLoading);
+  const loginUser = useSelector((state) => state.loginUser);
 
-  if (userLoading) return <Loading right />;
+  const { user } = loginUser;
+  console.log(user);
 
   if (!user) {
+    console.log("if not user");
     return <Navigate to="/login" />;
   }
-
+  console.log("ka user");
   return children;
 }
 

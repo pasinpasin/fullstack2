@@ -10,10 +10,7 @@ import { Navigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  login,
- 
-} from '../actions/userActions'
+import { login } from "../actions/userActions";
 
 const initialState = {
   email: "",
@@ -22,20 +19,14 @@ const initialState = {
   username: "",
 };
 
-
 const Login = () => {
   const [values, setValues] = useState(initialState);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  const userlogin = useSelector((state) => state.userLoginReduce)  //marre nga store.js
+  const dispatch = useDispatch();
+  const userlogin = useSelector((state) => state.loginUser); //marre nga store.js
 
-  const { loading, user, authTokens,error } = userlogin;
-
- 
-
-  const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember });
-  };
+  const { loading, user, authTokens, error } = userlogin;
+  console.log(userlogin);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -49,20 +40,24 @@ const Login = () => {
       return;
     }
     const currentUser = { username, password };
-    dispatch(login(currentUser))
-
-    //loginUser({ email:username, password:password });
+    dispatch(login(currentUser));
   };
-  if (loading) return <Loading center />;
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
 
   return (
     <>
-      {user && <Navigate to="/" />}
+      {loading && <Loading right />}
       <Wrapper className="full-page">
         <form className="form" onSubmit={onSubmit}>
           {<Logo />}
           <h3>{"Login"}</h3>
-          {error && <Alert />}
+
+          {error && <Alert variant="danger">{error}</Alert>}
 
           {/* email input */}
           <FormRow
@@ -82,7 +77,7 @@ const Login = () => {
             {loading ? "loading..." : "Login"}
           </button>
           <p>
-          <Link to='/forgot-password'>Keni harruar fjalekalimin?</Link>
+            <Link to="/forgot-password">Keni harruar fjalekalimin?</Link>
           </p>
         </form>
       </Wrapper>

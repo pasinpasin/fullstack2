@@ -13,12 +13,11 @@ import {
   DISABLE_USER_ERROR,
   LOGOUT_USER,
 } from "../constants/userConstants";
-import axios from "axios"
+import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
 export const login = (currentuser) => async (dispatch) => {
-
   try {
     dispatch({
       type: LOGIN_USER_BEGIN,
@@ -46,6 +45,7 @@ export const login = (currentuser) => async (dispatch) => {
       payload: { user, authTokens },
     });
   } catch (error) {
+    console.log(error.message);
     dispatch({
       type: LOGIN_USER_ERROR,
       payload:
@@ -54,4 +54,12 @@ export const login = (currentuser) => async (dispatch) => {
           : error.message,
     });
   }
+};
+
+export const logout = () => (dispatch) => {
+  sessionStorage.removeItem("authTokens");
+
+  dispatch({ type: LOGOUT_USER });
+
+  document.location.href = "/login";
 };

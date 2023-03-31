@@ -1,15 +1,10 @@
-import { useAppContext } from "../context/appContext";
+const Alert = ({ variant, children }) => {
+  //console.log(alertText);
+  return <div className={`alert alert-${variant}`}>{children}</div>;
+};
 
-
-
-
-  const Alert = () => {
-   
-    const { alertType, alertText } = useAppContext()
-    console.log(alertType)
-   return <div className={`alert alert-${alertType}`}>{alertText}</div> 
-  
-  }
-
+Alert.defaultProps = {
+  variant: "info",
+};
 
 export default Alert;

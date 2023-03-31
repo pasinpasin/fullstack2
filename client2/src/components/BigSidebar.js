@@ -1,26 +1,26 @@
-import Logo from '../components/Logo'
-import Wrapper from '../assets/wrappers/BigSidebar'
-import { useAppContext } from '../context/appContext'
-import NavLinks from './NavLinks'
+import Logo from "../components/Logo";
+import Wrapper from "../assets/wrappers/BigSidebar";
+import { useDispatch, useSelector } from "react-redux";
+import NavLinks from "./NavLinks";
 
 function BigSidebar() {
-  const { showSidebar } = useAppContext()
+  const showSidebar = useSelector((state) => state.view);
   return (
     <Wrapper>
-    <div
-      className={
-        showSidebar ? 'sidebar-container ' : 'sidebar-container show-sidebar'
-      }
-    >
-      <div className='content'>
-        <header>
-          <Logo />
-        </header>
-        <NavLinks/>
+      <div
+        className={
+          showSidebar ? "sidebar-container " : "sidebar-container show-sidebar"
+        }
+      >
+        <div className="content">
+          <header>
+            <Logo />
+          </header>
+          <NavLinks />
+        </div>
       </div>
-    </div>
-  </Wrapper>
-  )
+    </Wrapper>
+  );
 }
 
-export default BigSidebar
+export default BigSidebar;

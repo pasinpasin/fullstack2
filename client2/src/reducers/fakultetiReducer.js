@@ -16,7 +16,7 @@ export const fakultetiListReducer = (state = { fakultetet: [] }, action) => {
     case LIST_FAKULTETE_SUCCESS:
       return {
         loading: false,
-        fakultetet: action.payload.fakultetet,
+        fakultetet: action.payload.result.items,
         //pages: action.payload.pages,
         //page: action.payload.page,
       };
@@ -26,3 +26,19 @@ export const fakultetiListReducer = (state = { fakultetet: [] }, action) => {
       return state;
   }
 };
+export const fakultetiCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SHTO_FAKULTETE_BEGIN:
+      return { loading: true }
+    case SHTO_FAKULTETE_SUCCESS:
+      console.log(action.payload)
+      return { loading: false, success: true, fakulteti: action.payload }
+    case SHTO_FAKULTETE_ERROR:
+      return { loading: false, error: action.payload }
+   
+    default:
+      return state
+  }
+}
+
+

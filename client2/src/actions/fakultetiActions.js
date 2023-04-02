@@ -1,4 +1,4 @@
-import useAxios from "../hooks/useAxios"
+import api from "../utils/api";
 import {
     LIST_FAKULTETE_BEGIN,
     LIST_FAKULTETE_SUCCESS,
@@ -12,15 +12,16 @@ import {
   } from "../constants/fakultetiConstants";
 
  
-
+  
 export const listFakultete = () => async (dispatch) => {
-    let api=useAxios();
+  
   try {
-    dispatch({ type: LIST_FAKULTETE_BEGIN })
+    dispatch({ type: LIST_FAKULTETE_BEGIN });
 
     const { data } = await api.get(
       `fakulteti`
-    )
+    );
+    console.log(data)
     
 
     dispatch({
@@ -38,13 +39,13 @@ export const listFakultete = () => async (dispatch) => {
   }
 }
 
-export const updateFakultete = (id) => async (dispatch) => {
-    let api=useAxios();
+export const updateFakultete = (id,bodytosend) => async (dispatch) => {
+    
   try {
     dispatch({ type: UPDATE_FAKULTETI_BEGIN })
 
     const { data } = await api.patch(
-      `fakulteti/${id}/`,{}
+      `fakulteti/${id}/`,bodytosend
     )
     
 
@@ -63,13 +64,13 @@ export const updateFakultete = (id) => async (dispatch) => {
   }
 }
 
-export const addFakultete = () => async (dispatch) => {
-    let api=useAxios();
+export const addFakultete = (datatosend) => async (dispatch) => {
+   
   try {
     dispatch({ type: SHTO_FAKULTETE_BEGIN })
 
     const { data } = await api.post(
-      `fakulteti/`
+      `fakulteti/`,datatosend
     )
     
 

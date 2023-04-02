@@ -3,7 +3,9 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOGOUT_USER,
+  REFRESH_TOKEN,
 } from "../constants/userConstants";
+
 
 export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
@@ -20,7 +22,15 @@ export const userLoginReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case LOGOUT_USER:
       return {};
+      case REFRESH_TOKEN:
+        return {
+          user: action.payload.user,
+          authTokens: action.payload.authTokens,
+        };
+   
     default:
       return state;
   }
 };
+
+

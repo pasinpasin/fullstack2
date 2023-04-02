@@ -1,4 +1,4 @@
-import { useAppContext } from "../context/appContext";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useCallback } from "react";
@@ -9,13 +9,14 @@ import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import ShtoForm from "../components/ShtoForm";
 import ModifikoForm from "../components/ModifikoForm";
-import axios from "axios";
+
 import Tabela from "../components/Tabela";
 import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import useAxios from "../hooks/useAxios";
+
 import {
   listFakultete,
+  addFakultete,
  
 } from '../actions/fakultetiActions'
 
@@ -23,11 +24,12 @@ import {
 const Fakultetet2 = () => {
   const dispatch = useDispatch()
   const fakulteteList = useSelector((state) => state.fakultetilist)  //marre nga store.js
+  const {fakulteti} = useSelector((state) => state.fakultetiri)
+  console.log(fakulteti)
   //const [values, setValues] = useState(initialState);
   //const navigate = useNavigate();
+   
 
-
-  let api = useAxios();
   const { loading, error, fakultetet } = fakulteteList
 
   const columnsData = [
@@ -37,7 +39,8 @@ const Fakultetet2 = () => {
   const [columns, setColumns] = useState(columnsData);
   const [editing, setEditing] = useState(false);
 
-  const [fakultetet2, setFakultetet2] = useState();
+  const [fakultetet2, setFakultetet2] = useState(fakultetet);
+  
   const [formfakulteti, setformfakulteti] = useState("");
   const initialFormState = { id: null, fakulteti: "" };
   const [currentFakultet, setCurrentFakultet] = useState(initialFormState);
@@ -57,43 +60,13 @@ const Fakultetet2 = () => {
     setFakultetet2([...fakultetet2, fakultet]);
   };
 
-  const getData = useCallback(async () => {
-    try {
-      // const response = await sendRequest(
-      //   "fakulteti",
-      //   "GET",
-      //   {},
-      //   "GET_FAKULTETE"
-      // );
-      dispatch({
-        type: "GET_FAKULTETE_BEGIN",
-      });
-      const { data } = await api.get("fakulteti");
-      dispatch({
-        type: "GET_FAKULTETE_SUCCESS",
-        payload: { data },
-        // payload: { fakultetet }
-      });
-      setFakultetet2(data.result.items);
-      //setLoading(false);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      dispatch({
-        type: "GET_FAKULTETE_ERROR",
-        payload: {
-          msg:
-            error.response.data.error.details.detail ||
-            error.response.data.error.details,
-        },
-      });
-    }
-  });
+ 
   useEffect(() => {
     console.log("u thirr effect fakulteti");
 
    dispatch(listFakultete())
-  }, []);
+   //shtoFakultet(fakultetet)
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setformfakulteti(e.target.value);
@@ -109,8 +82,10 @@ const Fakultetet2 = () => {
 
   const placeSubmitHandler = (event) => {
     event.preventDefault();
+    const datatosend={"emertimi":formfakulteti}
 
-   //shtoData();
+    dispatch(addFakultete(datatosend))
+   //shtoFakultet(fakulteti)
   };
 
   const placeSubmitHandler2 = (event) => {
@@ -122,7 +97,7 @@ const Fakultetet2 = () => {
 
   return (
     <Wrapper>
-      {loading ? (
+      {loading || !fakultetet ? (
         <Loading center />
       ) : (
         <div>

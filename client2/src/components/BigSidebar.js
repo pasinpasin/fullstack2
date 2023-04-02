@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import NavLinks from "./NavLinks";
 
 function BigSidebar() {
-  const showSidebar = useSelector((state) => state.view);
+  const {showSidebar} = useSelector((state) => state.view);
+  
   return (
     <Wrapper>
       <div

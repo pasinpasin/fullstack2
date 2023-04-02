@@ -2,6 +2,7 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  REFRESH_TOKEN,
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
@@ -16,6 +17,7 @@ import {
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 export const login = (currentuser) => async (dispatch) => {
   try {
@@ -61,5 +63,15 @@ export const logout = () => (dispatch) => {
 
   dispatch({ type: LOGOUT_USER });
 
-  document.location.href = "/login";
+  //document.location.href = "/login";
 };
+
+export const refreshToken = (authTokens) => (dispatch) => {
+  dispatch({
+    type: REFRESH_TOKEN,
+    payload: {
+      user: jwt_decode(authTokens.access),
+      authTokens: authTokens,
+    },
+  })
+}

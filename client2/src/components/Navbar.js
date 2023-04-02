@@ -9,17 +9,28 @@ import { logout } from "../actions/userActions";
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const dispatch = useDispatch();
-  const showSidebar = useSelector((state) => state.view);
-  const userlogin = useSelector((state) => state.loginUser); //marre nga store.js
+  
+  const userlogin = useSelector((state) => state.loginUser); //marre nga store.js 
 
   const { loading, user, authTokens, error } = userlogin;
+  const useToggleClick = () => {
+   // const dispatch = useDispatch();
+    
+    return () => dispatch(toggleSidebar());
+  };
+  const myClick = useToggleClick()
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
   return (
     <Wrapper>
       <div className="nav-center">
         <button
           type="button"
           className="toggle-btn"
-          onClick={dispatch(toggleSidebar)}
+         // onClick={() =>dispatch(toggleSidebar())}
+         onClick={myClick}
+          
         >
           <FaAlignLeft />
         </button>
@@ -41,7 +52,7 @@ const Navbar = () => {
             <button
               type="button"
               className="dropdown-btn"
-              onClick={dispatch(logout)}
+              onClick={logoutHandler}
             >
               logout
             </button>

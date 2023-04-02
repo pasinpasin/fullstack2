@@ -4,6 +4,7 @@ import {
   TOGGLE_SIDEBAR,
 } from "../constants/viewConstants";
 
-export const toggleSidebar = () => async (dispatch) => {
+export const toggleSidebar = () => async (dispatch) => { 
+
   dispatch({ type: TOGGLE_SIDEBAR });
 };

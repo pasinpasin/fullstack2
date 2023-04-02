@@ -6,8 +6,14 @@ import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import { toggleSidebar } from "../actions/viewActions";
 function SmallSidebar() {
-  const showSidebar = useSelector((state) => state.view);
-  const dispatch = useDispatch();
+  const {showSidebar} = useSelector((state) => state.view);
+  //const dispatch = useDispatch();
+  const useToggleClick = () => {
+    const dispatch = useDispatch();
+    
+    return () => dispatch(toggleSidebar());
+  };
+  const myClick = useToggleClick()
   return (
     <Wrapper>
       <div
@@ -19,14 +25,14 @@ function SmallSidebar() {
           <button
             type="button"
             className="close-btn"
-            onClick={dispatch(toggleSidebar)}
+            onClick={myClick}
           >
             <FaTimes />
           </button>
           <header>
             <Logo />
           </header>
-          <NavLinks toggleSidebar={dispatch(toggleSidebar)} />
+          <NavLinks toggleSidebar={myClick} />
         </div>
       </div>
     </Wrapper>

@@ -1,9 +1,17 @@
 import Wrapper from "../assets/wrappers/Tabela";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { deleteFakultet } from "../actions/fakultetiActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Tabela = (props) => {
   // console.log(props.data);
+  const dispatch = useDispatch();
+  const deleteHandler = (id) => {
+    if (window.confirm("Jeni te sigurte?")) {
+      dispatch(deleteFakultet(id));
+    }
+  };
   let i = 0;
   return (
     <Wrapper>
@@ -43,7 +51,10 @@ const Tabela = (props) => {
                   >
                     Edit
                   </button>
-                  <button className="btn " onClick={() => props.fshij(data.id)}>
+                  <button
+                    className="btn "
+                    onClick={() => deleteHandler(data.id)}
+                  >
                     Delete
                   </button>
                 </td>

@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useCallback } from "react";
@@ -17,20 +16,26 @@ import { MdDelete } from "react-icons/md";
 import {
   listFakultete,
   addFakultete,
- 
-} from '../actions/fakultetiActions'
-
+  updateFakultete,
+} from "../actions/fakultetiActions";
 
 const Fakultetet2 = () => {
-  const dispatch = useDispatch()
-  const fakulteteList = useSelector((state) => state.fakultetilist)  //marre nga store.js
-  const {fakulteti} = useSelector((state) => state.fakultetiri)
-  console.log(fakulteti)
-  //const [values, setValues] = useState(initialState);
-  //const navigate = useNavigate();
-   
+  const dispatch = useDispatch();
+  const fakulteteList = useSelector((state) => state.fakultetilist); //marre nga store.js
+  const { fakulteti } = useSelector((state) => state.fakultetiri);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = useSelector((state) => state.fakultetiupdate);
 
-  const { loading, error, fakultetet } = fakulteteList
+  const {
+    loading: loadingcreate,
+    error: errorCreate,
+    success: successCreate,
+  } = useSelector((state) => state.fakultetiri);
+
+  const { loading, error, fakultetet } = fakulteteList;
 
   const columnsData = [
     { field: "emertimi", header: "Fakulteti" },
@@ -40,12 +45,16 @@ const Fakultetet2 = () => {
   const [editing, setEditing] = useState(false);
 
   const [fakultetet2, setFakultetet2] = useState(fakultetet);
-  
+
   const [formfakulteti, setformfakulteti] = useState("");
   const initialFormState = { id: null, fakulteti: "" };
-  const [currentFakultet, setCurrentFakultet] = useState(initialFormState);
+  const [currentFakultet, setCurrentFakultet] = useState({
+    id: null,
+    fakulteti: "",
+  });
 
   const editRow = (fakultetpermodifikim) => {
+    console.log(fakultetpermodifikim);
     setformfakulteti("");
     setCurrentFakultet({
       id: fakultetpermodifikim.id,
@@ -60,12 +69,11 @@ const Fakultetet2 = () => {
     setFakultetet2([...fakultetet2, fakultet]);
   };
 
- 
   useEffect(() => {
     console.log("u thirr effect fakulteti");
 
-   dispatch(listFakultete())
-   //shtoFakultet(fakultetet)
+    dispatch(listFakultete());
+    //shtoFakultet(fakultetet)
   }, [dispatch]);
 
   const handleChange = (e) => {
@@ -73,50 +81,61 @@ const Fakultetet2 = () => {
   };
 
   const handleChange2 = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setCurrentFakultet({
       id: currentFakultet.id,
       fakulteti: e.target.value,
     });
+
+    /* this.setCurrentFakultet({
+      currentFakultet: {
+        ...this.state.currentFakultet,
+        fakulteti: e.target.value,
+      },
+    }); */
+    console.log(currentFakultet);
   };
 
   const placeSubmitHandler = (event) => {
     event.preventDefault();
-    const datatosend={"emertimi":formfakulteti}
+    const datatosend = { emertimi: formfakulteti };
 
-    dispatch(addFakultete(datatosend))
-   //shtoFakultet(fakulteti)
+    dispatch(addFakultete(datatosend));
   };
 
   const placeSubmitHandler2 = (event) => {
     event.preventDefault();
-
-   // ModifikoData();
+    let bodytosend = {
+      emertimi: currentFakultet.fakulteti,
+    };
+    console.log(currentFakultet);
+    dispatch(updateFakultete(currentFakultet.id, bodytosend));
   };
   let url = "/fakulteti/id/departamenti";
 
   return (
     <Wrapper>
-      {loading || !fakultetet ? (
+      {loading ? (
         <Loading center />
       ) : (
         <div>
           {editing ? (
             <>
               <h2>Edit fakultet</h2>
-              {error && <Alert />}
+              {loadingUpdate && <Loading center />}
+              {errorUpdate && <Alert variant="danger">{errorUpdate}</Alert>}
               <ModifikoForm
                 eventi={placeSubmitHandler2}
                 setEditing={setEditing}
-                //editrow={editRow}
-                formvlera={currentFakultet.fakulteti}
+                formvlera={currentFakultet.fakulteti || ""}
                 handleChange={handleChange2}
               />
             </>
           ) : (
             <>
               <h2>Shto Fakultetet</h2>
-              {error && <Alert />}
+
+              {errorCreate && <Alert variant="danger">{errorCreate}</Alert>}
               <ShtoForm
                 eventi={placeSubmitHandler}
                 formvlera={formfakulteti}
@@ -130,7 +149,7 @@ const Fakultetet2 = () => {
             <Tabela
               kol={columns}
               data2={fakultetet}
-             // fshij={fshijFakultet}
+              // fshij={() => deleteHandler()}
               modifiko={editRow}
               url={url}
             />

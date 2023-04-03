@@ -1,8 +1,13 @@
-import { createStore,combineReducers, applyMiddleware } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { fakultetiListReducer, fakultetiCreateReducer } from "./reducers/fakultetiReducer";
+import {
+  fakultetiListReducer,
+  fakultetiCreateReducer,
+  fakultetiDeleteReducer,
+  fakultetiUpdateReducer,
+} from "./reducers/fakultetiReducer";
 import { userLoginReducer } from "./reducers/userReducers";
 import { viewReducer } from "./reducers/viewReducer";
 
@@ -10,7 +15,9 @@ import jwt_decode from "jwt-decode";
 
 const reducer = combineReducers({
   fakultetilist: fakultetiListReducer,
-  fakultetiri:fakultetiCreateReducer,
+  fakultetiri: fakultetiCreateReducer,
+  fshijfakultet: fakultetiDeleteReducer,
+  fakultetiupdate: fakultetiUpdateReducer,
   loginUser: userLoginReducer,
   view: viewReducer,
 });
@@ -24,13 +31,12 @@ const userFromStorage = sessionStorage.getItem("authTokens")
 
 const initialState = {
   loginUser: { authTokens: userInfoFromStorage, user: userFromStorage },
- view:{ showSidebar: true},
+  view: { showSidebar: true },
 };
 
 const middleware = [thunk];
 const store = configureStore(
-  { reducer: reducer ,
-  preloadedState: initialState},
+  { reducer: reducer, preloadedState: initialState },
   composeWithDevTools(applyMiddleware(...middleware))
 );
 

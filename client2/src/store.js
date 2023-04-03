@@ -11,9 +11,12 @@ import {
 import { userLoginReducer } from "./reducers/userReducers";
 import { viewReducer } from "./reducers/viewReducer";
 
+import fakultetiReducer from "./features/fakultetiSlice"
+
 import jwt_decode from "jwt-decode";
 
 const reducer = combineReducers({
+  fakultetiState: fakultetiReducer,
   fakultetilist: fakultetiListReducer,
   fakultetiri: fakultetiCreateReducer,
   fshijfakultet: fakultetiDeleteReducer,

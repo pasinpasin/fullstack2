@@ -194,6 +194,26 @@ ul {
   border-radius: var(--borderRadius);
   text-align: center;
   letter-spacing: var(--letterSpacing);
+  opacity: 1;
+  transition: opacity 0.6s;
+}
+.closebtn {
+  margin-left: 2px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+.hide {
+  display: none;
 }
 
 .alert-danger {
@@ -203,6 +223,11 @@ ul {
 .alert-success {
   color: var(--green-dark);
   background: var(--green-light);
+}
+
+.alert-warning {
+  color: var(--yellow-dark);
+  background: var(--yellow-light);
 }
 /* form */
 

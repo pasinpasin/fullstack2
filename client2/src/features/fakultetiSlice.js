@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
-const baseURL = "http://localhost:5000/api/";
-
 const initialState = {
   fakultete: [],
   shtofakulteteStatus: "",
@@ -16,57 +14,76 @@ const initialState = {
 };
 
 export const shtoFakultet = createAsyncThunk(
-  "fakultete/shto",
+  "fakultetet/shto",
   async (fakultet, { rejectWithValue }) => {
     try {
-      const response = await api.post("fakulteti/", fakultet);
+      const response = await api.post("fakulteti/", {
+        emertimi: fakultet.emertimi,
+      });
       return response.data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error.response?.data);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   }
 );
 
 export const getFakultete = createAsyncThunk(
-  "fakultete/get",
+  "fakultetet/get",
   async (id = null, { rejectWithValue }) => {
     try {
       const response = await api.get("fakulteti");
       return response.data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error.response?.data);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   }
 );
 
 export const deleteFakulteti = createAsyncThunk(
-  "fakultete/fshij",
+  "fakultetet/fshij",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await api.delete("fakulteti/" + id);
+      const response = await api.delete(`fakulteti/${id}`);
+      console.log(response);
       return response.data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error.response?.data);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   }
 );
 
 export const updateFakulteti = createAsyncThunk(
-  "fakultete/perditeso",
+  "fakultetet/perditeso",
   async (fakulteti, { rejectWithValue }) => {
     try {
       const { id, emertimi } = fakulteti;
 
-      const response = await api.patch(baseURL + "fakulteti/" + id + "/", {
-        emertimi:emertimi,
+      const response = await api.patch(`fakulteti/${id}/`, {
+        emertimi: emertimi,
       });
       return response.data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error.response?.data);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   }
 );
@@ -75,8 +92,9 @@ const fakultetiSlice = createSlice({
   name: "fakultetet",
   initialState,
   reducers: {},
-  extraReducers: {
-    [shtoFakultet.pending]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(shtoFakultet.pending, (state, action) => {
+      //[shtoFakultet.pending]: (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "pending",
@@ -88,12 +106,13 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [shtoFakultet.fulfilled]: (state, action) => {
+    });
+    // [shtoFakultet.fulfilled]: (state, action) => {
+    builder.addCase(shtoFakultet.fulfilled, (state, action) => {
       // state.todos.push(action.payload);
       return {
         ...state,
-        todos: [action.payload, ...state.fakultete],
+        fakultete: [action.payload, ...state.fakultete],
         shtofakulteteStatus: "success",
         shtofakulteteError: "",
         getFakulteteStatus: "",
@@ -103,8 +122,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [shtoFakultet.rejected]: (state, action) => {
+    });
+    //[shtoFakultet.rejected]: (state, action) => {
+    builder.addCase(shtoFakultet.rejected, (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "rejected",
@@ -116,8 +136,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [getFakultete.pending]: (state, action) => {
+    });
+    builder.addCase(getFakultete.pending, (state, action) => {
+      //[getFakultete.pending]: (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "",
@@ -129,11 +150,12 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [getFakultete.fulfilled]: (state, action) => {
+    });
+    builder.addCase(getFakultete.fulfilled, (state, action) => {
+      //[getFakultete.fulfilled]: (state, action) => {
       return {
         ...state,
-        todos: action.payload,
+        fakultete: action.payload.result.items,
         shtofakulteteStatus: "",
         shtofakulteteError: "",
         getFakulteteStatus: "success",
@@ -143,8 +165,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [getFakultete.rejected]: (state, action) => {
+    });
+    //[getFakultete.rejected]: (state, action) => {
+    builder.addCase(getFakultete.rejected, (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "",
@@ -156,8 +179,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [deleteFakulteti.pending]: (state, action) => {
+    });
+    // [deleteFakulteti.pending]: (state, action) => {
+    builder.addCase(deleteFakulteti.pending, (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "",
@@ -169,11 +193,13 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [deleteFakulteti.fulfilled]: (state, action) => {
+    });
+    //[deleteFakulteti.fulfilled]: (state, action) => {
+    builder.addCase(deleteFakulteti.fulfilled, (state, action) => {
       const currentFakultete = state.fakultete.filter(
-        (fakultet) => fakultet.id !== action.payload.id
+        (fakultet) => fakultet.id !== action.payload.result.items.id
       );
+      console.log(action.payload);
       return {
         ...state,
         fakultete: currentFakultete,
@@ -186,8 +212,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [deleteFakulteti.rejected]: (state, action) => {
+    });
+    //[deleteFakulteti.rejected]: (state, action) => {
+    builder.addCase(deleteFakulteti.rejected, (state, action) => {
       state = {
         ...state,
         shtofakulteteStatus: "",
@@ -199,8 +226,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "",
         updateFakultetiError: "",
       };
-    },
-    [updateFakulteti.pending]: (state, action) => {
+    });
+    // [updateFakulteti.pending]: (state, action) => {
+    builder.addCase(updateFakulteti.pending, (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "",
@@ -212,14 +240,16 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "pending",
         updateFakultetiError: "",
       };
-    },
-    [updateFakulteti.fulfilled]: (state, action) => {
+    });
+    //[updateFakulteti.fulfilled]: (state, action) => {
+    builder.addCase(updateFakulteti.fulfilled, (state, action) => {
       const updatedFakultete = state.fakultete.map((fakultet) =>
         fakultet.id === action.payload.id ? action.payload : fakultet
       );
+      console.log(updatedFakultete);
       return {
         ...state,
-        todos: updatedFakultete,
+        fakultete: updatedFakultete,
         shtofakulteteStatus: "",
         shtofakulteteError: "",
         getFakulteteStatus: "",
@@ -229,8 +259,9 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "success",
         updateFakultetiError: "",
       };
-    },
-    [updateFakulteti.rejected]: (state, action) => {
+    });
+    // [updateFakulteti.rejected]: (state, action) => {
+    builder.addCase(updateFakulteti.rejected, (state, action) => {
       return {
         ...state,
         shtofakulteteStatus: "",
@@ -242,7 +273,7 @@ const fakultetiSlice = createSlice({
         updateFakultetiStatus: "rejected",
         updateFakultetiError: action.payload,
       };
-    },
+    });
   },
 });
 

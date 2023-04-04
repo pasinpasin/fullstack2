@@ -93,6 +93,12 @@ class FakultetiViewSet(viewsets.ModelViewSet):
         #except Exception as e:
         #    return Response({'message':'fail','error':True,'code':500,'result':{'totalItems':0,'items':[],'totalPages':0,'currentPage':0}})
 
+    
+    def destroy(self, *args, **kwargs):
+            serializer = self.get_serializer(self.get_object())
+            super().destroy(*args, **kwargs)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
 
 
 

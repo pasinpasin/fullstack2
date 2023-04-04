@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import { combineReducers, applyMiddleware } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -11,7 +11,7 @@ import {
 import { userLoginReducer } from "./reducers/userReducers";
 import { viewReducer } from "./reducers/viewReducer";
 
-import fakultetiReducer from "./features/fakultetiSlice"
+import fakultetiReducer from "./features/fakultetiSlice";
 
 import jwt_decode from "jwt-decode";
 

@@ -28,10 +28,10 @@ const ListoFakultete = ({ setFakulteti }) => {
 
   return (
     <Wrapper>
-      {fakultetiState.getfakulteteStatus === "rejected" ? (
-        <Alert variant="danger">{fakultetiState.getfakulteteError}</Alert>
+      {fakultetiState.getFakulteteStatus === "rejected" ? (
+        <Alert variant="danger">{fakultetiState.getFakulteteError}</Alert>
       ) : null}
-      {fakultetiState.getfakulteteStatus === "pending" ? (
+      {fakultetiState.getFakulteteStatus === "pending" ? (
         <Loading center />
       ) : (
         <table>

@@ -25,8 +25,9 @@ const Shtofakultet = ({ fakulteti, setFakulteti }) => {
         ...fakulteti,
       };
 
-      console.log(newFakultet);
+      
       dispatch(shtoFakultet(newFakultet));
+      
     }
 
     setFakulteti({
@@ -52,7 +53,7 @@ const Shtofakultet = ({ fakulteti, setFakulteti }) => {
 
         <button
           type="submit"
-          className="btn btn-block "
+          className="btn btn-block"
           disabled={
             fakultetiState.shtofakulteteStatus === "pending" ||
             fakultetiState.updateFakultetiStatus === "pending"

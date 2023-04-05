@@ -1,22 +1,25 @@
-import Shtodepartamente from "../components/Shtodepartamente";
-import Listodepartamente from "../components/Listodepartamente";
+import ShtodepartamenteNgaFakulteti from "../components/ShtodepartamenteNgaFakulteti";
+import ListodepartamenteNgaFakulteti from "../components/ListodepartamenteNgaFakulteti";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 const Departamentetngafakulteti = () => {
+
+  const { id } = useParams();
   const [departamenti, setDepartamenti] = useState({
     emertimi: "",
     id: null,
-    fakulteti: null,
+    fakulteti: id,
     created: null,
     updated: null,
   });
 
   return (
     <div>
-      <Shtodepartamente
+      <ShtodepartamenteNgaFakulteti
         departamenti={departamenti}
         setDepartamenti={setDepartamenti}
       />
-      <Listodepartamente setDepartamenti={setDepartamenti} />
+      <ListodepartamenteNgaFakulteti setDepartamenti={setDepartamenti} />
     </div>
   );
 };

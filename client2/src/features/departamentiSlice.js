@@ -7,6 +7,8 @@ const initialState = {
   shtoDepartamenteError: "",
   getDepartamenteStatus: "",
   getDepartamenteError: "",
+  getDepartamenteNgaFakStatus: "",
+  getDepartamenteNgaFakError: "",
   deleteDepartamentiStatus: "",
   deleteDepartamentiError: "",
   updateDepartamentiStatus: "",
@@ -49,6 +51,8 @@ export const getDepartamente = createAsyncThunk(
   }
 );
 
+
+
 export const deleteDepartamenti = createAsyncThunk(
   "departamentet/fshij",
   async (id, { rejectWithValue }) => {
@@ -89,7 +93,7 @@ export const updateDepartamenti = createAsyncThunk(
 );
 
 export const getDepartamenteNgaFakulteti = createAsyncThunk(
-  "fakultetet/getdep",
+  "departamentet/getdepngafak",
   async (id = null, { rejectWithValue }) => {
     try {
       const response = await api.get(`fakulteti/${id}/departametet`);
@@ -154,7 +158,7 @@ const departamentiSlice = createSlice({
         updateDepartamentiError: "",
       };
     });
-    builder.addCase(getDepartamente.pending, (state, action) => {
+    builder.addCase([getDepartamente.pending,getDepartamenteNgaFakulteti.pending], (state, action) => {
       //[getDepartamente.pending]: (state, action) => {
       return {
         ...state,
@@ -168,7 +172,7 @@ const departamentiSlice = createSlice({
         updateDepartamentiError: "",
       };
     });
-    builder.addCase(getDepartamente.fulfilled, (state, action) => {
+    builder.addCase([getDepartamente.fulfilled,getDepartamenteNgaFakulteti.fulfilled], (state, action) => {
       //[getDepartamente.fulfilled]: (state, action) => {
       return {
         ...state,
@@ -184,7 +188,7 @@ const departamentiSlice = createSlice({
       };
     });
     //[getDepartamente.rejected]: (state, action) => {
-    builder.addCase(getDepartamente.rejected, (state, action) => {
+    builder.addCase([getDepartamente.rejected,getDepartamenteNgaFakulteti.rejected], (state, action) => {
       return {
         ...state,
         shtoDepartamenteStatus: "",

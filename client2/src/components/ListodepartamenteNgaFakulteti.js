@@ -1,23 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+
 import Wrapper from "../assets/wrappers/Tabela";
-import Loading from "./Loading";
-import Alert from "./Alert";
+import Loading from "../components/Loading";
+import Alert from "../components/Alert";
 import { NavLink } from "react-router-dom";
-
-import {
-  deleteDepartamenti,
-  getDepartamente,
-  getDepartamenteNgaFakulteti,
-} from "../features/departamentiSlice";
+import { deleteDepartamenti, getDepartamenteNgaFakulteti } from "../features/departamenteNgaFakultetiSlice";
 
 
-const Listodepartamente = ({ setDepartamenti }) => {
+
+const ListodepartamenteNgaFakulteti= ({ setDepartamenti }) => {
   const dispatch = useDispatch();
-  const departamentiState = useSelector((state) => state.departamentiState);
-  const { id } = useParams();
-  const { departamente } = departamentiState;
+  const departamentingafakState = useSelector((state) => state.departamentingafakState);
+  const { departamentengafakulteti} = departamentingafakState;
+ 
+  
 
   const columnsData = [
     { field: "emertimi", header: "Departamenti" },
@@ -25,11 +22,8 @@ const Listodepartamente = ({ setDepartamenti }) => {
   ];
   useEffect(() => {
     console.log("effect departamenti");
-    if (id){
-    dispatch(getDepartamenteNgaFakulteti());}
-    else {
-    dispatch(getDepartamente());}
-  }, [dispatch,id]);
+    dispatch(getDepartamenteNgaFakulteti);
+  }, [dispatch]);
 
   const handleDelete = (id) => {
     if (window.confirm("Jeni te sigurte?")) {
@@ -40,10 +34,10 @@ const Listodepartamente = ({ setDepartamenti }) => {
 
   return (
     <Wrapper>
-      {departamentiState.getDepartamenteStatus === "rejected" ? (
-        <Alert variant="danger">{departamentiState.getDepartamenteError}</Alert>
+      {departamentingafakState.getDepartamenteStatus === "rejected" ? (
+        <Alert variant="danger">{departamentingafakState.getDepartamenteError}</Alert>
       ) : null}
-      {departamentiState.getDepartamenteStatus === "pending" ? (
+      {departamentingafakState.getDepartamenteStatus === "pending" ? (
         <Loading center />
       ) : (
         <table>
@@ -59,8 +53,8 @@ const Listodepartamente = ({ setDepartamenti }) => {
             </tr>
           </thead>
           <tbody>
-            {departamente.length > 0 ? (
-              departamente.map((data) => (
+            {departamentengafakulteti.length > 0 ? (
+              departamentengafakulteti.map((data) => (
                 <tr key={data.id}>
                   <td data-label={columnsData[0].header}>
                     <NavLink
@@ -103,4 +97,4 @@ const Listodepartamente = ({ setDepartamenti }) => {
     </Wrapper>
   );
 };
-export default Listodepartamente;
+export default ListodepartamenteNgaFakulteti;

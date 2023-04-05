@@ -106,8 +106,8 @@ export const getDepartamenteNgaFakulteti = createAsyncThunk(
   }
 );
 
-const departamentiSlice = createSlice({
-  name: "departamentet",
+const departamenteNgaFakultetiSlice = createSlice({
+  name: "departamentengafakultetet",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -348,4 +348,4 @@ const departamentiSlice = createSlice({
   },
 });
 
-export default departamentiSlice.reducer;
+export default departamenteNgaFakultetiSlice.reducer;

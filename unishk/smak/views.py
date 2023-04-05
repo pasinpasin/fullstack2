@@ -98,6 +98,27 @@ class FakultetiViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(self.get_object())
             super().destroy(*args, **kwargs)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=["get","post","put"],url_path=r'departamentet')
+    def get_departamentet(self, request ,pk=None):
+        if request.method == 'GET':
+            fakulteti = self.get_object()
+            print(fakulteti)
+            departamenti=Departamenti.objects.filter(fakulteti__id=fakulteti.id)
+            print(departamenti.query)
+            serializer = DepartamentiSerializer(departamenti,many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        elif request.method == 'POST':
+            emertimi = request.data.get('emertimi')
+            fakulteti = self.get_object()
+            data = {
+            "emertimi": emertimi,
+            "fakulteti": fakulteti.id,
+            }
+            serializer = DepartamentiSerializer(data=data)  # NOQA
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
 
 
 

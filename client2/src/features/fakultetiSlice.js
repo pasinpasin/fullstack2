@@ -3,6 +3,7 @@ import api from "../utils/api";
 
 const initialState = {
   fakultete: [],
+
   shtofakulteteStatus: "",
   shtofakulteteError: "",
   getFakulteteStatus: "",
@@ -11,6 +12,8 @@ const initialState = {
   deleteFakultetiError: "",
   updateFakultetiStatus: "",
   updateFakultetiError: "",
+  getFakulteteNgaDepStatus: "",
+  getFakultetengaDepError: "",
 };
 
 export const shtoFakultet = createAsyncThunk(
@@ -180,6 +183,7 @@ const fakultetiSlice = createSlice({
         updateFakultetiError: "",
       };
     });
+
     // [deleteFakulteti.pending]: (state, action) => {
     builder.addCase(deleteFakulteti.pending, (state, action) => {
       return {

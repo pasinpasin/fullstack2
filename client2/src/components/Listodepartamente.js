@@ -1,37 +1,45 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { deleteFakulteti, getFakultete } from "../features/fakultetiSlice";
+
 import Wrapper from "../assets/wrappers/Tabela";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import { NavLink } from "react-router-dom";
+import {
+  deleteDepartamenti,
+  getDepartamente,
+} from "../features/departamentiSlice";
+import { getDepartamenteNgaFakulteti } from "../features/fakultetiSlice";
 
-const ListoFakultete = ({ setFakulteti }) => {
+const ListoDepartamente = ({ setDepartamenti }) => {
   const dispatch = useDispatch();
+  const departamentiState = useSelector((state) => state.departamentiState);
   const fakultetiState = useSelector((state) => state.fakultetiState);
-  const { fakultete } = fakultetiState;
+  const { departamentengafakulteti } = fakultetiState;
+  const { departamente } = departamentiState;
+
   const columnsData = [
-    { field: "emertimi", header: "Fakulteti" },
+    { field: "emertimi", header: "Departamenti" },
     { field: "veprimet", header: "Veprimet" },
   ];
   useEffect(() => {
-    console.log("effect fakultete");
-    dispatch(getFakultete());
+    console.log("effect departamenti");
+    dispatch(getDepartamenteNgaFakulteti());
   }, [dispatch]);
 
   const handleDelete = (id) => {
     if (window.confirm("Jeni te sigurte?")) {
-      dispatch(deleteFakulteti(id));
+      dispatch(deleteDepartamenti(id));
     }
   };
-  let url = "/fakulteti/id/departamentet";
+  let url = "/departamenti/id/programi";
 
   return (
     <Wrapper>
-      {fakultetiState.getFakulteteStatus === "rejected" ? (
-        <Alert variant="danger">{fakultetiState.getFakulteteError}</Alert>
+      {departamentiState.getDepartamenteStatus === "rejected" ? (
+        <Alert variant="danger">{departamentiState.getDepartamenteError}</Alert>
       ) : null}
-      {fakultetiState.getFakulteteStatus === "pending" ? (
+      {departamentiState.getDepartamenteStatus === "pending" ? (
         <Loading center />
       ) : (
         <table>
@@ -47,8 +55,8 @@ const ListoFakultete = ({ setFakulteti }) => {
             </tr>
           </thead>
           <tbody>
-            {fakultete.length > 0 ? (
-              fakultete.map((data) => (
+            {departamente.length > 0 ? (
+              departamente.map((data) => (
                 <tr key={data.id}>
                   <td data-label={columnsData[0].header}>
                     <NavLink
@@ -67,7 +75,7 @@ const ListoFakultete = ({ setFakulteti }) => {
                     <button
                       size="small"
                       className="btn  "
-                      onClick={() => setFakulteti({ ...data })}
+                      onClick={() => setDepartamenti({ ...data })}
                     >
                       Edit
                     </button>
@@ -91,4 +99,4 @@ const ListoFakultete = ({ setFakulteti }) => {
     </Wrapper>
   );
 };
-export default ListoFakultete;
+export default ListoDepartamente;

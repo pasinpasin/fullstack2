@@ -151,7 +151,7 @@ class DepartamentiSerializer(serializers.ModelSerializer):
        ret = super().to_representation(instance)
        ret['fakulteti'] = FakultetiSerializer(instance.fakulteti).data
      
-       return ret    
+       return ret   
 
 
     

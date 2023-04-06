@@ -70,7 +70,7 @@ function App() {
             path="fakulteti/:id/departamentet"
             element={
               <ProtectedRoute>
-                <Departamentetngafakulteti />
+                <Departamentet />
               </ProtectedRoute>
             }
           />

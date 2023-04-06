@@ -102,10 +102,14 @@ class FakultetiViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get","post","put"],url_path=r'departamentet')
     def get_departamentet(self, request ,pk=None):
         if request.method == 'GET':
+            userporfile=Profile.objects.get(user=self.request.user)
             fakulteti = self.get_object()
             print(fakulteti)
-            departamenti=Departamenti.objects.filter(fakulteti__id=fakulteti.id)
-            print(departamenti.query)
+            if 'Admin' in userporfile.roli:
+                departamenti=Departamenti.objects.filter(fakulteti__id=fakulteti.id)
+            else:
+                departamenti=Departamenti.objects.filter(fakulteti__id=fakulteti.id,emertimi=userporfile.departamenti.emertimi)
+            #print(departamenti.query)
             serializer = DepartamentiSerializer(departamenti,many=True)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
         elif request.method == 'POST':
@@ -130,13 +134,19 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
     def get_queryset(self):
          id=self.kwargs.get("id", None)
          userporfile=Profile.objects.get(user=self.request.user)
-         if id!=None:
+         print(userporfile.roli)
+         if 'Admin' in userporfile.roli:
+            return Departamenti.objects.order_by('updated')
+         else:
+            return Departamenti.objects.order_by('updated').filter(emertimi=userporfile.departamenti.emertimi) 
+    """  if id!=None:
             print(id)
             #id = self.kwargs['id']
-            return Departamenti.objects.order_by('updated').filter(fakulteti=id,emertimi=userporfile.departamenti.emertimi)
+            return Departamenti.objects.order_by('updated').filter(fakulteti=id,emertimi=userporfile.departamenti.emertimi )
          else:
-              print("pa id")
-              return Departamenti.objects.order_by('updated').filter(emertimi=userporfile.departamenti.emertimi)
+              print("pa id") """
+    
+        
 
     def list(self, request, *args, **kwargs):
         deps = self.serializer_class(self.get_queryset(), many=True)
@@ -168,6 +178,7 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         fakulteti = request.data.get('fakulteti')
+        
         
         emertimi = request.data.get('emertimi')
         #print(emertimi)
@@ -203,7 +214,7 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
     def update(self, request,pk=None, *args, **kwargs):
 
         fakulteti = request.data.get('fakulteti')
-        
+        print(fakulteti)
         emertimi = request.data.get('emertimi')
         instance = self.get_object()
         #print(emertimi)
@@ -212,19 +223,19 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
                 
             raise ValidationError("mungon fakulteti ose emertimi i departamentit")
         try:
-                fid = Fakulteti.objects.get(emertimi=fakulteti).id
+                fid = Fakulteti.objects.get(id=fakulteti)
 
         except Fakulteti.DoesNotExist:
                 raise ValidationError("Nuk ekziston nje fakultet i tille")
         
-        if Departamenti.objects.filter(emertimi=emertimi,fakulteti_id=fid).exists():
+        if Departamenti.objects.filter(emertimi=emertimi,fakulteti_id=fakulteti).exists():
 
             raise ValidationError("Departamenti me kete emer ekziston")
        
         
         data = {
             "emertimi": emertimi,
-            "fakulteti": fid,
+            "fakulteti": fakulteti,
             }
         
         

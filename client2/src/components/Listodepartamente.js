@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+
 import Wrapper from "../assets/wrappers/Tabela";
 import Loading from "./Loading";
 import Alert from "./Alert";
@@ -12,24 +12,23 @@ import {
   getDepartamenteNgaFakulteti,
 } from "../features/departamentiSlice";
 
-
-const Listodepartamente = ({ setDepartamenti }) => {
+const Listodepartamente = ({ setDepartamenti, id }) => {
   const dispatch = useDispatch();
   const departamentiState = useSelector((state) => state.departamentiState);
-  const { id } = useParams();
+
   const { departamente } = departamentiState;
+  console.log(departamente);
 
   const columnsData = [
+    { field: "emertimif", header: "Fakulteti" },
     { field: "emertimi", header: "Departamenti" },
     { field: "veprimet", header: "Veprimet" },
   ];
   useEffect(() => {
     console.log("effect departamenti");
-    if (id){
-    dispatch(getDepartamenteNgaFakulteti());}
-    else {
-    dispatch(getDepartamente());}
-  }, [dispatch,id]);
+
+    dispatch(getDepartamente(id));
+  }, [dispatch, id]);
 
   const handleDelete = (id) => {
     if (window.confirm("Jeni te sigurte?")) {
@@ -63,6 +62,9 @@ const Listodepartamente = ({ setDepartamenti }) => {
               departamente.map((data) => (
                 <tr key={data.id}>
                   <td data-label={columnsData[0].header}>
+                    {data.fakulteti.emertimi}
+                  </td>
+                  <td data-label={columnsData[1].header}>
                     <NavLink
                       to={url.replace("id", data.id)}
                       // onClick={props.functioncall}
@@ -79,7 +81,14 @@ const Listodepartamente = ({ setDepartamenti }) => {
                     <button
                       size="small"
                       className="btn  "
-                      onClick={() => setDepartamenti({ ...data })}
+                      onClick={() =>
+                        setDepartamenti({
+                          emertimi: data.emertimi,
+                          fakulteti: data.fakulteti,
+                          created: null,
+                          updated: null,
+                        })
+                      }
                     >
                       Edit
                     </button>

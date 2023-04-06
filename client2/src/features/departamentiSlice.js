@@ -17,10 +17,11 @@ const initialState = {
 
 export const shtoDepartament = createAsyncThunk(
   "departamentet/shto",
-  async (fakultet, { rejectWithValue }) => {
+  async (departament, { rejectWithValue }) => {
     try {
-      const response = await api.post("fakulteti/", {
-        emertimi: fakultet.emertimi,
+      const response = await api.post("departamenti/", {
+        emertimi: departament.emertimi,
+        fakulteti: departament.fakulteti,
       });
       return response.data;
     } catch (error) {
@@ -36,10 +37,15 @@ export const shtoDepartament = createAsyncThunk(
 
 export const getDepartamente = createAsyncThunk(
   "departamentet/get",
-  async (id = null, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const response = await api.get("departamenti");
-      return response.data;
+      if (id) {
+        const response = await api.get(`fakulteti/${id}/departamentet`);
+        return response.data;
+      } else {
+        const response = await api.get("departamenti");
+        return response.data;
+      }
     } catch (error) {
       console.log(error);
       return rejectWithValue(
@@ -51,13 +57,11 @@ export const getDepartamente = createAsyncThunk(
   }
 );
 
-
-
 export const deleteDepartamenti = createAsyncThunk(
   "departamentet/fshij",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await api.delete(`fakulteti/${id}`);
+      const response = await api.delete(`departamenti/${id}`);
       console.log(response);
       return response.data;
     } catch (error) {
@@ -73,30 +77,15 @@ export const deleteDepartamenti = createAsyncThunk(
 
 export const updateDepartamenti = createAsyncThunk(
   "departamentet/perditeso",
-  async (fakulteti, { rejectWithValue }) => {
+  async (departamenti, { rejectWithValue }) => {
+    console.log(departamenti);
     try {
-      const { id, emertimi } = fakulteti;
+      const { id, emertimi, fakulteti } = departamenti;
 
-      const response = await api.patch(`fakulteti/${id}/`, {
+      const response = await api.patch(`departamenti/${id}/`, {
         emertimi: emertimi,
+        fakulteti: fakulteti.id,
       });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-    }
-  }
-);
-
-export const getDepartamenteNgaFakulteti = createAsyncThunk(
-  "departamentet/getdepngafak",
-  async (id = null, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`fakulteti/${id}/departametet`);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -130,10 +119,10 @@ const departamentiSlice = createSlice({
     });
     // [shtoDepartament.fulfilled]: (state, action) => {
     builder.addCase(shtoDepartament.fulfilled, (state, action) => {
-      // state.todos.push(action.payload);
+      console.log(action.payload);
       return {
         ...state,
-        departamente: [action.payload, ...state.departamente],
+        departamente: [action.payload.result.items, ...state.departamente],
         shtoDepartamenteStatus: "success",
         shtoDepartamenteError: "",
         getDepartamenteStatus: "",
@@ -158,7 +147,7 @@ const departamentiSlice = createSlice({
         updateDepartamentiError: "",
       };
     });
-    builder.addCase([getDepartamente.pending,getDepartamenteNgaFakulteti.pending], (state, action) => {
+    builder.addCase(getDepartamente.pending, (state, action) => {
       //[getDepartamente.pending]: (state, action) => {
       return {
         ...state,
@@ -172,7 +161,7 @@ const departamentiSlice = createSlice({
         updateDepartamentiError: "",
       };
     });
-    builder.addCase([getDepartamente.fulfilled,getDepartamenteNgaFakulteti.fulfilled], (state, action) => {
+    builder.addCase(getDepartamente.fulfilled, (state, action) => {
       //[getDepartamente.fulfilled]: (state, action) => {
       return {
         ...state,
@@ -188,7 +177,7 @@ const departamentiSlice = createSlice({
       };
     });
     //[getDepartamente.rejected]: (state, action) => {
-    builder.addCase([getDepartamente.rejected,getDepartamenteNgaFakulteti.rejected], (state, action) => {
+    builder.addCase(getDepartamente.rejected, (state, action) => {
       return {
         ...state,
         shtoDepartamenteStatus: "",
@@ -219,9 +208,9 @@ const departamentiSlice = createSlice({
     //[deleteDepartamenti.fulfilled]: (state, action) => {
     builder.addCase(deleteDepartamenti.fulfilled, (state, action) => {
       const currentFakultete = state.departamente.filter(
-        (fakultet) => fakultet.id !== action.payload.result.items.id
+        (departament) => departament.id !== action.payload.result.items.id
       );
-      console.log(action.payload);
+
       return {
         ...state,
         departamente: currentFakultete,
@@ -265,13 +254,15 @@ const departamentiSlice = createSlice({
     });
     //[updateDepartamenti.fulfilled]: (state, action) => {
     builder.addCase(updateDepartamenti.fulfilled, (state, action) => {
-      const updatedFakultete = state.departamente.map((fakultet) =>
-        fakultet.id === action.payload.id ? action.payload : fakultet
+      const updatedDepartamente = state.departamente.map((departament) =>
+        departament.id === action.payload.result.items.id
+          ? action.payload.result.items
+          : departament
       );
-      console.log(updatedFakultete);
+      console.log(updatedDepartamente);
       return {
         ...state,
-        departamente: updatedFakultete,
+        departamente: updatedDepartamente,
         shtoDepartamenteStatus: "",
         shtoDepartamenteError: "",
         getDepartamenteStatus: "",

@@ -13,14 +13,14 @@ import { viewReducer } from "./reducers/viewReducer";
 
 import fakultetiReducer from "./features/fakultetiSlice";
 import departamentiReducer from "./features/departamentiSlice";
-import departamenteNgaFakultetiReducer from "./features/departamenteNgaFakultetiSlice";
+
 
 import jwt_decode from "jwt-decode";
 
 const reducer = combineReducers({
   fakultetiState: fakultetiReducer,
   departamentiState: departamentiReducer,
-  departamentingafakState: departamenteNgaFakultetiReducer,
+  
   fakultetilist: fakultetiListReducer,
   fakultetiri: fakultetiCreateReducer,
   fshijfakultet: fakultetiDeleteReducer,

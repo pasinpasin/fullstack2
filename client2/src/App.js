@@ -18,7 +18,7 @@ import Planet from "./pages/Planet";
 import ForgotPassword from "./pages/ForgotPassword";
 import Shtorresht from "./pages/Shtorresht";
 import Planipdf from "./pages/Planipdf";
-import Departamentetngafakulteti from "./pages/Departamentetngafakulteti";
+
 
 function App() {
   return (

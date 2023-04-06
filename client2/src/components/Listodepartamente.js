@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-
+import { useNavigate} from "react-router-dom";
 import Wrapper from "../assets/wrappers/Tabela";
 import Loading from "./Loading";
 import Alert from "./Alert";
@@ -9,13 +9,13 @@ import { NavLink } from "react-router-dom";
 import {
   deleteDepartamenti,
   getDepartamente,
-  getDepartamenteNgaFakulteti,
+  
 } from "../features/departamentiSlice";
 
 const Listodepartamente = ({ setDepartamenti, id }) => {
   const dispatch = useDispatch();
   const departamentiState = useSelector((state) => state.departamentiState);
-
+  
   const { departamente } = departamentiState;
   console.log(departamente);
 
@@ -39,6 +39,7 @@ const Listodepartamente = ({ setDepartamenti, id }) => {
 
   return (
     <Wrapper>
+       
       {departamentiState.getDepartamenteStatus === "rejected" ? (
         <Alert variant="danger">{departamentiState.getDepartamenteError}</Alert>
       ) : null}
@@ -83,8 +84,10 @@ const Listodepartamente = ({ setDepartamenti, id }) => {
                       className="btn  "
                       onClick={() =>
                         setDepartamenti({
+                          id:data.id,
                           emertimi: data.emertimi,
-                          fakulteti: data.fakulteti,
+                         fakulteti: data.fakulteti.id,
+                         //fakulteti:data.fakulteti,
                           created: null,
                           updated: null,
                         })

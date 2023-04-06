@@ -84,7 +84,7 @@ export const updateDepartamenti = createAsyncThunk(
 
       const response = await api.patch(`departamenti/${id}/`, {
         emertimi: emertimi,
-        fakulteti: fakulteti.id,
+        fakulteti: fakulteti
       });
       return response.data;
     } catch (error) {
@@ -207,13 +207,13 @@ const departamentiSlice = createSlice({
     });
     //[deleteDepartamenti.fulfilled]: (state, action) => {
     builder.addCase(deleteDepartamenti.fulfilled, (state, action) => {
-      const currentFakultete = state.departamente.filter(
+      const currentDep = state.departamente.filter(
         (departament) => departament.id !== action.payload.result.items.id
       );
 
       return {
         ...state,
-        departamente: currentFakultete,
+        departamente: currentDep,
         shtoDepartamenteStatus: "",
         shtoDepartamenteError: "",
         getDepartamenteStatus: "",

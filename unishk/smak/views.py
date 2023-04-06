@@ -146,7 +146,13 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
          else:
               print("pa id") """
     
-        
+    
+    
+    def destroy(self, *args, **kwargs):
+            serializer = self.get_serializer(self.get_object())
+            super().destroy(*args, **kwargs)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+       
 
     def list(self, request, *args, **kwargs):
         deps = self.serializer_class(self.get_queryset(), many=True)

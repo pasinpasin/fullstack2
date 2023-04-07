@@ -2,31 +2,28 @@ import { combineReducers, applyMiddleware } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import {
-  fakultetiListReducer,
-  fakultetiCreateReducer,
-  fakultetiDeleteReducer,
-  fakultetiUpdateReducer,
-} from "./reducers/fakultetiReducer";
+
 import { userLoginReducer } from "./reducers/userReducers";
 import { viewReducer } from "./reducers/viewReducer";
 
 import fakultetiReducer from "./features/fakultetiSlice";
 import departamentiReducer from "./features/departamentiSlice";
-
+import programiReducer from "./features/programiSlice";
+import pedagogeReducer from "./features/pedagogetSlice";
 
 import jwt_decode from "jwt-decode";
 
 const reducer = combineReducers({
   fakultetiState: fakultetiReducer,
   departamentiState: departamentiReducer,
-  
-  fakultetilist: fakultetiListReducer,
-  fakultetiri: fakultetiCreateReducer,
-  fshijfakultet: fakultetiDeleteReducer,
-  fakultetiupdate: fakultetiUpdateReducer,
+  programiState: programiReducer,
+  pedagogeState: pedagogeReducer,
   loginUser: userLoginReducer,
   view: viewReducer,
+  //fakultetilist: fakultetiListReducer,
+  //fakultetiri: fakultetiCreateReducer,
+  //fshijfakultet: fakultetiDeleteReducer,
+  //fakultetiupdate: fakultetiUpdateReducer,
 });
 
 const userInfoFromStorage = sessionStorage.getItem("authTokens")

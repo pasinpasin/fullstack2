@@ -255,6 +255,36 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
             return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # """
+    
+    @action(detail=True, methods=["get"],url_path=r'programet')
+    def get_programet(self, request ,pk=None):
+    
+        userporfile=Profile.objects.get(user=self.request.user)
+        departamenti = self.get_object()
+        #print(fakulteti)
+        if 'Admin' in userporfile.roli:
+            programi=Programi.objects.filter(departamenti__id=departamenti.id)
+        else:
+            programi=Programi.objects.filter(departamenti__id=departamenti.id,departamenti__emertimi=userporfile.departamenti.emertimi)
+        #print(departamenti.query)
+        serializer = ProgramiSerializer(programi,many=True)
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=["get"],url_path=r'pedagoget')
+    def get_pedagoget(self, request ,pk=None):
+       
+        userporfile=Profile.objects.get(user=self.request.user)
+        departamenti = self.get_object()
+        #print(fakulteti)
+        if 'Admin' in userporfile.roli:
+            pedagoget=Profile.objects.filter(departamenti__id=departamenti.id)
+            
+        else:
+            pedagoget=Profile.objects.filter(departamenti__id=departamenti.id,departamenti__emertimi=userporfile.departamenti.emertimi)
+        #print(departamenti.query)
+        serializer = ProfileSerializer(pedagoget,many=True)
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
 
         
         

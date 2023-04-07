@@ -5,43 +5,40 @@ import Wrapper from "../assets/wrappers/Tabela";
 import Loading from "./Loading";
 import Alert from "./Alert";
 import { NavLink } from "react-router-dom";
-
-import {
-  deleteDepartamenti,
-  getDepartamente,
-} from "../features/departamentiSlice";
-
-const Listodepartamente = ({ setDepartamenti, id }) => {
+import { deleteProgrami, getPrograme } from "../features/programiSlice";
+import { useParams } from "react-router-dom";
+const Listoprograme = ({ setProgrami }) => {
   const dispatch = useDispatch();
-  const departamentiState = useSelector((state) => state.departamentiState);
-
-  const { departamente } = departamentiState;
-  console.log(departamente);
+  const programiState = useSelector((state) => state.programiState);
+  const { id } = useParams();
+  const { programe } = programiState;
+  console.log(programe);
 
   const columnsData = [
-    { field: "emertimif", header: "Fakulteti" },
-    { field: "emertimi", header: "Departamenti" },
+    { field: "fakulteti", header: "Fakulteti" },
+    { field: "departamenti", header: "Departamenti" },
+    { field: "emertimi", header: "Programi" },
     { field: "veprimet", header: "Veprimet" },
   ];
   useEffect(() => {
     console.log("effect departamenti");
 
-    dispatch(getDepartamente(id));
+    dispatch(getPrograme(id));
   }, [dispatch, id]);
 
   const handleDelete = (id) => {
     if (window.confirm("Jeni te sigurte?")) {
-      dispatch(deleteDepartamenti(id));
+      dispatch(deleteProgrami(id));
     }
   };
-  let url = "/departamenti/id/content";
+  let url = "/departamenti/id/programi";
 
   return (
     <Wrapper>
-      {departamentiState.getDepartamenteStatus === "rejected" ? (
-        <Alert variant="danger">{departamentiState.getDepartamenteError}</Alert>
+      {programiState.getProgrameStatus === "rejected" ? (
+        <Alert variant="danger">{programiState.getProgrameError}</Alert>
       ) : null}
-      {departamentiState.getDepartamenteStatus === "pending" ? (
+      {programiState.getProgrameStatus === "pending" ? (
         <Loading center />
       ) : (
         <table>
@@ -57,13 +54,16 @@ const Listodepartamente = ({ setDepartamenti, id }) => {
             </tr>
           </thead>
           <tbody>
-            {departamente.length > 0 ? (
-              departamente.map((data) => (
+            {programe.length > 0 ? (
+              programe.map((data) => (
                 <tr key={data.id}>
                   <td data-label={columnsData[0].header}>
-                    {data.fakulteti.emertimi}
+                    {data.departamenti.fakulteti.emertimi}
                   </td>
                   <td data-label={columnsData[1].header}>
+                    {data.departamenti.emertimi}
+                  </td>
+                  <td data-label={columnsData[2].header}>
                     <NavLink
                       to={url.replace("id", data.id)}
                       // onClick={props.functioncall}
@@ -81,11 +81,12 @@ const Listodepartamente = ({ setDepartamenti, id }) => {
                       size="small"
                       className="btn  "
                       onClick={() =>
-                        setDepartamenti({
+                        setProgrami({
                           id: data.id,
                           emertimi: data.emertimi,
-                          fakulteti: data.fakulteti.id,
-                          //fakulteti:data.fakulteti,
+                          departamenti: data.departamenti.id,
+                          fakulteti: data.departamenti.fakulteti.id,
+
                           created: null,
                           updated: null,
                         })
@@ -113,4 +114,4 @@ const Listodepartamente = ({ setDepartamenti, id }) => {
     </Wrapper>
   );
 };
-export default Listodepartamente;
+export default Listoprograme;

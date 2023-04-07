@@ -19,7 +19,6 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Shtorresht from "./pages/Shtorresht";
 import Planipdf from "./pages/Planipdf";
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -50,7 +49,7 @@ function App() {
           />
 
           <Route
-            path="departamenti/:id/programi"
+            path="departamenti/:id/content"
             element={
               <ProtectedRoute>
                 <DepartmentContent />

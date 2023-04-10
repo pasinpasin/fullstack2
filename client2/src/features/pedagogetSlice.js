@@ -44,7 +44,7 @@ const pedagogetSlice = createSlice({
       };
     });
     builder.addCase(getPedagoget.fulfilled, (state, action) => {
-      //[getPrograme.fulfilled]: (state, action) => {
+      console.log(action.payload)
       return {
         ...state,
         pedagoge: action.payload.result.items,

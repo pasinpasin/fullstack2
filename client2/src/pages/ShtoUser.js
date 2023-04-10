@@ -1,18 +1,25 @@
-import { useAppContext } from "../context/appContext";
+import { useDispatch, useSelector } from "react-redux";
 import FormRow from "../components/FormRow";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useHttpClient from "../hooks/useHttpClient";
+
 import React from "react";
 import FormrowSelect from "../components/FormrowSelect";
 import Loading from "../components/Loading";
 import FormCheckBox from "../components/FormCheckBox";
-import Alert2 from "../components/Alert2";
-import { useNavigate } from "react-router-dom";
+import Alert from "../components/Alert";
+import { useNavigate ,Navigate} from "react-router-dom";
+
+import { shtoUser } from "../features/userSlice";
+import { getFakultete } from "../features/fakultetiSlice";
+import { getDepartamente } from "../features/departamentiSlice";
+
 
 const ShtoUser = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
+ 
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.userState);
   const navigate = useNavigate();
   const [emri, setEmri] = useState("");
   const [mbiemri, setMbimri] = useState("");
@@ -32,18 +39,14 @@ const ShtoUser = () => {
   const [checked, setChecked] = useState([]);
   const titujt = ["Msc", "Dr", "Prof.Dr", "Doc", "Prof.Asoc. Dr"];
   const [isdepLoading, setIsdepLoading] = useState(true);
+  const departamentiState = useSelector((state) => state.departamentiState);
+  const { departamente } = departamentiState;
+  const fakultetiState = useSelector((state) => state.fakultetiState);
+  const {fakultete } = fakultetiState;
 
-  const postData = async (newuser) => {
-    try {
-      const response = await sendRequest(`users/`, "POST", newuser);
-      //console.log(response);
-      navigate("/users");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
 
-  const getFakultetet = async () => {
+/*   const getFakultetet = async () => {
     try {
       const response = await sendRequest("fakulteti", "GET", {});
 
@@ -60,10 +63,10 @@ const ShtoUser = () => {
       setDepartamentet(...departamentet, response.data.result.items);
     } catch (error) {
       console.log(error);
-    }
-  };
+    } 
+  };*/
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const newuser = {
       user: {
@@ -80,16 +83,36 @@ const ShtoUser = () => {
       roli: checked,
       departamenti,
     };
-    postData(newuser);
+    /* try {
+    await dispatch(shtoUser(newuser)).unwrap()
+    
+    navigate(-1);
+
+    }
+    catch(err){
+      console.log(err)
+    } */
+    dispatch(shtoUser(newuser)).unwrap()
+    .then(() => {
+      navigate("/users");
+    });
+   
+
+
+    
+   
   };
 
   useEffect(() => {
-    if (userloading) {
-      getFakultetet();
-      getDepartamentet();
-      setUserloading(false);
-    }
-  }, []);
+   
+    
+      dispatch(getFakultete());
+      
+      dispatch(getDepartamente());
+
+     
+    
+  }, [dispatch]);
 
   const handleCheck = (event) => {
     var updatedList = [...checked];
@@ -110,16 +133,22 @@ const ShtoUser = () => {
     );
   };
 
+ 
+  // if (userState.shtoUserStatus==="success") return < Navigate to="/users" />;
   return (
+    
     <>
-    {isLoading ? (
-      <Loading center />
-    ) : (
+   {(fakultetiState.getFakulteteStatus === "pending" || departamentiState.getDepartamenteStatus === "pending"
+   || userState.shtoUserStatus === "pending") ? (
+        <Loading center />
+      ) : 
+     
+      (
       <>
-          {error.alertType !== "" ?? (
-            <Alert2 alertType={error.alertType} alertText={error.alertText} />
-          )}
-          <Alert2 alertType={error.alertType} alertText={error.alertText} />
+          {userState.shtoUserStatus === "rejected" ? (
+        <Alert variant="danger">{userState.shtoUserError}</Alert>
+      ) : null}
+         
           <form className="form" onSubmit={onSubmit}>
             
             <FormRow
@@ -173,11 +202,11 @@ const ShtoUser = () => {
                 setFakulteti(e.target.value);
                 setDepartamentetfilter(
                   //...departamentetfilter,
-                  setFilter(departamentet, e.target.value)
+                  setFilter(departamente, e.target.value)
                 );
               }}
               className="form-select"
-              lista={fakultetet}
+              lista={fakultete}
             ></FormrowSelect>
 
             <FormrowSelect
@@ -185,6 +214,7 @@ const ShtoUser = () => {
               value={departamenti}
               handleChange={(e) => {
                 setDepartamenti(e.target.value);
+                console.log(e.target.value)
               }}
               //lista={departamentet}
               //lista={setFilter(departamentet, fakulteti)}

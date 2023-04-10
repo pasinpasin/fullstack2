@@ -20,6 +20,8 @@ const Shtoprograme = ({ programi, setProgrami }) => {
       (departament) => departament.fakulteti.id === parseInt(value)
     );
   };
+ 
+
 
   console.log(departamente);
 

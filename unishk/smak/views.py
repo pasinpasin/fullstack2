@@ -275,9 +275,11 @@ class DepartamentiViewSet(VerboseCreateModelMixin,viewsets.ModelViewSet):
        
         userporfile=Profile.objects.get(user=self.request.user)
         departamenti = self.get_object()
-        #print(fakulteti)
+        print(departamenti.id)
         if 'Admin' in userporfile.roli:
-            pedagoget=Profile.objects.filter(departamenti__id=departamenti.id)
+           pedagoget=Profile.objects.filter(departamenti__id=departamenti.id)
+           print(pedagoget)
+           
             
         else:
             pedagoget=Profile.objects.filter(departamenti__id=departamenti.id,departamenti__emertimi=userporfile.departamenti.emertimi)
@@ -424,6 +426,13 @@ class UsersViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
+     
+    def destroy(self, *args, **kwargs):
+            serializer = self.get_serializer(self.get_object())
+            super().destroy(*args, **kwargs)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
 
 class PlaniViewSet(viewsets.ModelViewSet):
     

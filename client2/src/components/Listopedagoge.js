@@ -12,7 +12,7 @@ const Listopedagoge = ({ id }) => {
   const pedagogState = useSelector((state) => state.pedagogeState);
 
   const { pedagoge } = pedagogState;
-  console.log(pedagoge);
+  //console.log(pedagoge);
 
   const columnsData = [
     { field: "user.first_name", header: "Emri" },
@@ -53,7 +53,7 @@ const Listopedagoge = ({ id }) => {
             {pedagoge.length > 0 ? (
               pedagoge.map((data) => (
                 <tr key={data.id}>
-                  <td data-label={columnsData[0].header}>{data.emri}</td>
+                  <td data-label={columnsData[0].header}>{data.user.first_name}</td>
                   <td data-label={columnsData[1].header}>
                     <NavLink
                       to={url.replace("id", data.id)}
@@ -63,7 +63,7 @@ const Listopedagoge = ({ id }) => {
                       }
                       end
                     >
-                      {data.mbiemri}
+                      {data.user.last_name}
                     </NavLink>
                   </td>
                 </tr>

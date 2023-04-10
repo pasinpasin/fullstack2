@@ -253,18 +253,20 @@ const programiSlice = createSlice({
     });
     //[updateProgrami.fulfilled]: (state, action) => {
     builder.addCase(updateProgrami.fulfilled, (state, action) => {
-      console.log(state.programe);
+      console.log(action.payload);
+      
+      let depid=state.programe[0].departamenti.id
       const updatedPrograme = state.programe.map((program) =>
-        program.id === action.payload.result.items.id &&
-        program.departamenti.id === action.payload.result.items.departamenti.id
+        program.id === action.payload.result.items.id
           ? action.payload.result.items
           : program
       );
+      const filterd_programe = updatedPrograme.filter(prog => prog.departamenti.id===depid) ;
 
-      console.log(updatedPrograme);
+      console.log(filterd_programe);
       return {
         ...state,
-        programe: updatedPrograme,
+        programe: filterd_programe,
         shtoProgrameStatus: "",
         shtoProgrameError: "",
         getProgrameStatus: "",

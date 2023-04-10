@@ -1,25 +1,20 @@
-
-import { useDispatch, useSelector } from "react-redux";
+import ModifikoForm from "../components/ModifikoForm";
+import { useAppContext } from "../context/appContext";
 import FormRow from "../components/FormRow";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Alert from "../components/Alert";
+import useHttpClient from "../hooks/useHttpClient";
 import React from "react";
 import FormrowSelect from "../components/FormrowSelect";
 import Loading from "../components/Loading";
 import FormCheckBox from "../components/FormCheckBox";
-
+import Alert2 from "../components/Alert2";
 import { useNavigate } from "react-router-dom";
-import { getUser, updateUser } from "../features/userSlice";
-import { getFakultete } from "../features/fakultetiSlice";
-import { getDepartamente } from "../features/departamentiSlice";
 
 const ModifikoUser = () => {
-  
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
- 
   const [emri, setEmri] = useState("");
   const [mbiemri, setMbimri] = useState("");
   const [atesia, setAtesia] = useState("");
@@ -31,21 +26,54 @@ const ModifikoUser = () => {
   const [fakulteti, setFakulteti] = useState();
   const [departamenti, setDepartamenti] = useState();
   const [edituser, seteditUser] = useState(null);
-
- 
-
+  const [fakultetet, setFakultetet] = useState([]);
+  const [departamentet, setDepartamentet] = useState([]);
+  const [usereditloading, setUsereditloading] = useState(true);
   const [checked, setChecked] = useState([]);
   const [departamentetfilter, setDepartamentetfilter] = useState([]);
 
-  const userState = useSelector((state) => state.userState);
-  const { perdorues } = userState;
-  const departamentiState = useSelector((state) => state.departamentiState);
-  const { departamente } = departamentiState;
-  const fakultetiState = useSelector((state) => state.fakultetiState);
-  const {fakultete } = fakultetiState;
+  const getData = async () => {
+    try {
+      const response = await sendRequest(`users/${id}`, "GET", {});
+      console.log(response)
+      seteditUser(response.data.result.items);
+    
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const postData = async (newuser) => {
+    try {
+      const response = await sendRequest(`users/${id}/`, "PATCH", newuser);
+      
+   
+   
+    navigate("/users");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const getFakultetet = async () => {
+    try {
+      const response = await sendRequest("fakulteti", "GET", {});
 
+      setFakultetet(...fakultetet, response.data.result.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const getDepartamentet = async () => {
+    try {
+      const response = await sendRequest(`departamenti`, "GET", {});
+
+      setDepartamentet(...departamentet, response.data.result.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
  
 
@@ -53,25 +81,13 @@ const ModifikoUser = () => {
     
     if (!edituser || edituser.id !== parseInt(id) ) {
      
-      dispatch(getUser(id)).then(() => {
-        seteditUser(perdorues)
-       
-      }).then(() => {
-        dispatch(getFakultete())
-       
-      }).then(() => {
-        dispatch(getDepartamente());
-       
-      })
-      .then(() => {
-        dispatch(getDepartamente());
-       
-      });
-      //dispatch(getFakultete())
-      //dispatch(getDepartamente());
+      getData();
+      getFakultetet();
+      getDepartamentet();
 
     } else {
       
+       
       setEmri(edituser.user.first_name);
       setMbimri(edituser.user.last_name);
       setEmail(edituser.user.email);
@@ -87,7 +103,7 @@ const ModifikoUser = () => {
       );
       setDepartamentetfilter(
         //...departamentetfilter,
-        setFilter(departamente, parseInt(edituser.departamenti.fakulteti.id))
+        setFilter(departamentet, parseInt(edituser.departamenti.fakulteti.id))
       );
     
 
@@ -99,11 +115,9 @@ const ModifikoUser = () => {
       setChecked([...edituser.roli]);
       //setChecked(edituser.role);
     
+      setUsereditloading(false);
     }
-  }, [dispatch]);
-
-  
-    
+  }, [edituser]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -121,8 +135,7 @@ const ModifikoUser = () => {
       roli: checked,
       departamenti:departamenti,
     };
-    
-    dispatch(updateUser(newuser,id));
+    postData(newuser);
   };
 
   const handleCheck = (event) => {
@@ -143,24 +156,15 @@ const ModifikoUser = () => {
     );
   };
 
-  if (edituser!==null)
-  {
-   
-       
-  }
- 
-
   return (
     <>
-      {(fakultetiState.getFakulteteStatus === "pending" || departamentiState.getDepartamenteStatus === "pending"
-      || userState.getUserStatus==="pending"
-   ) ? (
+      {usereditloading ? (
         <Loading center />
       ) : (
         <>
-         {userState.updateUserStatus === "rejected" ? (
-        <Alert variant="danger">{userState.updateUserError}</Alert>
-      ) : null}
+          {
+            <Alert2 alertType={error.alertType} alertText={error.alertText} />
+          }
           <form className="form" onSubmit={onSubmit}>
             <FormRow
               type="email"
@@ -221,10 +225,10 @@ const ModifikoUser = () => {
                 );
                 setDepartamentetfilter(
                   //...departamentetfilter,
-                  setFilter(departamente, e.target.value)
+                  setFilter(departamentet, e.target.value)
                 );
               }}
-              lista={fakultete}
+              lista={fakultetet}
             />
             <FormrowSelect
               name="departamenti"

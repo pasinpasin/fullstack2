@@ -10,6 +10,7 @@ import fakultetiReducer from "./features/fakultetiSlice";
 import departamentiReducer from "./features/departamentiSlice";
 import programiReducer from "./features/programiSlice";
 import pedagogeReducer from "./features/pedagogetSlice";
+import userReducer  from "./features/userSlice"
 
 import jwt_decode from "jwt-decode";
 
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   departamentiState: departamentiReducer,
   programiState: programiReducer,
   pedagogeState: pedagogeReducer,
+  userState: userReducer,
   loginUser: userLoginReducer,
   view: viewReducer,
   //fakultetilist: fakultetiListReducer,

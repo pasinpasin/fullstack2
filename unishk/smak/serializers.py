@@ -196,7 +196,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
    
     user=UserSerializer()
-    departamenti=DepartamentiSerializer()
+    departamenti=DepartamentiSerializer
 
     class Meta:
         model = Profile
@@ -222,7 +222,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
        ret = super().to_representation(instance)
-       #ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
+       ret['departamenti'] = DepartamentiSerializer(instance.departamenti).data
        ret['user'] = UserSerializer(instance.user).data
        return ret
     def create(self, validated_data):
@@ -255,6 +255,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
     
+   
 
 
 class PlaniSerializer(serializers.ModelSerializer):

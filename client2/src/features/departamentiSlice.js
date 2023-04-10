@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
 const initialState = {
-  departamente: [],
+  departamente: JSON.parse(sessionStorage.getItem("departamentet")) || [],
   shtoDepartamenteStatus: "",
   shtoDepartamenteError: "",
   getDepartamenteStatus: "",
@@ -119,10 +119,12 @@ const departamentiSlice = createSlice({
     });
     // [shtoDepartament.fulfilled]: (state, action) => {
     builder.addCase(shtoDepartament.fulfilled, (state, action) => {
-      console.log(action.payload);
+      //console.log(action.payload);
+      sessionStorage.setItem("departamentet", JSON.stringify(action.payload.result.items));
       return {
         ...state,
         departamente: [action.payload.result.items, ...state.departamente],
+        
         shtoDepartamenteStatus: "success",
         shtoDepartamenteError: "",
         getDepartamenteStatus: "",
@@ -163,6 +165,7 @@ const departamentiSlice = createSlice({
     });
     builder.addCase(getDepartamente.fulfilled, (state, action) => {
       //[getDepartamente.fulfilled]: (state, action) => {
+        sessionStorage.setItem("departamentet", JSON.stringify(action.payload.result.items));
       return {
         ...state,
         departamente: action.payload.result.items,
@@ -210,7 +213,7 @@ const departamentiSlice = createSlice({
       const currentDep = state.departamente.filter(
         (departament) => departament.id !== action.payload.result.items.id
       );
-
+      sessionStorage.setItem("departamentet", JSON.stringify(currentDep));
       return {
         ...state,
         departamente: currentDep,
@@ -259,7 +262,8 @@ const departamentiSlice = createSlice({
           ? action.payload.result.items
           : departament
       );
-      console.log(updatedDepartamente);
+      //console.log(updatedDepartamente);
+      sessionStorage.setItem("departamentet", JSON.stringify(updatedDepartamente));
       return {
         ...state,
         departamente: updatedDepartamente,

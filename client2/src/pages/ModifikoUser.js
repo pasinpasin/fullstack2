@@ -9,7 +9,7 @@ import Loading from "../components/Loading";
 import FormCheckBox from "../components/FormCheckBox";
 
 import { useNavigate } from "react-router-dom";
-import { getUser, updateUser } from "../features/userSlice";
+import { getSingleUser, updateUser } from "../features/userSlice";
 import { getFakultete } from "../features/fakultetiSlice";
 import { getDepartamente } from "../features/departamentiSlice";
 
@@ -40,38 +40,47 @@ const ModifikoUser = () => {
   const { departamente } = departamentiState;
   const fakultetiState = useSelector((state) => state.fakultetiState);
   const { fakultete } = fakultetiState;
-  console.log(perdorues);
+
+  
 
   useEffect(() => {
+    console.log("u thirr")
     /*    dispatch(getUser(id)).then(() => {
         dispatch(getFakultete());
         dispatch(getDepartamente());
       }); */
-    dispatch(getUser(id)).then(() => {
+    dispatch(getSingleUser(id)).then(() => {
       Promise.all([dispatch(getFakultete()), dispatch(getDepartamente())]).then(
         () => {
-          setEmri(perdorues[0].user.first_name);
-          setMbimri(perdorues[0].user.last_name);
-          setEmail(perdorues[0].user.email);
-          setAtesia(perdorues[0].atesia);
-          //console.log(edituser)
-          //setPassword(edituser.user.password);
-          //setConfirmpassword(edituser.user.password);
-          setUsername(perdorues[0].user.username);
-          setTitulli(perdorues[0].titulli);
-          setFakulteti(perdorues[0].departamenti.fakulteti.id);
-          setDepartamentetfilter(
-            //...departamentetfilter,
-            setFilter(
-              departamente,
-              parseInt(perdorues[0].departamenti.fakulteti.id)
-            )
-          );
+          console.log(fakultete.length)
+          if(fakultete.length>=1 && departamente.length>=1 )
+  {
 
-          setDepartamenti(perdorues[0].departamenti.id);
+    console.log(perdorues)
+    setEmri(perdorues.user.first_name);
+    setMbimri(perdorues.user.last_name);
+    setEmail(perdorues.user.email);
+    setAtesia(perdorues.atesia);
+    //console.log(edituser)
+    //setPassword(edituser.user.password);
+    //setConfirmpassword(edituser.user.password);
+    setUsername(perdorues.user.username);
+    setTitulli(perdorues.titulli);
+    setFakulteti(perdorues.departamenti.fakulteti.id);
+    setDepartamentetfilter(
+      //...departamentetfilter,
+      setFilter(
+        departamente,
+        parseInt(perdorues.departamenti.fakulteti.id)
+      )
+    );
 
-          setChecked([...perdorues[0].roli]);
-          //setChecked(edituser.role);
+    setDepartamenti(perdorues.departamenti.id);
+
+    setChecked([...perdorues.roli]);
+    //setChecked(edituser.role);
+  }
+         
         }
       );
     });
@@ -121,10 +130,10 @@ const ModifikoUser = () => {
 
   return (
     <>
-      {fakultetiState.getFakulteteStatus === "pending" ||
+      {(fakultetiState.getFakulteteStatus === "pending" ||
       departamentiState.getDepartamenteStatus === "pending" ||
       userState.updateUserStatus === "pending" ||
-      userState.getUserStatus === "pending" ? (
+      userState.getSingleUserStatus === "pending" )? (
         <Loading center />
       ) : (
         <>

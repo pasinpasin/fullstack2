@@ -32,8 +32,8 @@ const Listouser = ({ setUser }) => {
   useEffect(() => {
     console.log("effect user");
 
-    dispatch(getUser(id));
-  }, [dispatch, id]);
+    dispatch(getUser());
+  }, [dispatch]);
 
   const handleDelete = (id) => {
     if (window.confirm("Jeni te sigurte?")) {

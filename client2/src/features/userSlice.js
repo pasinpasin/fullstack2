@@ -7,11 +7,13 @@ const initialState = {
   shtoUserError: "",
   getUserStatus: "",
   getUserError: "",
+  getSingleUserStatus: "",
+  getSingleUserError: "",
   deleteUserStatus: "",
   deleteUserError: "",
   updateUserStatus: "",
   updateUserError: "",
-  redirectTo: false,
+  
 };
 
 export const shtoUser = createAsyncThunk(
@@ -33,17 +35,34 @@ export const shtoUser = createAsyncThunk(
 
 export const getUser = createAsyncThunk(
   "users/get",
-  async (id, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      if (id) {
-        //const response = await api.get(`departamenti/${id}/users`);
+     
+        const response = await api.get("users");
+        return response.data;
+      
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
+export const getSingleUser = createAsyncThunk(
+  "users/getsingle",
+  async (id, { rejectWithValue }) => {
+    
+    try {
+      
+       
         const response = await api.get(`users/${id}`);
         console.log(response.data);
         return response.data;
-      } else {
-        const response = await api.get("users");
-        return response.data;
-      }
+     
     } catch (error) {
       console.log(error);
       return rejectWithValue(
@@ -92,6 +111,9 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const selectPostById = (state, postId) =>
+  state.perdorues.find(post => post.id === postId)
+
 const userSlice = createSlice({
   name: "perdoruesit",
   initialState,
@@ -108,7 +130,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
 
@@ -139,7 +161,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     builder.addCase(getUser.pending, (state, action) => {
@@ -153,24 +175,14 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     builder.addCase(getUser.fulfilled, (state, action) => {
-      let newperdorues;
-      if (action.payload.result.items instanceof Array) {
-        console.log("array");
-        newperdorues = action.payload.result.items;
-      } else {
-        console.log(" jo array");
-        newperdorues = [...state.perdorues, action.payload.result.items];
-      }
+     
       return {
         ...state,
-        //perdorues: action.payload.result.items,
-
-        // perdorues: [...state.perdorues, action.payload.result.items],
-        perdorues: newperdorues,
+        perdorues:action.payload.result.items,
         shtoUserStatus: "",
         shtoUserError: "",
         getUserStatus: "success",
@@ -179,11 +191,12 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     //[getUser.rejected]: (state, action) => {
     builder.addCase(getUser.rejected, (state, action) => {
+      console.log(action)
       return {
         ...state,
         shtoUserStatus: "",
@@ -194,7 +207,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
 
@@ -210,7 +223,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     //[deleteUser.fulfilled]: (state, action) => {
@@ -230,7 +243,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     //[deleteUser.rejected]: (state, action) => {
@@ -245,7 +258,7 @@ const userSlice = createSlice({
         deleteUserError: action.payload,
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     // [updateUser.pending]: (state, action) => {
@@ -260,7 +273,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "pending",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
@@ -280,7 +293,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "success",
         updateUserError: "",
-        redirectTo: false,
+        
       };
     });
     // [updateUser.rejected]: (state, action) => {
@@ -296,9 +309,66 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "rejected",
         updateUserError: action.payload,
-        redirectTo: false,
+        
       };
     });
+
+
+    builder.addCase(getSingleUser.pending, (state, action) => {
+      return {
+        ...state,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        getSingleUserStatus: "pending",
+        getSinglUserError: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        
+      };
+    });
+    //[updateUser.fulfilled]: (state, action) => {
+    builder.addCase(getSingleUser.fulfilled, (state, action) => {
+      
+
+      return {
+        ...state,
+        perdorues:action.payload.result.items,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        getSingleUserError:"",
+        getSingleUserStatus:"success",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        
+      };
+    });
+    
+    builder.addCase(getSingleUser.rejected, (state, action) => {
+      
+      return {
+        ...state,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        getSingleUserError: action.payload,
+        getSingleUserStatus:"",
+        updateUserStatus: "",
+        updateUserError: "",
+        
+      };
+    });
+
   },
 });
 

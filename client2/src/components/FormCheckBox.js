@@ -1,13 +1,7 @@
 const FormCheckBox = (props) => {
-  const checkList = [
-    "Admin",
-    "Pedagog",
-    "ShefDep",
-    "Dekan",
-    "Kurrikula",
-  ];
-  console.log(props.arr)
-  console.log( props.arr.includes('pedagog'))
+  const checkList = ["Admin", "Pedagog", "ShefDep", "Dekan", "Kurrikula"];
+  //console.log(props.arr)
+  //console.log( props.arr.includes('pedagog'))
 
   return (
     <div className="form-row">
@@ -24,11 +18,9 @@ const FormCheckBox = (props) => {
               key={index}
               id={index}
               onChange={props.handleChange}
-              checked={ props.arr.includes(itemValue)}
-              
+              checked={props.arr.includes(itemValue)}
             />
             {itemValue}
-            
           </div>
         );
       })}

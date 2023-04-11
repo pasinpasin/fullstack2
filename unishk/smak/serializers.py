@@ -172,15 +172,16 @@ class ProgramiSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
    
-    confirmpassword = serializers.CharField(write_only=True, required=True)
+    confirmpassword = serializers.CharField(write_only=True,required=True)
     class Meta:
         model = User
         fields = '__all__'
  
     def validate(self, attrs):
        
-        #print (attrs)
-        if not self.instance:
+       
+        if self.instance:
+        
             print("valido pass")
             if  attrs['password'] != attrs['confirmpassword']:
                 raise serializers.ValidationError("passw gabim"
@@ -208,6 +209,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         
         if (self.instance):
             print("ketu 1")
+            print(self.instance.user.id)
+            print(attrs['user']['email'])
             qs=User.objects.filter(email=attrs['user']['email']).exclude(id=self.instance.user.id)
             if qs.exists(): 
                 raise serializers.ValidationError("Not unique email")
@@ -239,8 +242,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         
     def update(self, instance, validated_data):
             user = self.context['request'].user
-            if user.pk != instance.pk:
-                raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
+            print(user)
+            userporfile=Profile.objects.get(user=user)
+            if 'Admin' not in userporfile.roli:
+                if user.pk != instance.pk:
+                    raise serializers.ValidationError({"authorize": "Nuk keni te drejta te modifikoni kete user."})
             
             # retrieve the User
             user_data = validated_data.pop('user', None)

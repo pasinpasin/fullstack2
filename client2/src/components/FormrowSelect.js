@@ -1,5 +1,5 @@
 const FormrowSelect = (props) => {
-  console.log(props.lista);
+  //console.log(props.lista);
   return (
     <div className="form-row">
       <label htmlFor={props.name} className="form-label">

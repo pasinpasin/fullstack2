@@ -11,7 +11,7 @@ const initialState = {
   deleteUserError: "",
   updateUserStatus: "",
   updateUserError: "",
-  redirectTo:false,
+  redirectTo: false,
 };
 
 export const shtoUser = createAsyncThunk(
@@ -75,11 +75,10 @@ export const deleteUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "users/perditeso",
-  async (user,id, { rejectWithValue }) => {
-  console.log(user);
+  async (userData, { rejectWithValue }) => {
+    const { id, user } = userData;
+    console.log(userData);
     try {
-     
-
       const response = await api.patch(`users/${id}/`, user);
       return response.data;
     } catch (error) {
@@ -99,7 +98,6 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(shtoUser.pending, (state, action) => {
-      
       return {
         ...state,
         shtoUserStatus: "pending",
@@ -110,12 +108,11 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
-   
+
     builder.addCase(shtoUser.fulfilled, (state, action) => {
-     
       return {
         ...state,
         perdorues: [action.payload.result.items, ...state.perdorues],
@@ -127,10 +124,10 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:true,
+        redirectTo: true,
       };
     });
-    
+
     builder.addCase(shtoUser.rejected, (state, action) => {
       return {
         ...state,
@@ -142,11 +139,10 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     builder.addCase(getUser.pending, (state, action) => {
-     
       return {
         ...state,
         shtoUserStatus: "",
@@ -157,14 +153,24 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     builder.addCase(getUser.fulfilled, (state, action) => {
-      //[getUser.fulfilled]: (state, action) => {
+      let newperdorues;
+      if (action.payload.result.items instanceof Array) {
+        console.log("array");
+        newperdorues = action.payload.result.items;
+      } else {
+        console.log(" jo array");
+        newperdorues = [...state.perdorues, action.payload.result.items];
+      }
       return {
         ...state,
-        perdorues: action.payload.result.items,
+        //perdorues: action.payload.result.items,
+
+        // perdorues: [...state.perdorues, action.payload.result.items],
+        perdorues: newperdorues,
         shtoUserStatus: "",
         shtoUserError: "",
         getUserStatus: "success",
@@ -173,7 +179,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     //[getUser.rejected]: (state, action) => {
@@ -188,7 +194,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
 
@@ -204,7 +210,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     //[deleteUser.fulfilled]: (state, action) => {
@@ -224,7 +230,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     //[deleteUser.rejected]: (state, action) => {
@@ -239,12 +245,11 @@ const userSlice = createSlice({
         deleteUserError: action.payload,
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     // [updateUser.pending]: (state, action) => {
     builder.addCase(updateUser.pending, (state, action) => {
-      console.log(action.payload);
       return {
         ...state,
         shtoUserStatus: "",
@@ -255,16 +260,15 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "pending",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      console.log(action.payload);
       const updatedUser = state.perdorues.map((user) =>
         user.id === action.payload.id ? action.payload : user
       );
-    
+
       return {
         ...state,
         perdorues: updatedUser,
@@ -276,11 +280,12 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "success",
         updateUserError: "",
-        redirectTo:false,
+        redirectTo: false,
       };
     });
     // [updateUser.rejected]: (state, action) => {
     builder.addCase(updateUser.rejected, (state, action) => {
+      console.log(action);
       return {
         ...state,
         shtoUserStatus: "",
@@ -291,7 +296,7 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "rejected",
         updateUserError: action.payload,
-        redirectTo:false,
+        redirectTo: false,
       };
     });
   },

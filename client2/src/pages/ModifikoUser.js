@@ -1,4 +1,3 @@
-
 import { useDispatch, useSelector } from "react-redux";
 import FormRow from "../components/FormRow";
 import { useState, useEffect } from "react";
@@ -15,11 +14,10 @@ import { getFakultete } from "../features/fakultetiSlice";
 import { getDepartamente } from "../features/departamentiSlice";
 
 const ModifikoUser = () => {
-  
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
- 
+
   const [emri, setEmri] = useState("");
   const [mbiemri, setMbimri] = useState("");
   const [atesia, setAtesia] = useState("");
@@ -27,108 +25,83 @@ const ModifikoUser = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
-  
+
   const [fakulteti, setFakulteti] = useState();
   const [departamenti, setDepartamenti] = useState();
   const [edituser, seteditUser] = useState(null);
-
- 
 
   const [checked, setChecked] = useState([]);
   const [departamentetfilter, setDepartamentetfilter] = useState([]);
 
   const userState = useSelector((state) => state.userState);
   const { perdorues } = userState;
+
   const departamentiState = useSelector((state) => state.departamentiState);
   const { departamente } = departamentiState;
   const fakultetiState = useSelector((state) => state.fakultetiState);
-  const {fakultete } = fakultetiState;
-
-
-
-
- 
+  const { fakultete } = fakultetiState;
+  console.log(perdorues);
 
   useEffect(() => {
-    
-    if (!edituser || edituser.id !== parseInt(id) ) {
-     
-      dispatch(getUser(id)).then(() => {
-        seteditUser(perdorues)
-       
-      }).then(() => {
-        dispatch(getFakultete())
-       
-      }).then(() => {
+    /*    dispatch(getUser(id)).then(() => {
+        dispatch(getFakultete());
         dispatch(getDepartamente());
-       
-      })
-      .then(() => {
-        dispatch(getDepartamente());
-       
-      });
-      //dispatch(getFakultete())
-      //dispatch(getDepartamente());
+      }); */
+    dispatch(getUser(id)).then(() => {
+      Promise.all([dispatch(getFakultete()), dispatch(getDepartamente())]).then(
+        () => {
+          setEmri(perdorues[0].user.first_name);
+          setMbimri(perdorues[0].user.last_name);
+          setEmail(perdorues[0].user.email);
+          setAtesia(perdorues[0].atesia);
+          //console.log(edituser)
+          //setPassword(edituser.user.password);
+          //setConfirmpassword(edituser.user.password);
+          setUsername(perdorues[0].user.username);
+          setTitulli(perdorues[0].titulli);
+          setFakulteti(perdorues[0].departamenti.fakulteti.id);
+          setDepartamentetfilter(
+            //...departamentetfilter,
+            setFilter(
+              departamente,
+              parseInt(perdorues[0].departamenti.fakulteti.id)
+            )
+          );
 
-    } else {
-      
-      setEmri(edituser.user.first_name);
-      setMbimri(edituser.user.last_name);
-      setEmail(edituser.user.email);
-      setAtesia(edituser.atesia);
-      //console.log(edituser)
-      //setPassword(edituser.user.password);
-      //setConfirmpassword(edituser.user.password);
-      setUsername(edituser.user.username)
-      setTitulli(edituser.titulli);
-      setFakulteti(
-        
-        edituser.departamenti.fakulteti.id
-      );
-      setDepartamentetfilter(
-        //...departamentetfilter,
-        setFilter(departamente, parseInt(edituser.departamenti.fakulteti.id))
-      );
-    
+          setDepartamenti(perdorues[0].departamenti.id);
 
-      setDepartamenti(
-      
-         edituser.departamenti.id,
+          setChecked([...perdorues[0].roli]);
+          //setChecked(edituser.role);
+        }
       );
-      
-      setChecked([...edituser.roli]);
-      //setChecked(edituser.role);
-    
-    }
+    });
   }, [dispatch]);
-
-  
-    
 
   const onSubmit = (e) => {
     e.preventDefault();
     const newuser = {
       user: {
-       
         email: email,
         first_name: emri,
         last_name: mbiemri,
-       
       },
 
       titulli,
       atesia,
       roli: checked,
-      departamenti:departamenti,
+      departamenti: departamenti,
     };
-    
-    dispatch(updateUser(newuser,id));
+
+    dispatch(updateUser({ user: newuser, id }))
+      .unwrap()
+      .then(() => {
+        navigate("/users");
+      });
   };
 
   const handleCheck = (event) => {
     var updatedList = [...checked];
     if (event.target.checked) {
-     
       updatedList = [...checked, event.target.value];
     } else {
       updatedList.splice(checked.indexOf(event.target.value), 1);
@@ -143,24 +116,21 @@ const ModifikoUser = () => {
     );
   };
 
-  if (edituser!==null)
-  {
-   
-       
+  if (edituser !== null) {
   }
- 
 
   return (
     <>
-      {(fakultetiState.getFakulteteStatus === "pending" || departamentiState.getDepartamenteStatus === "pending"
-      || userState.getUserStatus==="pending"
-   ) ? (
+      {fakultetiState.getFakulteteStatus === "pending" ||
+      departamentiState.getDepartamenteStatus === "pending" ||
+      userState.updateUserStatus === "pending" ||
+      userState.getUserStatus === "pending" ? (
         <Loading center />
       ) : (
         <>
-         {userState.updateUserStatus === "rejected" ? (
-        <Alert variant="danger">{userState.updateUserError}</Alert>
-      ) : null}
+          {userState.updateUserStatus === "rejected" ? (
+            <Alert variant="danger">{userState.updateUserError}</Alert>
+          ) : null}
           <form className="form" onSubmit={onSubmit}>
             <FormRow
               type="email"
@@ -175,7 +145,7 @@ const ModifikoUser = () => {
               value={username}
               handleChange={(e) => setUsername(e.target.value)}
             />
-           
+
             <FormRow
               type="text"
               name="emri"
@@ -203,16 +173,9 @@ const ModifikoUser = () => {
 
             <FormrowSelect
               name="fakulteti"
-              value={ fakulteti}
+              value={fakulteti}
               handleChange={(e) => {
-                setFakulteti(
-                  e.target.value,
-                
-                );
-
-              
-                  
-                  
+                setFakulteti(e.target.value);
 
                 console.log(
                   e.target.children[e.target.selectedIndex].getAttribute(
@@ -228,14 +191,12 @@ const ModifikoUser = () => {
             />
             <FormrowSelect
               name="departamenti"
-            value={departamenti} //per te vendosur default selected value
-              
+              value={departamenti} //per te vendosur default selected value
               handleChange={(e) => {
-                console.log(e.target.value)
+                console.log(e.target.value);
                 setDepartamenti(e.target.value);
-               
               }}
-               lista={departamentetfilter}
+              lista={departamentetfilter}
               //lista={setFilter(departamentet)}
             />
             <FormCheckBox

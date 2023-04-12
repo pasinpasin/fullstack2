@@ -418,7 +418,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         _serializer.is_valid(raise_exception=True)
         _serializer.save()
            # return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
-        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(_serializer.data),'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
             
       
     def retrieve(self, request, *args, **kwargs):

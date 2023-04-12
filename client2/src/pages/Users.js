@@ -46,10 +46,16 @@ const Users = () => {
     const [usertoedit] = perdorues.filter(
       (njeperdorues) => njeperdorues.id === id
     );
-    console.log(usertoedit);
+    //console.log(usertoedit);
 
     setSelectedPerdorues(usertoedit);
     setIsEditing(true);
+  };
+
+  const handlePassword = (id) => {
+    if (window.confirm("Jeni te sigurte?")) {
+      dispatch(ChangeUserPassword(id));
+    }
   };
 
   const handleDelete = (id) => {

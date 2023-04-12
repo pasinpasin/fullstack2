@@ -179,12 +179,15 @@ class UserSerializer(serializers.ModelSerializer):
  
     def validate(self, attrs):
        
-       
-        if self.instance:
+        print("parent",self.parent)
+        
+        #if not self.instance:
+        if self.parent is not None and self.parent.instance is None:
+      
         
             print("valido pass")
             if  attrs['password'] != attrs['confirmpassword']:
-                raise serializers.ValidationError("passw gabim"
+                raise serializers.ValidationError("passw nuk perputhet"
                     )
 
         return attrs
@@ -209,7 +212,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         
         if (self.instance):
             print("ketu 1")
-            print(self.instance.user.id)
+           # print(self.instance.user.id)
             print(attrs['user']['email'])
             qs=User.objects.filter(email=attrs['user']['email']).exclude(id=self.instance.user.id)
             if qs.exists(): 
@@ -235,7 +238,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         user_data.pop('confirmpassword',None)
         validated_data['user'] = User.objects.create_user(**user_data)
-        print(validated_data)
+        #print(validated_data)
         
         profile = Profile.objects.create(**validated_data)
         return profile

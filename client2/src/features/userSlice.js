@@ -278,8 +278,9 @@ const userSlice = createSlice({
     });
     //[updateUser.fulfilled]: (state, action) => {
     builder.addCase(updateUser.fulfilled, (state, action) => {
+      console.log(action.payload)
       const updatedUser = state.perdorues.map((user) =>
-        user.id === action.payload.id ? action.payload : user
+        user.id === action.payload.result.items.id ? action.payload.result.items : user
       );
 
       return {
@@ -298,7 +299,7 @@ const userSlice = createSlice({
     });
     // [updateUser.rejected]: (state, action) => {
     builder.addCase(updateUser.rejected, (state, action) => {
-      console.log(action);
+     
       return {
         ...state,
         shtoUserStatus: "",

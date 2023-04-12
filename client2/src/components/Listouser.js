@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-const Listouser = ({ perdorues, handleEdit, handleDelete, setIsAdding }) => {
+const Listouser = ({ perdorues, handleEdit, handleDelete, setIsAdding,handlePassword }) => {
   const columnsData = [
     { field: "user.first_name", header: "Emri" },
     { field: "user.last_name", header: "Mbiemri" },
@@ -84,6 +84,13 @@ const Listouser = ({ perdorues, handleEdit, handleDelete, setIsAdding }) => {
                         className="button muted-button"
                       >
                         Delete
+                      </button>
+
+                      <button
+                        onClick={() => handlePassword(data.id)}
+                        className="button muted-button"
+                      >
+                        Ndrysho password
                       </button>
                     </td>
                   }

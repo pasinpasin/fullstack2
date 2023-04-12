@@ -434,6 +434,20 @@ class UsersViewSet(viewsets.ModelViewSet):
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     
 
+    def update(self, request,pk=None, *args, **kwargs):
+
+  
+        instance = self.get_object()
+        print(instance)
+       
+        
+        
+        _serializer = self.serializer_class(instance=instance,data=request.data,partial=True,context={'request': request})  # NOQA
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    
+
 class PlaniViewSet(viewsets.ModelViewSet):
     
     queryset = Planet.objects.all()

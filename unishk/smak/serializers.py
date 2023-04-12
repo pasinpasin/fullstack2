@@ -241,6 +241,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return profile
         
     def update(self, instance, validated_data):
+            
             user = self.context['request'].user
             print(user)
             userporfile=Profile.objects.get(user=user)

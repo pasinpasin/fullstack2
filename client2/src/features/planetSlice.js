@@ -33,7 +33,7 @@ export const shtoPlan = createAsyncThunk(
       );
     }
   }
-);
+); 
 
 export const getPlane = createAsyncThunk(
   "planet/get",

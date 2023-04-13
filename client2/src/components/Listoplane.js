@@ -8,11 +8,15 @@ import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { deletePlani, getPlane } from "../features/planetSlice";
 import { useParams } from "react-router-dom";
-const Listoplane = ({ setPlani }) => {
+const Listoplane = ({ plane,
+  handleEdit,
+  handleDelete,
+  setIsAdding,
+   }) => {
   const dispatch = useDispatch();
   const planiState = useSelector((state) => state.planiState);
   const { id } = useParams();
-  const { plane } = planiState;
+  
   console.log(plane);
 
   const columnsData = [
@@ -22,6 +26,7 @@ const Listoplane = ({ setPlani }) => {
     { field: "status", header: "Status" },
     { field: "fakulteti", header: "Fakulteti" },
     { field: "departamenti", header: "Departamenti" },
+    { field: "veprimet", header: "Veprimet" },
   ];
 
   useEffect(() => {
@@ -30,32 +35,31 @@ const Listoplane = ({ setPlani }) => {
     dispatch(getPlane(id));
   }, [dispatch, id]);
 
-  const handleDelete = (id) => {
-    if (window.confirm("Jeni te sigurte?")) {
-      dispatch(deletePlani(id));
-    }
-  };
+
   let url = "/plani/id/planpermbajtja";
 
   return (
     <Wrapper>
-      {planiState.getPlaneStatus === "rejected" ? (
-        <Alert variant="danger">{planiState.getPlaneError}</Alert>
-      ) : null}
-      {planiState.getPlaneStatus === "pending" ? (
-        <Loading center />
-      ) : (
+       <div style={{ marginTop: "30px", marginBottom: "18px" }}>
+          <button onClick={() => setIsAdding(true)} className="round-button">
+            Shto user
+          </button>
+          </div>
+     
+       
         <table>
           <thead>
             <tr>
+            
               {columnsData.length > 0 ? (
                 columnsData.map((column) => (
                   <th key={column.field}> {column.header}</th>
                 ))
+               
               ) : (
                 <th colSpan={3}>Nuk ka te dhena per kolonat</th>
               )}
-            </tr>
+           </tr>
           </thead>
           <tbody>
             {plane.length > 0 ? (
@@ -88,16 +92,12 @@ const Listoplane = ({ setPlani }) => {
                       </td>
 
                   <td data-label="Veprimet">
-                    <button
-                      size="small"
-                      className="btn  "
-                      onClick={() =>
-                        setPlani({
-                        ...data
-                      })}
-                    >
-                      Edit
-                    </button>
+                  <button
+                        onClick={() => handleEdit(data.id)}
+                        className="button muted-button"
+                      >
+                        Edit
+                      </button>
                     <button
                       className="btn "
                       onClick={() => handleDelete(data.id)}
@@ -114,7 +114,8 @@ const Listoplane = ({ setPlani }) => {
             )}
           </tbody>
         </table>
-      )}
+       
+    
     </Wrapper>
   );
 };

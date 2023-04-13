@@ -13,7 +13,8 @@ const initialState = {
   deleteUserError: "",
   updateUserStatus: "",
   updateUserError: "",
-  
+  changeUserPasswordStatus: "",
+  changeUserPasswordError: "",
 };
 
 export const shtoUser = createAsyncThunk(
@@ -37,10 +38,8 @@ export const getUser = createAsyncThunk(
   "users/get",
   async (_, { rejectWithValue }) => {
     try {
-     
-        const response = await api.get("users");
-        return response.data;
-      
+      const response = await api.get("users");
+      return response.data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(
@@ -55,14 +54,10 @@ export const getUser = createAsyncThunk(
 export const getSingleUser = createAsyncThunk(
   "users/getsingle",
   async (id, { rejectWithValue }) => {
-    
     try {
-      
-       
-        const response = await api.get(`users/${id}`);
-        console.log(response.data);
-        return response.data;
-     
+      const response = await api.get(`users/${id}`);
+      console.log(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(
@@ -78,7 +73,7 @@ export const deleteUser = createAsyncThunk(
   "users/fshij",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await api.delete(`users/${id}`);
+      const response = await api.delete(`user/${id}/delete`);
       // console.log(response);
       return response.data;
     } catch (error) {
@@ -111,8 +106,30 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const changeUserPassword = createAsyncThunk(
+  "users/perditesopassword",
+  async (email, { rejectWithValue }) => {
+    console.log(email);
+    try {
+      //const response = await api.patch(`resetpasswordbyadmin/${id}/`, {
+      const response = await api.post(`password_reset/`, {
+        email: email,
+      });
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
 export const selectPostById = (state, postId) =>
-  state.perdorues.find(post => post.id === postId)
+  state.perdorues.find((post) => post.id === postId);
 
 const userSlice = createSlice({
   name: "perdoruesit",
@@ -130,7 +147,8 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
 
@@ -146,7 +164,8 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        redirectTo: true,
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
 
@@ -161,7 +180,8 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     builder.addCase(getUser.pending, (state, action) => {
@@ -175,14 +195,14 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     builder.addCase(getUser.fulfilled, (state, action) => {
-     
       return {
         ...state,
-        perdorues:action.payload.result.items,
+        perdorues: action.payload.result.items,
         shtoUserStatus: "",
         shtoUserError: "",
         getUserStatus: "success",
@@ -191,12 +211,13 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     //[getUser.rejected]: (state, action) => {
     builder.addCase(getUser.rejected, (state, action) => {
-      console.log(action)
+      console.log(action);
       return {
         ...state,
         shtoUserStatus: "",
@@ -207,7 +228,8 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
 
@@ -223,13 +245,15 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     //[deleteUser.fulfilled]: (state, action) => {
     builder.addCase(deleteUser.fulfilled, (state, action) => {
+      console.log(action.payload);
       const currentUser = state.perdorues.filter(
-        (user) => user.id !== action.payload.result.items.id
+        (user) => user.id !== action.payload.id
       );
 
       return {
@@ -243,7 +267,8 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     //[deleteUser.rejected]: (state, action) => {
@@ -258,7 +283,8 @@ const userSlice = createSlice({
         deleteUserError: action.payload,
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     // [updateUser.pending]: (state, action) => {
@@ -273,14 +299,17 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "pending",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      console.log(action.payload)
+      console.log(action.payload);
       const updatedUser = state.perdorues.map((user) =>
-        user.id === action.payload.result.items.id ? action.payload.result.items : user
+        user.id === action.payload.result.items.id
+          ? action.payload.result.items
+          : user
       );
 
       return {
@@ -294,12 +323,12 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "success",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     // [updateUser.rejected]: (state, action) => {
     builder.addCase(updateUser.rejected, (state, action) => {
-     
       return {
         ...state,
         shtoUserStatus: "",
@@ -310,10 +339,10 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "rejected",
         updateUserError: action.payload,
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
-
 
     builder.addCase(getSingleUser.pending, (state, action) => {
       return {
@@ -328,32 +357,31 @@ const userSlice = createSlice({
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
     builder.addCase(getSingleUser.fulfilled, (state, action) => {
-      
-
       return {
         ...state,
-        perdorues:action.payload.result.items,
+        perdorues: action.payload.result.items,
         shtoUserStatus: "",
         shtoUserError: "",
         getUserStatus: "",
         getUserError: "",
-        getSingleUserError:"",
-        getSingleUserStatus:"success",
+        getSingleUserError: "",
+        getSingleUserStatus: "success",
         deleteUserStatus: "",
         deleteUserError: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
-    
+
     builder.addCase(getSingleUser.rejected, (state, action) => {
-      
       return {
         ...state,
         shtoUserStatus: "",
@@ -363,13 +391,75 @@ const userSlice = createSlice({
         deleteUserStatus: "",
         deleteUserError: "",
         getSingleUserError: action.payload,
-        getSingleUserStatus:"",
+        getSingleUserStatus: "",
         updateUserStatus: "",
         updateUserError: "",
-        
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
       };
     });
 
+    builder.addCase(changeUserPassword.pending, (state, action) => {
+      return {
+        ...state,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        getSingleUserStatus: "",
+        getSinglUserError: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        changeUserPasswordStatus: "pending",
+        changeUserPasswordError: "",
+      };
+    });
+    //[updateUser.fulfilled]: (state, action) => {
+    builder.addCase(changeUserPassword.fulfilled, (state, action) => {
+      console.log(action.payload);
+      /*  const updatedUser = state.perdorues.map((user) =>
+        user.id === action.payload.result.items.id
+          ? action.payload.result.items
+          : user
+      ); */
+
+      return {
+        ...state,
+        //perdorues: updatedUser,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        getSingleUserError: "",
+        getSingleUserStatus: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        changeUserPasswordStatus: "success",
+        changeUserPasswordError: "",
+      };
+    });
+
+    builder.addCase(changeUserPassword.rejected, (state, action) => {
+      return {
+        ...state,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        getSingleUserError: "",
+        getSingleUserStatus: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "action.payload",
+      };
+    });
   },
 });
 

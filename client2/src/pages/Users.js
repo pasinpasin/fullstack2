@@ -8,9 +8,15 @@ import Shtouser from "../components/Shtouser";
 import Edituser from "../components/Edituser";
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
-import { deleteUser, getUser, updateUser } from "../features/userSlice";
+import {
+  changeUserPassword,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "../features/userSlice";
 import { getFakultete } from "../features/fakultetiSlice";
 import { getDepartamente } from "../features/departamentiSlice";
+import Changepassbyadmin from "../components/Changepassbyadmin";
 const Users = () => {
   let navigate = useNavigate();
   const { id } = useParams();
@@ -21,6 +27,7 @@ const Users = () => {
   const [selectedPerdorues, setSelectedPerdorues] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [changePass, setChangePass] = useState(false);
   const departamentiState = useSelector((state) => state.departamentiState);
   const { departamente } = departamentiState;
   const fakultetiState = useSelector((state) => state.fakultetiState);
@@ -52,10 +59,24 @@ const Users = () => {
     setIsEditing(true);
   };
 
-  const handlePassword = (id) => {
-    if (window.confirm("Jeni te sigurte?")) {
-      dispatch(ChangeUserPassword(id));
-    }
+  const handlePassword = (data) => {
+    //  const [usertoedit] = perdorues.filter(
+    //  (njeperdorues) => njeperdorues.id === id
+    //);
+    //console.log(usertoedit);
+
+    // setSelectedPerdorues(usertoedit);
+    //setChangePass(true);
+
+    dispatch(changeUserPassword(data.user.email))
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        if (res.code === 200) setChangePass(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleDelete = (id) => {
@@ -67,27 +88,35 @@ const Users = () => {
   return (
     <div>
       {userState.getUserStatus === "rejected" ||
+      userState.deleteUserStatus === "rejected" ||
+      userState.changeUserPasswordStatus === "rejected" ||
       fakultetiState.getFakulteteStatus === "rejected" ||
       departamentiState.getDepartamenteStatus === "rejected" ? (
         <Alert variant="danger">
           {userState.getUserError ||
+            userState.changeUserPasswordError ||
             departamentiState.getDepartamenteError ||
             fakultetiState.getFakulteteError}
         </Alert>
       ) : null}
+      {userState.changeUserPasswordStatus === "success" ? (
+        <Alert variant="success">Passwordi u ndryshua</Alert>
+      ) : null}
       {userState.getUserStatus === "pending" ||
+      userState.changeUserPasswordStatus === "pending" ||
       fakultetiState.getFakulteteStatus === "pending" ||
       departamentiState.getDepartamenteStatus === "pending" ||
       userState.deleteUserStatus === "pending" ? (
         <Loading center />
       ) : (
         <>
-          {!isAdding && !isEditing && (
+          {!isAdding && !isEditing && !changePass && (
             <>
               <Listouser
                 perdorues={perdorues}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
+                handlePassword={handlePassword}
                 setIsAdding={setIsAdding}
               />
             </>
@@ -95,6 +124,14 @@ const Users = () => {
           {/* Add */}
           {isAdding && (
             <Shtouser perdorues={perdorues} setIsAdding={setIsAdding} />
+          )}
+
+          {changePass && (
+            <Changepassbyadmin
+              perdorues={perdorues}
+              selectedUser={selectedPerdorues}
+              setChangePass={setChangePass}
+            />
           )}
           {/* Edit */}
           {isEditing && (

@@ -26,6 +26,7 @@ from django.template.loader import render_to_string
 import weasyprint
 from django.db.models import Prefetch
 from django.http import HttpResponse
+from rest_framework import generics
 
 
 
@@ -446,7 +447,43 @@ class UsersViewSet(viewsets.ModelViewSet):
         _serializer.is_valid(raise_exception=True)
         _serializer.save()
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
+class Deleteuser(generics.RetrieveDestroyAPIView):
+    serializer_class = UserSerializer
     
+    def get_queryset(self):
+         if ('id' in self.kwargs):
+            id = self.kwargs['id']
+            
+            return  User.objects.filter(id=id)
+         
+    def get_object(self, queryset=None):
+       # if queryset is None:
+          #  queryset = self.get_queryset()
+        obj = self.get_queryset()
+        return obj 
+    
+    def delete(self, request, pk=None, format=None):
+        
+            user = get_object_or_404(User.objects.all(), pk=pk)
+            user.delete()
+            return Response({'message':'success','error':False,'code':202,'id':pk},status=status.HTTP_202_ACCEPTED)
+        
+    def retrieve(self, request, *args, **kwargs):
+      
+            instance = self.get_object()
+            print(instance)
+            serializer = self.get_serializer(instance)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+"""  def destroy(self, *args, **kwargs):
+            print(self.get_object())
+            serializer = self.get_serializer(self.get_object())
+            super().destroy(*args, **kwargs)
+            return Response({'message':'success','error':False,'code':202,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_202_ACCEPTED)
+     """
+
+    
+
 
 class PlaniViewSet(viewsets.ModelViewSet):
     
@@ -581,16 +618,20 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
 
 
 class ChangePasswordView(generics.UpdateAPIView):
-    queryset = User.objects.all()
+    #queryset = User.objects.all()
     
     serializer_class = ChangePasswordSerializer
+
+    def get_queryset(self):
+         
+         if ('id' in self.kwargs):
+            print("ndrysho pass",id)
+            id = self.kwargs['id']
+            
+            return  User.objects.filter(id=id)
     
 
-    def get_object(self, queryset=None):
-       # if queryset is None:
-          #  queryset = self.get_queryset()
-        obj = self.request.user
-        return obj 
+    
         
         
        # return queryset.get(pk=self.request.user.pk)
@@ -604,7 +645,7 @@ class ChangePasswordView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-            
+             
 
 class LendeMeZgjedhjeView(APIView):
     """  def get(self, request, pk=None, format=None) -> Response:

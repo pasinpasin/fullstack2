@@ -35,6 +35,8 @@ urlpatterns = [
     path('changepassword/', views.ChangePasswordView.as_view(), name='auth_change_password'),
     path('lendemezgjedhje_plani/<int:pid>/', views.LendeMeZgjedhjeListAPI.as_view(),name='zgjedhje2'),
     path('lendemezgjedhje/<int:pk>/', views.LendeMeZgjedhjeView.as_view()),
+   # path('resetpasswordbyadmin/<int:pk>/',views.ChangePasswordByAdmin.as_view(),name='resetpasswordbyadmin'),
+    path('user/<int:pk>/delete/',views.Deleteuser.as_view(),name='deleteuser'),
     
    #path('fakulteti/<int:id>/departamenti/', views.DepartamentiViewSet.as_view(),name='mefakultet'),
    #path('departamenti/', views.DepartamentiViewSet.as_view(),name='pafakultet'),

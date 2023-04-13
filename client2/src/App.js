@@ -18,6 +18,7 @@ import Planet from "./pages/Planet";
 import ForgotPassword from "./pages/ForgotPassword";
 import Shtorresht from "./pages/Shtorresht";
 import Planipdf from "./pages/Planipdf";
+import Changepassbyadmin from "./components/Changepassbyadmin";
 
 function App() {
   return (
@@ -159,6 +160,10 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route
+          path="/password_reset/confirm/"
+          element={<Changepassbyadmin />}
+        />
         <Route path="/krijofakultet" element={<ShtoFakultet />} />
       </Routes>
     </BrowserRouter>

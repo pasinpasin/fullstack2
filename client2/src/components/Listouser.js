@@ -86,7 +86,7 @@ const Listouser = ({
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(data.id)}
+                        onClick={() => handleDelete(data.user.id)}
                         className="button muted-button"
                       >
                         Delete

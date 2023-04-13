@@ -15,6 +15,8 @@ const initialState = {
   updateUserError: "",
   changeUserPasswordStatus: "",
   changeUserPasswordError: "",
+  changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
 };
 
 export const shtoUser = createAsyncThunk(
@@ -128,6 +130,29 @@ export const changeUserPassword = createAsyncThunk(
   }
 );
 
+export const changeUserPassword2 = createAsyncThunk(
+  "users/perditesopassword2",
+  async (body, { rejectWithValue }) => {
+    const { token, password}= body;
+    try {
+      //const response = await api.patch(`resetpasswordbyadmin/${id}/`, {
+      const response = await api.post(`password_reset/confirm/`, {
+        token: token,
+        password:password
+      });
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
 export const selectPostById = (state, postId) =>
   state.perdorues.find((post) => post.id === postId);
 
@@ -149,6 +174,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+         changeUserPasswordError2: "",
       };
     });
 
@@ -166,6 +193,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
 
@@ -182,6 +211,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     builder.addCase(getUser.pending, (state, action) => {
@@ -197,6 +228,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     builder.addCase(getUser.fulfilled, (state, action) => {
@@ -213,6 +246,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     //[getUser.rejected]: (state, action) => {
@@ -230,6 +265,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
 
@@ -247,13 +284,15 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     //[deleteUser.fulfilled]: (state, action) => {
     builder.addCase(deleteUser.fulfilled, (state, action) => {
       console.log(action.payload);
       const currentUser = state.perdorues.filter(
-        (user) => user.id !== action.payload.id
+        (user) => user.user.id !== action.payload.id  //sepse ke fshire ne baze te id se userit dhe jo te profilit
       );
 
       return {
@@ -269,6 +308,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     //[deleteUser.rejected]: (state, action) => {
@@ -285,6 +326,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     // [updateUser.pending]: (state, action) => {
@@ -301,6 +344,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
@@ -325,6 +370,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     // [updateUser.rejected]: (state, action) => {
@@ -341,6 +388,8 @@ const userSlice = createSlice({
         updateUserError: action.payload,
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
 
@@ -359,6 +408,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
@@ -378,6 +429,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
 
@@ -396,6 +449,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
 
@@ -414,6 +469,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "pending",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
     //[updateUser.fulfilled]: (state, action) => {
@@ -440,6 +497,8 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "success",
         changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
       };
     });
 
@@ -458,6 +517,76 @@ const userSlice = createSlice({
         updateUserError: "",
         changeUserPasswordStatus: "",
         changeUserPasswordError: "action.payload",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: "",
+      };
+    });
+
+     builder.addCase(changeUserPassword2.pending, (state, action) => {
+      return {
+        ...state,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        getSingleUserStatus: "",
+        getSinglUserError: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
+        changeUserPasswordStatus2: "pending",
+  changeUserPasswordError2: "",
+      };
+    });
+    //[updateUser.fulfilled]: (state, action) => {
+    builder.addCase(changeUserPassword2.fulfilled, (state, action) => {
+      console.log(action.payload);
+      /*  const updatedUser = state.perdorues.map((user) =>
+        user.id === action.payload.result.items.id
+          ? action.payload.result.items
+          : user
+      ); */
+
+      return {
+        ...state,
+        //perdorues: updatedUser,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        getSingleUserError: "",
+        getSingleUserStatus: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
+        changeUserPasswordStatus2: "success",
+  changeUserPasswordError2: "",
+      };
+    });
+
+    builder.addCase(changeUserPassword2.rejected, (state, action) => {
+      return {
+        ...state,
+        shtoUserStatus: "",
+        shtoUserError: "",
+        getUserStatus: "",
+        getUserError: "",
+        deleteUserStatus: "",
+        deleteUserError: "",
+        getSingleUserError: "",
+        getSingleUserStatus: "",
+        updateUserStatus: "",
+        updateUserError: "",
+        changeUserPasswordStatus: "",
+        changeUserPasswordError: "",
+        changeUserPasswordStatus2: "",
+  changeUserPasswordError2: action.payload,
       };
     });
   },

@@ -392,6 +392,21 @@ class ProgramiViewSet(viewsets.ModelViewSet):
             return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
             return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # """
+    
+    @action(detail=True, methods=["get"])
+    def planet(self, request ,pk=None):
+        if request.method == 'GET':
+            programi = self.get_object()
+            print(programi)
+            planet=Planet.objects.filter(programi=programi.id)
+           
+            
+            serializer=PlaniSerializer(planet,many=True)
+         
+            
+            
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
         
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -567,7 +582,34 @@ class PlaniViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-  
+      
+
+    def create(self, request, *args, **kwargs):
+        
+
+        _serializer = self.serializer_class(data=request.data)  # NOQA
+        #if
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+           # return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object() #per ke  do ta bash update
+        print(instance)
+        serializer = self.get_serializer(instance=instance,data=request.data)  
+        print(serializer)
+        #serializer = self.serializer_class(instance=instance,data=request.data,partial=True)  # NOQA
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+               
+    def destroy(self, *args, **kwargs):
+            print(self.get_object())
+            serializer = self.get_serializer(self.get_object())
+            super().destroy(*args, **kwargs)
+            return Response({'message':'success','error':False,'code':202,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_202_ACCEPTED)
+         
+
 class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
     queryset = PlanPermbajtja.objects.all()
     serializer_class = PlanpermbajtjaSerializer

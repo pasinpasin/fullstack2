@@ -12,41 +12,26 @@ import { updatePlani } from "../features/planetSlice";
 
 const Editplane = ({ selectedPlane, setIsEditing }) => {
   const dispatch = useDispatch();
-  
+
   const planiState = useSelector((state) => state.planiState);
- 
+
   const programiState = useSelector((state) => state.programiState);
   const { programe } = programiState;
   console.log(selectedPlane);
   const id = selectedPlane.id;
 
- 
-
-  const setFilter = (departamentet, value) => {
-    return departamentet.filter(
-      (departament) => departament.programi.id === parseInt(value)
-    );
-  };
-
   const [periudha, setPeriudha] = useState(selectedPlane.periudha);
   const [cikli, setCikli] = useState(selectedPlane.cikli);
-  
 
-  const [programi, setProgrami] = useState(
-    selectedPlane.programi.id
-  );
- 
-
-  
+  const [programi, setProgrami] = useState(selectedPlane.programi.id);
 
   const handleUpdate = (e) => {
     e.preventDefault();
     const newplan = {
-      
-
+      id,
       periudha,
       cikli,
-     programi
+      programi,
     };
 
     dispatch(updatePlani(newplan))
@@ -69,7 +54,6 @@ const Editplane = ({ selectedPlane, setIsEditing }) => {
           {planiState.updatePlaniStatus === "rejected" ? (
             <Alert variant="danger">{planiState.updatePlaniError}</Alert>
           ) : null}
-         
 
           <FormRow
             type="text"
@@ -84,9 +68,6 @@ const Editplane = ({ selectedPlane, setIsEditing }) => {
             value={periudha}
             handleChange={(e) => setPeriudha(e.target.value)}
           />
-       
-        
-      
 
           <FormrowSelect
             name="departamenti"
@@ -98,7 +79,6 @@ const Editplane = ({ selectedPlane, setIsEditing }) => {
             lista={programe}
             //lista={setFilter(departamentet)}
           />
-          
 
           <button type="submit" className="btn btn-block ">
             Ruaj

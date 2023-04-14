@@ -125,7 +125,7 @@ function App() {
             }
           />
           <Route
-            path="programi/:id/plani"
+            path="programi/:id/planet"
             element={
               <ProtectedRoute>
                 <Planet />

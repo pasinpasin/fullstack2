@@ -1,16 +1,15 @@
-import Listouser from "../components/Listouser";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import Shtouser from "../components/Shtouser";
-import Edituser from "../components/Edituser";
+
 import Loading from "../components/Loading";
 import Alert from "../components/Alert";
 import {
   changePlaniPassword,
   deletePlani,
+  getPlane,
   getPlani,
   updatePlani,
 } from "../features/planetSlice";
@@ -33,7 +32,7 @@ const Planet = () => {
   const [changePass, setChangePass] = useState(false);
   const programiState = useSelector((state) => state.programiState);
   const { programe } = programiState;
- 
+
   const [plani, setPlani] = useState({
     emertimi: "",
     id: null,
@@ -44,23 +43,17 @@ const Planet = () => {
 
   useEffect(() => {
     console.log("effect plani");
-
-   
-
-    dispatch(getPrograme);
-  }, [dispatch]);
+    dispatch(getPlane(id));
+    dispatch(getPrograme());
+  }, [dispatch, id]);
 
   const handleEdit = (id) => {
-    const [usertoedit] = plane.filter(
-      (njeperdorues) => njeperdorues.id === id
-    );
+    const [planedit] = plane.filter((njeplan) => njeplan.id === id);
     //console.log(usertoedit);
 
-    setSelectedPlane(usertoedit);
+    setSelectedPlane(planedit);
     setIsEditing(true);
   };
-
-
 
   const handleDelete = (id) => {
     if (window.confirm("Jeni te sigurte?")) {
@@ -70,20 +63,15 @@ const Planet = () => {
 
   return (
     <div>
-      {planiState.getPlaniStatus === "rejected" ||
+      {planiState.getPlaneStatus === "rejected" ||
       planiState.deletePlaniStatus === "rejected" ||
-     
       programiState.getProgrameStatus === "rejected" ? (
         <Alert variant="danger">
-          {planiState.getPlaniError ||
-           
-           
-            programiState.getProgrameError}
+          {planiState.getPlaniError || programiState.getProgrameError}
         </Alert>
       ) : null}
-     
-      {planiState.getPlaniStatus === "pending" ||
-     
+
+      {planiState.getPlaneStatus === "pending" ||
       programiState.getProgrameStatus === "pending" ||
       planiState.deletePlaniStatus === "pending" ? (
         <Loading center />
@@ -95,17 +83,13 @@ const Planet = () => {
                 plane={plane}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
-                
                 setIsAdding={setIsAdding}
               />
             </>
           )}
           {/* Add */}
-          {isAdding && (
-            <Shtoplane  plane={plane} setIsAdding={setIsAdding} />
-          )}
+          {isAdding && <Shtoplane plane={plane} setIsAdding={setIsAdding} />}
 
-         
           {/* Edit */}
           {isEditing && (
             <Editplane

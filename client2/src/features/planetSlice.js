@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
 const initialState = {
-  plane:  [],
+  plane: [],
   shtoPlaneStatus: "",
   shtoPlaneError: "",
   getPlaneStatus: "",
@@ -19,10 +19,8 @@ export const shtoPlan = createAsyncThunk(
   "planet/shto",
   async (plan, { rejectWithValue }) => {
     try {
-      const response = await api.post("plani/", {
-        emertimi: plan.emertimi,
-        fakulteti: plan.fakulteti,
-      });
+      const response = await api.post("plani/", plan);
+
       return response.data;
     } catch (error) {
       console.log(error);
@@ -33,14 +31,14 @@ export const shtoPlan = createAsyncThunk(
       );
     }
   }
-); 
+);
 
 export const getPlane = createAsyncThunk(
   "planet/get",
   async (id, { rejectWithValue }) => {
     try {
       if (id) {
-        const response = await api.get(`programi/${id}/plani`);
+        const response = await api.get(`programi/${id}/planet`);
         return response.data;
       } else {
         const response = await api.get("plani");
@@ -80,11 +78,12 @@ export const updatePlani = createAsyncThunk(
   async (plani, { rejectWithValue }) => {
     console.log(plani);
     try {
-      const { id, emertimi, fakulteti } = plani;
+      const { id, cikli, periudha, programi } = plani;
 
       const response = await api.patch(`plani/${id}/`, {
-        emertimi: emertimi,
-        fakulteti: fakulteti
+        cikli,
+        periudha,
+        programi,
       });
       return response.data;
     } catch (error) {
@@ -120,11 +119,14 @@ const planetSlice = createSlice({
     // [shtoPlan.fulfilled]: (state, action) => {
     builder.addCase(shtoPlan.fulfilled, (state, action) => {
       //console.log(action.payload);
-      sessionStorage.setItem("planet", JSON.stringify(action.payload.result.items));
+      sessionStorage.setItem(
+        "planet",
+        JSON.stringify(action.payload.result.items)
+      );
       return {
         ...state,
         plane: [action.payload.result.items, ...state.plane],
-        
+
         shtoPlaneStatus: "success",
         shtoPlaneError: "",
         getPlaneStatus: "",
@@ -165,7 +167,10 @@ const planetSlice = createSlice({
     });
     builder.addCase(getPlane.fulfilled, (state, action) => {
       //[getPlane.fulfilled]: (state, action) => {
-        sessionStorage.setItem("planet", JSON.stringify(action.payload.result.items));
+      sessionStorage.setItem(
+        "planet",
+        JSON.stringify(action.payload.result.items)
+      );
       return {
         ...state,
         plane: action.payload.result.items,

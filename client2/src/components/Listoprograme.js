@@ -31,7 +31,7 @@ const Listoprograme = ({ setProgrami }) => {
       dispatch(deleteProgrami(id));
     }
   };
-  let url = "/departamenti/id/programi";
+  let url = "/programi/id/planet";
 
   return (
     <Wrapper>

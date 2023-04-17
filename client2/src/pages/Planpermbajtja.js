@@ -1,60 +1,70 @@
-import { useAppContext } from "../context/appContext";
+
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Wrapper from "../assets/wrappers/TabsWrapper";
-import Alert from "../components/Alert";
-import { Tabs, Tab, Content } from "../components/TabsComp";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
-import ShtoForm from "../components/ShtoForm";
-import ModifikoForm from "../components/ModifikoForm";
-import axios from "axios";
-import Tabela from "../components/Tabela";
-import { GrEdit } from "react-icons/gr";
-import { MdDelete } from "react-icons/md";
-import Semestri from "./Semestri";
-import { useParams } from "react-router-dom";
 
-import useHttpClient from "../hooks/useHttpClient";
+import Semestri from "../components/Semestri";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getPlanpermbajtje } from "../features/planpermbajtjaSlice";
+import { getLendemezgjedhje } from "../features/lendeMeZgjedhjeSlice";
+import EditableTable from "../components/EditableTable";
 
 const Planpermbajtja = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
+  const dispatch = useDispatch();
+  const planpermbajtjaState = useSelector((state) => state.planpermbajtjaState);
+  const lendemezgjedhjeState = useSelector((state) => state.lendemezgjedhjeState);
+  const { planpermbajtja } = planpermbajtjaState;
+  const { lendemezgjedhje } = lendemezgjedhjeState;
   const { id } = useParams();
-  const [planet, setPlanet] = useState();
-  const [zgjedhje, setZgjedhje] = useState();
+
   const setFilter = (plani, sem) => {
     return plani.filter(
       (planpermbajtja) =>
         (planpermbajtja.viti || planpermbajtja.lenda.viti) === sem
     );
   };
-  const getData = async () => {
-    try {
-      const response = await sendRequest(
-        `plani/${id}/planpermbajtja`,
-        "GET",
-        {}
-      );
-      const response2 = await sendRequest(
-        `lendemezgjedhje_plani/${id}`,
-        "GET",
-        {}
-      );
-      console.log(response2.data.result.items);
-      setZgjedhje(response2.data.result.items);
-      setPlanet(response.data.result.items);
+  const totalet = (myarray) => {
+    let newobj = myarray.reduce(
+      function (previousValue, currentValue) {
+        return {
+          totkredite:
+            currentValue.tipiveprimtarise !== "m"
+              ? previousValue.totkredite + currentValue.kredite
+              : previousValue.totkredite,
+          totngarkesasem1:
+            currentValue.tipiveprimtarise !== "m"
+              ? previousValue.totngarkesasem1 +
+                currentValue.leksionesem1 +
+                currentValue.seminaresem1 +
+                currentValue.praktikasem1 +
+                currentValue.laboratoresem1
+              : previousValue.totngarkesasem1,
+          totngarkesasem2:
+            currentValue.tipiveprimtarise !== "m"
+              ? previousValue.totngarkesasem2 +
+                currentValue.leksionesem2 +
+                currentValue.seminaresem2 +
+                currentValue.praktikasem2 +
+                currentValue.laboratoresem2
+              : previousValue.totngarkesasem2,
+        };
+      },
+      { totkredite: 0, totngarkesasem1: 0, totngarkesasem2: 0 }
+    );
 
-      //console.log(setFilter(planet, "Semestri 1"));
-    } catch (error) {
-      console.log(error);
-    }
+    return newobj;
   };
 
+
   useEffect(() => {
-    getData();
-  }, []);
+    console.log("efekt planpermb")
+    dispatch(getPlanpermbajtje(id));
+    dispatch(getLendemezgjedhje(id));
+  }, [dispatch,id]);
 
   let url = "/departamenti/id/programi";
 
@@ -83,13 +93,11 @@ const Planpermbajtja = () => {
 
   return (
     <Wrapper>
-      {isLoading || planet == null ? (
+      {planpermbajtjaState.getPlanpermbajtjeStatus === "pending" || lendemezgjedhjeState.getLendemezgjedhjeStatus==="pending" ? (
         <Loading center />
       ) : (
         <div className="Tabs">
-          {error.alertType !== "" ?? (
-            <Alert alertType={error.alertType} alertText={error.alertText} />
-          )}
+        
           <ul className="nav" key="nav">
             <li
               key="tab1"
@@ -131,43 +139,48 @@ const Planpermbajtja = () => {
           <div className="outlet">
             {activeTab === "tab1" ? (
               <Semestri
-                sem={setFilter(planet, 1)}
-                zgjedhje={setFilter(zgjedhje, 1)}
+                sem={setFilter(planpermbajtja, 1)}
+                zgjedhje={setFilter(lendemezgjedhje, 1)}
                 viti={1}
                 planiid={id}
-                getdata={getData}
+                
+                getdata={planpermbajtja}
               />
             ) : activeTab === "tab2" ? (
               <Semestri
-                sem={setFilter(planet, 2)}
-                zgjedhje={setFilter(zgjedhje, 2)}
+                sem={setFilter(planpermbajtja, 2)}
+                zgjedhje={setFilter(lendemezgjedhje, 2)}
+                
                 viti={2}
                 planiid={id}
-                getdata={getData}
+                getdata={lendemezgjedhje}
               />
             ) : activeTab === "tab3" ? (
               <Semestri
-                sem={setFilter(planet, 3)}
-                zgjedhje={setFilter(zgjedhje, 3)}
+                sem={setFilter(planpermbajtja, 3)}
+                zgjedhje={setFilter(lendemezgjedhje, 3)}
                 viti={3}
                 planiid={id}
-                getdata={getData}
+                
+                getdata={planpermbajtja}
               />
             ) : activeTab === "tab4" ? (
               <Semestri
-                sem={setFilter(planet, 4)}
-                zgjedhje={setFilter(zgjedhje, 4)}
+                sem={setFilter(planpermbajtja, 4)}
+                zgjedhje={setFilter(lendemezgjedhje, 4)}
                 viti={4}
                 planiid={id}
-                getdata={getData}
+                
+                getdata={planpermbajtja}
               />
             ) : (
               <Semestri
-                sem={setFilter(planet, 5)}
-                zgjedhje={setFilter(zgjedhje, 5)}
+                sem={setFilter(planpermbajtja, 5)}
+                zgjedhje={setFilter(lendemezgjedhje, 5)}
                 viti={5}
                 planiid={id}
-                getdata={getData}
+                
+                getdata={planpermbajtja}
               />
             )}
           </div>

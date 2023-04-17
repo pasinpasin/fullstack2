@@ -12,6 +12,8 @@ import programiReducer from "./features/programiSlice";
 import pedagogeReducer from "./features/pedagogetSlice";
 import userReducer  from "./features/userSlice"
 import planetReducer from "./features/planetSlice"
+import planpermbajtjaReducer from "./features/planpermbajtjaSlice"
+import lenndeMeZgjedhjeReducer from "./features/lendeMeZgjedhjeSlice"
 
 import jwt_decode from "jwt-decode";
 
@@ -21,6 +23,8 @@ const reducer = combineReducers({
   programiState: programiReducer,
   pedagogeState: pedagogeReducer,
   planiState: planetReducer,
+  planpermbajtjaState: planpermbajtjaReducer,
+  lendemezgjedhjeState:lenndeMeZgjedhjeReducer,
   userState: userReducer,
   loginUser: userLoginReducer,
   view: viewReducer,

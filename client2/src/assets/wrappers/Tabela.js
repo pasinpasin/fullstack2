@@ -89,6 +89,12 @@ const Wrapper = styled.section`
       width: 100%;
       white-space: nowrap;
     }
+    input {
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+       box-sizing: border-box;
+      padding: 10px;
+  }
   }
 `;
 export default Wrapper;

@@ -133,7 +133,7 @@ function App() {
             }
           />
           <Route
-            path="plani/:id/"
+            path="plani/:id/planpermbajtja"
             element={
               <ProtectedRoute>
                 <Planpermbajtja />

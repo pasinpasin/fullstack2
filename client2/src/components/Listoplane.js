@@ -52,7 +52,7 @@ const Listoplane = ({ plane, handleEdit, handleDelete, setIsAdding }) => {
             plane.map((data) => (
               <tr key={data.id}>
                 <td key="Programi" data-label="Programi">
-                  <Link to={`/kot`}> {data.programi.emertimi}</Link>
+                  <Link to={`/plani/${data.id}/planpermbajtja`}> {data.programi.emertimi}</Link>
                 </td>
                 <td key="Periudha" data-label="Periudha">
                   <Link to={`/kot`}> {data.periudha}</Link>

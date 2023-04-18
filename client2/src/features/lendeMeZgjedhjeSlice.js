@@ -38,7 +38,7 @@ export const getLendemezgjedhje = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       if (id) {
-        const response = await api.get(`planpermbajtja/${id}/lendemezgjedhje`);
+        const response = await api.get(`plani/${id}/lendemezgjedhje`);
         return response.data;
       } else {
         const response = await api.get("lendemezgjedhje");

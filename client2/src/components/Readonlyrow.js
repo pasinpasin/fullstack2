@@ -1,6 +1,7 @@
 import React from "react";
 import Wrapper from "../assets/wrappers/Tabela";
 const Readonlyrow = ({ mydata, handleEditClick, handleDeleteClick }) => {
+  
   return (
   
     <tr>

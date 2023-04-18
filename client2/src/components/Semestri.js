@@ -90,11 +90,11 @@ const Semestri = (props) => {
   const { planpermbajtja } = planpermbajtjaState;
   const { lendemezgjedhje } = lendemezgjedhjeState;
 
-  const [zgjedhjet, setZgjedhjet] = useState();
+
   const [totali, setTotalet] = useState();
 
-  const [listelendesh, setListelendesh] = useState([]);
-  const [lenda, setLenda] = useState();
+  
+ 
 
   useEffect(() => {
     // console.log(props.sem);
@@ -106,7 +106,7 @@ const Semestri = (props) => {
     //setTotalet({ totkredite: calculateSum(dhenat, "kredite") });
   }, [props.sem]);
 
-  console.log(listelendesh);
+
 
   const calculateSum = (array, property) => {
     const total = array.reduce((accumulator, object) => {
@@ -137,10 +137,10 @@ const Semestri = (props) => {
 
             <span>ONE THING</span>
             <EditableTable2
-              columnsData={columnsData2}
+              columnsData2={columnsData2}
               viti={props.viti}
               planiid={props.planiid}
-              semestridata={props.zgjedhje}
+              semestridata2={props.zgjedhje}
               lendepertezgjedhje={props.sem}
             />
           </>

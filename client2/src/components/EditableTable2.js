@@ -16,11 +16,11 @@ import {
   shtoLendemezgjedhje,
   updateLendemezgjedhje,
 } from "../features/lendeMeZgjedhjeSlice";
-function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
+function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
   const dispatch = useDispatch();
   const planpermbajtjaState = useSelector((state) => state.planpermbajtjaState);
   const { planpermbajtja } = planpermbajtjaState;
-  const [contacts, setContacts] = useState([]);
+  const [contacts2, setContacts2] = useState([]);
   const [listelendesh, setListelendesh] = useState([]);
   const lendemezgjedhjeState = useSelector(
     (state) => state.lendemezgjedhjeState
@@ -33,7 +33,7 @@ function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
     console.log("effect editable table 2");
 
     /*  dispatch(getLendemezgjedhje(id))
-    .then(data=>setContacts(data.payload.result.items)) */
+    .then(data=>setContacts2(data.payload.result.items)) */
     setListelendesh(
       lendepertezgjedhje.map((lendet) => {
         const container = {};
@@ -43,76 +43,77 @@ function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
         return container;
       })
     );
-    setContacts(semestridata);
-  }, [semestridata, lendepertezgjedhje]);
+    setContacts2(semestridata2);
+  }, [semestridata2, lendepertezgjedhje]);
 
-  //setContacts(...contacts,lendemezgjedhje)
+  //setContacts2(...contacts2,lendemezgjedhje)
 
-  const [editId, setEditId] = useState(null);
+  const [editId2, setEditId2] = useState(null);
 
   console.log(listelendesh);
-  const [editFormData, setEditFormData] = useState({
+  const [editFormData2, setEditFormData2] = useState({
     lenda: "",
     emertimi: "",
   });
 
-  const [addFormData, setAddFormData] = useState([]);
+  const [addFormData2, setAddFormData2] = useState([]);
 
-  const handleEditFormChange = (event) => {
+  const handleEditFormChange2 = (event) => {
     event.preventDefault();
 
     const fieldName = event.target.getAttribute("name");
     const fieldValue = event.target.value;
     //console.log(fieldValue);
-    const newFormData = { ...editFormData };
-    newFormData[fieldName] = fieldValue;
+    const newFormData2 = { ...editFormData2 };
+    newFormData2[fieldName] = fieldValue;
 
-    setEditFormData(newFormData);
-    // console.log(editFormData)
+    setEditFormData2(newFormData2);
+    // console.log(editFormData2)
   };
-  const handleCancelClick = () => {
-    setEditId(null);
-    const newContacts = [...contacts];
+  const handleCancelClick2 = () => {
+    setEditId2(null);
+    const  newContacts2 = [...contacts2];
 
-    const index = contacts.findIndex((contact) => contact.id === null);
+    const index = contacts2.findIndex((contact) => contact.id === null);
 
-    newContacts.splice(index, 1);
+     newContacts2.splice(index, 1);
 
-    setContacts(newContacts);
-    setAddFormData([]);
+    setContacts2( newContacts2);
+    setAddFormData2([]);
   };
 
-  const handleAddFormChange = (event) => {
+  const handleAddFormChange2 = (event) => {
     event.preventDefault();
 
     const fieldName = event.target.getAttribute("name");
     const fieldValue = event.target.value;
-    //console.log(fieldValue);
-    const newFormData = { ...addFormData };
-    newFormData[fieldName] = fieldValue;
+    console.log(fieldValue);
+    const newFormData2 = { ...addFormData2 };
+    newFormData2[fieldName] = fieldValue;
 
-    setAddFormData(newFormData);
+    setAddFormData2(newFormData2);
   };
 
-  const handleAddFormSubmit = (event) => {
+  const handleAddFormSubmit2 = (event) => {
     event.preventDefault();
 
     const newContact = {
-      lenda: addFormData.lenda,
+      lenda: addFormData2.lenda,
 
-      emertimi: addFormData.emertimi,
+      emertimi: addFormData2.emertimi,
     };
     /*  dispatch(shtoPlan(newContact))
-    .then(data=>setContacts(el => el.map((r) => (r.id  ? r : data.payload.result.items)))
+    .then(data=>setContacts2(el => el.map((r) => (r.id  ? r : data.payload.result.items)))
     ) */
+    console.log(newContact)
 
     dispatch(shtoLendemezgjedhje(newContact))
       .unwrap()
       .then((res) => {
         // console.log(res);
         if (res.code === 200) {
-          setContacts((el) => el.map((r) => (r.id ? r : res.result.items)));
-          setAddFormData([]);
+          setContacts2((el) => el.map((r) => (r.id ? r : res.result.items)));
+          setAddFormData2([]);
         }
       })
       .catch((error) => {
@@ -120,29 +121,29 @@ function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
       });
   };
 
-  const handleEditFormSubmit = (event) => {
+  const handleEditFormSubmit2 = (event) => {
     event.preventDefault();
 
     const editedContact = {
-      id: editId,
-      lenda: editFormData.lenda,
+      id: editId2,
+      lenda: editFormData2.lenda,
 
-      emertimi: editFormData.emertimi,
+      emertimi: editFormData2.emertimi,
     };
-    console.log(editFormData);
+    console.log(editFormData2);
     dispatch(updateLendemezgjedhje(editedContact))
       .unwrap()
       .then((res) => {
         console.log(res);
         if (res.code === 200) {
-          const newContacts = [...contacts];
+          const  newContacts2 = [...contacts2];
 
-          const index = contacts.findIndex((contact) => contact.id === editId);
+          const index = contacts2.findIndex((contact) => contact.id === editId2);
 
-          newContacts[index] = res.result.items;
+           newContacts2[index] = res.result.items;
           //console.log(editedContact)
-          setContacts(newContacts);
-          setEditId(null);
+          setContacts2( newContacts2);
+          setEditId2(null);
         }
       })
       .catch((error) => {
@@ -152,41 +153,40 @@ function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
     //dispatch(updateLendemezgjedhje(editedContact))
   };
 
-  const handleDeleteClick = (contactId) => {
-    dispatch(deleteLendemezgjedhje(contactId));
-    const newContacts = [...contacts];
+  const handleDeleteClick2 = ( contact2Id) => {
+    dispatch(deleteLendemezgjedhje( contact2Id));
+    const  newContacts2 = [...contacts2];
 
-    const index = contacts.findIndex((contact) => contact.id === contactId);
+    const index = contacts2.findIndex((contact) => contact.id ===  contact2Id);
 
-    newContacts.splice(index, 1);
+     newContacts2.splice(index, 1);
 
-    setContacts(newContacts);
+    setContacts2( newContacts2);
   };
 
-  // --------------------------------------------------------------------------------------------------
-  const [rowsData, setRowsData] = useState([]);
 
-  const addTableRows = () => {
-    const rowsInput = {
+
+  const addTableRows2 = () => {
+    const rowsInput2 = {
       emertimi: "",
       lenda: "",
     };
-    setAddFormData([...addFormData, rowsInput]);
+    setAddFormData2([...addFormData2, rowsInput2]);
 
-    setContacts([...contacts, rowsInput]);
+    setContacts2([...contacts2, rowsInput2]);
   };
 
-  const handleEditClick = (event, contact) => {
+  const handleEditClick22 = (event, contact) => {
     event.preventDefault();
-    setEditId(contact.id);
+    setEditId2(contact.id);
 
-    const formValues = {
+    const formValues2 = {
       lenda: contact.lenda,
 
       emertimi: contact.emertimi,
     };
 
-    setEditFormData(formValues);
+    setEditFormData2(formValues2);
   };
 
   return (
@@ -200,18 +200,18 @@ function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
         <Wrapper>
           <table className="table">
             <thead>
-              <tr key="kolonat">
-                {columnsData.map((column) => (
-                  <th className="classname" key={column.field}>
+              <tr key="kolonat2">
+                {columnsData2.map((column2) => (
+                  <th className="classname" key={column2.field}>
                     {" "}
-                    {column.header}
+                    {column2.header}
                   </th>
                 ))}
 
                 <th>
                   <button
                     className="btn btn-outline-success"
-                    onClick={addTableRows}
+                    onClick={addTableRows2}
                   >
                     +
                   </button>
@@ -219,29 +219,29 @@ function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
               </tr>
             </thead>
             <tbody>
-              {contacts.length > 0
-                ? contacts.map((contact) => (
+              {contacts2.length > 0
+                ? contacts2.map((lendetek) => (
                     <>
-                      {editId === contact.id ? (
+                      {editId2 === lendetek.id ? (
                         <EditableRow2
-                          editFormData={editFormData}
-                          handleEditFormChange={handleEditFormChange}
-                          handleCancelClick={handleCancelClick}
-                          handleEditFormSubmit={handleEditFormSubmit}
+                          editFormData2={editFormData2}
+                          handleEditFormChange2={handleEditFormChange2}
+                          handleCancelClick2={handleCancelClick2}
+                          handleEditFormSubmit2={handleEditFormSubmit2}
                         />
-                      ) : !contact.id ? (
+                      ) : !lendetek.id ? (
                         <Addrow2
-                          addFormData={addFormData}
-                          handleAddFormChange={handleAddFormChange}
-                          handleCancelClick={handleCancelClick}
-                          handleAddFormSubmit={handleAddFormSubmit}
+                          addFormData2={addFormData2}
+                          handleAddFormChange2={handleAddFormChange2}
+                          handleCancelClick2={handleCancelClick2}
+                          handleAddFormSubmit2={handleAddFormSubmit2}
                           listelendesh={listelendesh}
                         />
                       ) : (
                         <Readonlyrow2
-                          mydata={contact}
-                          handleEditClick={handleEditClick}
-                          handleDeleteClick={handleDeleteClick}
+                          mydata2={lendetek}
+                          handleEditClick2={handleEditClick22}
+                          handleDeleteClick2={handleDeleteClick2}
                         />
                       )}
                     </>

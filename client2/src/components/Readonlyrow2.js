@@ -1,32 +1,31 @@
 import React from "react";
-import Wrapper from "../assets/wrappers/Tabela";
-const Readonlyrow2 = ({ mydata, handleEditClick, handleDeleteClick }) => {
+
+const Readonlyrow2 = ({ mydata2, handleEditClick2, handleDeleteClick2 }) => {
+  console.log(mydata2)
   return (
     <tr>
-      <td key="Lenda" data-label="Lenda">
-        {mydata.lenda}
+      <td key="Lenda2" data-label="Lenda">
+        {mydata2.lenda}
       </td>
 
       <td
         // width="10%"
 
-        key="emertimi"
+        key="emertimi2"
         data-label="Emertimi"
       >
-        {mydata.emertimi}
+        {mydata2.emertimi}
       </td>
-      <td key="tipi" data-label="Tipi">
-        {mydata.tipiveprimtarise}
-      </td>
+      
 
       <td>
         <button
           type="button"
-          onClick={(event) => handleEditClick(event, mydata)}
+          onClick={(event) => handleEditClick2(event, mydata2)}
         >
           Edit
         </button>
-        <button type="button" onClick={() => handleDeleteClick(mydata.id)}>
+        <button type="button" onClick={() => handleDeleteClick2(mydata2.id)}>
           Delete
         </button>
       </td>

@@ -343,7 +343,7 @@ class LendeMeZgjedhjeSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = Lendemezgjedhje
-        fields = ('id','emertimi','lenda','created','updated')
+        fields = ('id','emertimi','lenda','created','updated','plani','viti')
         #depth = 1 
     def to_representation(self, instance):
        ret = super().to_representation(instance)

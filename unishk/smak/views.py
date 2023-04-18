@@ -608,7 +608,29 @@ class PlaniViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(self.get_object())
             super().destroy(*args, **kwargs)
             return Response({'message':'success','error':False,'code':202,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_202_ACCEPTED)
-         
+    @action(detail=True, methods=["get"],url_path=r'lendemezgjedhje')
+    def get_lendemezgjedhje(self, request ,pk=None):
+        if request.method == 'GET':
+            plani = self.get_object()
+            print(plani)
+            
+            lendamezgjedhje=Lendemezgjedhje.objects.filter(lenda__plani__id=plani.id)
+            #print(lendamezgjedhje.query)
+            serializer = LendeMeZgjedhjeSerializer(lendamezgjedhje,many=True)
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+        elif request.method == 'POST':
+            emertimi = request.data.get('emertimi')
+            lenda = self.get_object()
+            data = {
+            "emertimi": emertimi,
+            "lenda": lenda.id,
+            }
+            serializer = LendeMeZgjedhjeSerializer(data=data)  # NOQA
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+
+     
 
 class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
     queryset = PlanPermbajtja.objects.all()
@@ -661,28 +683,7 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     
-    @action(detail=True, methods=["get"],url_path=r'lendemezgjedhje')
-    def get_lendemezgjedhje(self, request ,pk=None):
-        if request.method == 'GET':
-            lenda = self.get_object()
-            #print(lenda)
-            lendamezgjedhje=Lendemezgjedhje.objects.filter(lenda__id=lenda.id)
-            #print(lendamezgjedhje.query)
-            serializer = LendeMeZgjedhjeSerializer(lendamezgjedhje,many=True)
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        elif request.method == 'POST':
-            emertimi = request.data.get('emertimi')
-            lenda = self.get_object()
-            data = {
-            "emertimi": emertimi,
-            "lenda": lenda.id,
-            }
-            serializer = LendeMeZgjedhjeSerializer(data=data)  # NOQA
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-
-
+  
 class ChangePasswordView(generics.UpdateAPIView):
     #queryset = User.objects.all()
     

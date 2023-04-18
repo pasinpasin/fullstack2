@@ -2,25 +2,36 @@ import React, { useState } from "react";
 import FormrowSelect from "./FormrowSelect";
 
 const Addrow2 = ({
-  addFormData,
-  handleAddFormChange,
-  handleCancelClick,
-  handleAddFormSubmit,
+  addFormData2,
+  handleAddFormChange2,
+  handleCancelClick2,
+  handleAddFormSubmit2,
   listelendesh,
 }) => {
-  const [lende, setLende] = useState();
+
   return (
     <tr>
       <td key="Lenda" data-label="Lenda">
-        <FormrowSelect
-          name="emertimi"
-          handleChange={(e) => {
-            console.log(e.target.value);
-            setLende(e.target.value);
-          }}
-          lista={listelendesh}
-          //lista={setFilter(departamentet)}
-        />
+      <select
+        
+        value={addFormData2.emertimi}
+        name="lenda"
+        onChange={handleAddFormChange2}
+        className="form-select"
+      >
+      
+        {listelendesh.map((itemValue) => {
+          return (
+            <option
+              key={itemValue.id || itemValue}
+              value={itemValue.id || itemValue}
+              data-celesi={itemValue.id || itemValue}
+            >
+              {itemValue.emertimi || itemValue}
+            </option>
+          );
+        })}
+      </select>
       </td>
 
       <td
@@ -34,16 +45,16 @@ const Addrow2 = ({
           required="required"
           placeholder="emertimi..."
           name="emertimi"
-          value={addFormData.emertimi}
-          onChange={handleAddFormChange}
+          value={addFormData2.emertimi}
+          onChange={handleAddFormChange2}
         ></input>
       </td>
 
       <td>
-        <button type="submit" onClick={handleAddFormSubmit}>
+        <button type="submit" onClick={handleAddFormSubmit2}>
           Save
         </button>
-        <button type="button" onClick={handleCancelClick}>
+        <button type="button" onClick={handleCancelClick2}>
           Cancel
         </button>
       </td>

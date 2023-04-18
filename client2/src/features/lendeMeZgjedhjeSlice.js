@@ -15,7 +15,7 @@ const initialState = {
   updateLendemezgjedhjeError: "",
 };
 
-export const shtoPlan = createAsyncThunk(
+export const shtoLendemezgjedhje = createAsyncThunk(
   "lendemezgjedhjet/shto",
   async (plan, { rejectWithValue }) => {
     try {
@@ -38,7 +38,7 @@ export const getLendemezgjedhje = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       if (id) {
-        const response = await api.get(`plani/${id}/planpermbajtja`);
+        const response = await api.get(`planpermbajtja/${id}/lendemezgjedhje`);
         return response.data;
       } else {
         const response = await api.get("lendemezgjedhje");
@@ -80,7 +80,9 @@ export const updateLendemezgjedhje = createAsyncThunk(
     try {
       const { id } = lendemezgjedhje;
 
-      const response = await api.patch(`lendemezgjedhje/${id}/`, lendemezgjedhje
+      const response = await api.patch(
+        `lendemezgjedhje/${id}/`,
+        lendemezgjedhje
       );
       return response.data;
     } catch (error) {
@@ -99,8 +101,7 @@ const lendeMeZgjedhjeSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(shtoPlan.pending, (state, action) => {
- 
+    builder.addCase(shtoLendemezgjedhje.pending, (state, action) => {
       return {
         ...state,
         shtoLendemezgjedhjeStatus: "pending",
@@ -113,13 +114,16 @@ const lendeMeZgjedhjeSlice = createSlice({
         updateLendemezgjedhjeError: "",
       };
     });
-    
-    builder.addCase(shtoPlan.fulfilled, (state, action) => {
+
+    builder.addCase(shtoLendemezgjedhje.fulfilled, (state, action) => {
       //console.log(action.payload);
-     
+
       return {
         ...state,
-        lendemezgjedhje: [action.payload.result.items, ...state.lendemezgjedhje],
+        lendemezgjedhje: [
+          action.payload.result.items,
+          ...state.lendemezgjedhje,
+        ],
 
         shtoLendemezgjedhjeStatus: "success",
         shtoLendemezgjedhjeError: "",
@@ -132,7 +136,7 @@ const lendeMeZgjedhjeSlice = createSlice({
       };
     });
     //[shtoPlan.rejected]: (state, action) => {
-    builder.addCase(shtoPlan.rejected, (state, action) => {
+    builder.addCase(shtoLendemezgjedhje.rejected, (state, action) => {
       return {
         ...state,
         shtoLendemezgjedhjeStatus: "rejected",
@@ -161,7 +165,7 @@ const lendeMeZgjedhjeSlice = createSlice({
     });
     builder.addCase(getLendemezgjedhje.fulfilled, (state, action) => {
       //[getLendemezgjedhje.fulfilled]: (state, action) => {
-    
+
       return {
         ...state,
         lendemezgjedhje: action.payload.result.items,
@@ -259,7 +263,10 @@ const lendeMeZgjedhjeSlice = createSlice({
           : plan
       );
       //console.log(updatedLendemezgjedhje);
-      sessionStorage.setItem("lendemezgjedhjet", JSON.stringify(updatedLendemezgjedhje));
+      sessionStorage.setItem(
+        "lendemezgjedhjet",
+        JSON.stringify(updatedLendemezgjedhje)
+      );
       return {
         ...state,
         lendemezgjedhje: updatedLendemezgjedhje,

@@ -18,8 +18,8 @@ router.register('programi', views.ProgramiViewSet,basename='programi')
 router.register('users', views.UsersViewSet,basename='users')
 router.register('plani', views.PlaniViewSet,basename='plani')
 router.register('plani/(?P<id>\d+)/planpermbajtja', views.PlanpermbajtjaViewSet,basename='plnanimeid')
-router.register(r'planpermbajtja', views.PlanpermbajtjaViewSet,basename='planpermbajtja')
-#router.register(r'lendemezgjedhje', views.LendeMeZgjedhjeViewSet,basename='LendeMeZgjedhje')
+router.register('planpermbajtja', views.PlanpermbajtjaViewSet,basename='planpermbajtja')
+router.register('lendemezgjedhje', views.LendeMeZgjedhjeViewSet,basename='LendeMeZgjedhje')
 
 
 
@@ -33,8 +33,8 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('changepassword/', views.ChangePasswordView.as_view(), name='auth_change_password'),
-    path('lendemezgjedhje_plani/<int:pid>/', views.LendeMeZgjedhjeListAPI.as_view(),name='zgjedhje2'),
-    path('lendemezgjedhje/<int:pk>/', views.LendeMeZgjedhjeView.as_view()),
+    #path('lendemezgjedhje_plani/<int:pid>/', views.LendeMeZgjedhjeListAPI.as_view(),name='zgjedhje2'),
+   # path('lendemezgjedhje/<int:pk>/', views.LendeMeZgjedhjeView.as_view()),
    # path('resetpasswordbyadmin/<int:pk>/',views.ChangePasswordByAdmin.as_view(),name='resetpasswordbyadmin'),
     path('user/<int:pk>/delete/',views.Deleteuser.as_view(),name='deleteuser'),
     

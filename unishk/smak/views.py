@@ -661,7 +661,7 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(instance)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     
-    @action(detail=True, methods=["get","post","put"],url_path=r'lendemezgjedhje')
+    @action(detail=True, methods=["get"],url_path=r'lendemezgjedhje')
     def get_lendemezgjedhje(self, request ,pk=None):
         if request.method == 'GET':
             lenda = self.get_object()
@@ -713,7 +713,9 @@ class ChangePasswordView(generics.UpdateAPIView):
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
              
 
-class LendeMeZgjedhjeView(APIView):
+class LendeMeZgjedhjeViewSet(viewsets.ModelViewSet):
+    queryset = Lendemezgjedhje.objects.all()
+    serializer_class = LendeMeZgjedhjeSerializer
     """  def get(self, request, pk=None, format=None) -> Response:
         
             lendemezgjedhje = get_object_or_404(Lendemezgjedhje.objects.all(), pk=pk)
@@ -721,8 +723,33 @@ class LendeMeZgjedhjeView(APIView):
             return Response(serializer.data,
                             status=status.HTTP_200_OK) 
     """
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object() #per ke  do ta bash update
+        #print(instance)
+        serializer = self.get_serializer(instance=instance,data=request.data)  
+        #print(serializer)
+        #serializer = self.serializer_class(instance=instance,data=request.data,partial=True)  # NOQA
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+    def destroy(self, *args, **kwargs):
+            print(self.get_object())
+            serializer = self.get_serializer(self.get_object())
+            super().destroy(*args, **kwargs)
+            return Response({'message':'success','error':False,'code':202,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_202_ACCEPTED)
 
-    def delete(self, request, pk=None, format=None):
+    def create(self, request, *args, **kwargs):
+        
+
+        _serializer = LendeMeZgjedhjeSerializer(data=request.data)  # NOQA
+        #if
+        _serializer.is_valid(raise_exception=True)
+        _serializer.save()
+           # return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':_serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
+            
+
+"""  def delete(self, request, pk=None, format=None):
         
             lendemezgjedhje = get_object_or_404(Lendemezgjedhje.objects.all(), pk=pk)
             lendemezgjedhje.delete()
@@ -734,10 +761,11 @@ class LendeMeZgjedhjeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
-        
+     
+   """
   
         
-class LendeMeZgjedhjeListAPI(generics.ListAPIView):
+""" class LendeMeZgjedhjeListAPI(generics.ListAPIView):
     model = Lendemezgjedhje
     serializer_class = LendeMeZgjedhjeSerializer
     def get_queryset(self):
@@ -751,7 +779,7 @@ class LendeMeZgjedhjeListAPI(generics.ListAPIView):
             lendemezgjedhje=self.get_queryset()
             serializer = self.get_serializer(lendemezgjedhje, many=True)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK) 
-
+ """
 
     
            

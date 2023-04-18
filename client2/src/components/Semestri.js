@@ -19,9 +19,9 @@ import useHttpClient from "../hooks/useHttpClient";
 import React from "react";
 import { FaEdit } from "react-icons/fa";
 import EditableTable from "./EditableTable";
+import EditableTable2 from "./EditableTable2";
 
 const Semestri = (props) => {
- 
   const totalet = (myarray) => {
     let newobj = myarray.reduce(
       function (previousValue, currentValue) {
@@ -78,38 +78,35 @@ const Semestri = (props) => {
     { field: "sem11", header: "Sem 1" },
     { field: "sem21", header: "Sem 2" },
   ];
+
+  const columnsData2 = [
+    { field: "grupi", header: "Grupi" },
+    { field: "lenda", header: "Lenda" },
+  ];
   const planpermbajtjaState = useSelector((state) => state.planpermbajtjaState);
-  const lendemezgjedhjeState = useSelector((state) => state.lendemezgjedhjeState);
+  const lendemezgjedhjeState = useSelector(
+    (state) => state.lendemezgjedhjeState
+  );
   const { planpermbajtja } = planpermbajtjaState;
   const { lendemezgjedhje } = lendemezgjedhjeState;
 
- 
-
-  const [dhenat, setDhenat] = useState();
   const [zgjedhjet, setZgjedhjet] = useState();
   const [totali, setTotalet] = useState();
-  const initialFormState = { id: null, users: "" };
-  const [currentUser, setCurrentUser] = useState(initialFormState);
+
   const [listelendesh, setListelendesh] = useState([]);
   const [lenda, setLenda] = useState();
- 
-
 
   useEffect(() => {
-    console.log(props.sem);
+    // console.log(props.sem);
     //setZgjedhjet(props.zgjedhje)
-   console.log("efekt semestri")
+    console.log("efekt semestri");
     setTotalet(totalet(props.sem));
     //console.log(totali)
-    setListelendesh(props.sem.map((lendet) => lendet.emertimi));
 
     //setTotalet({ totkredite: calculateSum(dhenat, "kredite") });
   }, [props.sem]);
 
-
-  console.log(totali)
-
- 
+  console.log(listelendesh);
 
   const calculateSum = (array, property) => {
     const total = array.reduce((accumulator, object) => {
@@ -120,35 +117,37 @@ const Semestri = (props) => {
 
     return total;
   };
+  console.log(props.zgjedhje);
 
   let url = "/users/id/";
 
   return (
     <>
-    {totali ?
-      (
+      {totali ? (
         <div>
-        
-
-          <Link
-            to={`/planpermbajtja/shtorresht/viti/${props.viti}/plani/${props.planiid}`}
-          >
-            <button className="btn  ">Shto rresht</button>
-          </Link>
           <input value={totali.totkredite} readOnly="readOnly" name="total" />
 
-         
-            <>
-            <EditableTable columnsData={columnsData} viti={props.viti} planiid={props.planiid} semestridata={props.sem} />
-              
-              <span>ONE THING</span>
-         
-            </>
-         
+          <>
+            <EditableTable
+              columnsData={columnsData}
+              viti={props.viti}
+              planiid={props.planiid}
+              semestridata={props.sem}
+            />
+
+            <span>ONE THING</span>
+            <EditableTable2
+              columnsData={columnsData2}
+              viti={props.viti}
+              planiid={props.planiid}
+              semestridata={props.zgjedhje}
+              lendepertezgjedhje={props.sem}
+            />
+          </>
         </div>
-     
-      ):(<div></div>)}
- </> );
+      ) : null}
+    </>
+  );
 };
 
 export default Semestri;

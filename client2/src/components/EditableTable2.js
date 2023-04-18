@@ -2,57 +2,58 @@ import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/Tabela";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import {
-  getPlanpermbajtje,
-  shtoPlan,
-  updatePlanpermbajtja,
-} from "../features/planpermbajtjaSlice";
-import EditableRow from "./Editablerow";
-import Readonlyrow from "./Readonlyrow";
-import Addrow from "./Addrow";
+
+import EditableRow2 from "./Editablerow2";
+import Readonlyrow2 from "./Readonlyrow2";
+import Addrow2 from "./Addrow2";
 import { useParams } from "react-router-dom";
 import Loading from "./Loading";
 import Alert from "./Alert";
 
-import { deletePlanpermbajtja } from "../features/planpermbajtjaSlice";
-function EditableTable({ columnsData, semestridata, viti, planiid }) {
+import {
+  deleteLendemezgjedhje,
+  getLendemezgjedhje,
+  shtoLendemezgjedhje,
+  updateLendemezgjedhje,
+} from "../features/lendeMeZgjedhjeSlice";
+function EditableTable2({ columnsData, semestridata, lendepertezgjedhje }) {
   const dispatch = useDispatch();
-  const [contacts, setContacts] = useState([]);
   const planpermbajtjaState = useSelector((state) => state.planpermbajtjaState);
   const { planpermbajtja } = planpermbajtjaState;
-  //console.log(planpermbajtja)
+  const [contacts, setContacts] = useState([]);
+  const [listelendesh, setListelendesh] = useState([]);
+  const lendemezgjedhjeState = useSelector(
+    (state) => state.lendemezgjedhjeState
+  );
+  const { lendemezgjedhje } = lendemezgjedhjeState;
+  //console.log(lendemezgjedhje)
 
   const { id } = useParams();
   useEffect(() => {
-    console.log("effect editable table");
+    console.log("effect editable table 2");
 
-    /*  dispatch(getPlanpermbajtje(id))
+    /*  dispatch(getLendemezgjedhje(id))
     .then(data=>setContacts(data.payload.result.items)) */
+    setListelendesh(
+      lendepertezgjedhje.map((lendet) => {
+        const container = {};
+        container.emertimi = lendet.emertimi;
+        container.id = lendet.id;
 
+        return container;
+      })
+    );
     setContacts(semestridata);
-  }, [semestridata]);
+  }, [semestridata, lendepertezgjedhje]);
 
-  //setContacts(...contacts,planpermbajtja)
+  //setContacts(...contacts,lendemezgjedhje)
 
   const [editId, setEditId] = useState(null);
 
-  console.log(contacts);
+  console.log(listelendesh);
   const [editFormData, setEditFormData] = useState({
-    renditja: "",
-    titullari: "",
+    lenda: "",
     emertimi: "",
-    tipi: "",
-    kredite: "",
-    nrjavesem1: "",
-    seminaresem1: "",
-    leksionesem1: "",
-    praktikasem1: "",
-    laboratoresem1: "",
-    nrjavesem2: "",
-    seminaresem2: "",
-    leksionesem2: "",
-    praktikasem2: "",
-    laboratoresem2: "",
   });
 
   const [addFormData, setAddFormData] = useState([]);
@@ -97,29 +98,15 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     event.preventDefault();
 
     const newContact = {
-      plani: planiid,
-      viti: viti,
-      renditja: addFormData.renditja,
-      titullari: addFormData.titullari,
+      lenda: addFormData.lenda,
+
       emertimi: addFormData.emertimi,
-      tipiveprimtarise: addFormData.tipi,
-      kredite: addFormData.kredite,
-      nrjavesem1: addFormData.nrjavesem1,
-      seminaresem1: addFormData.seminaresem1,
-      leksionesem1: addFormData.leksionesem1,
-      praktikasem1: addFormData.praktikasem1,
-      laboratoresem1: addFormData.laboratoresem1,
-      nrjavesem2: addFormData.nrjavesem2,
-      seminaresem2: addFormData.seminaresem2,
-      leksionesem2: addFormData.leksionesem2,
-      praktikasem2: addFormData.praktikasem2,
-      laboratoresem2: addFormData.laboratoresem2,
     };
     /*  dispatch(shtoPlan(newContact))
     .then(data=>setContacts(el => el.map((r) => (r.id  ? r : data.payload.result.items)))
     ) */
 
-    dispatch(shtoPlan(newContact))
+    dispatch(shtoLendemezgjedhje(newContact))
       .unwrap()
       .then((res) => {
         // console.log(res);
@@ -138,26 +125,12 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
 
     const editedContact = {
       id: editId,
-      plani: planiid,
-      viti: viti,
-      renditja: editFormData.renditja,
-      titullari: editFormData.titullari,
+      lenda: editFormData.lenda,
+
       emertimi: editFormData.emertimi,
-      tipiveprimtarise: editFormData.tipiveprimtarise,
-      kredite: editFormData.kredite,
-      nrjavesem1: editFormData.nrjavesem1,
-      seminaresem1: editFormData.seminaresem1,
-      leksionesem1: editFormData.leksionesem1,
-      praktikasem1: editFormData.praktikasem1,
-      laboratoresem1: editFormData.laboratoresem1,
-      nrjavesem2: editFormData.nrjavesem2,
-      seminaresem2: editFormData.seminaresem2,
-      leksionesem2: editFormData.leksionesem2,
-      praktikasem2: editFormData.praktikasem2,
-      laboratoresem2: editFormData.laboratoresem2,
     };
     console.log(editFormData);
-    dispatch(updatePlanpermbajtja(editedContact))
+    dispatch(updateLendemezgjedhje(editedContact))
       .unwrap()
       .then((res) => {
         console.log(res);
@@ -176,11 +149,11 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
         console.log(error);
       });
 
-    //dispatch(updatePlanpermbajtja(editedContact))
+    //dispatch(updateLendemezgjedhje(editedContact))
   };
 
   const handleDeleteClick = (contactId) => {
-    dispatch(deletePlanpermbajtja(contactId));
+    dispatch(deleteLendemezgjedhje(contactId));
     const newContacts = [...contacts];
 
     const index = contacts.findIndex((contact) => contact.id === contactId);
@@ -195,38 +168,12 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
 
   const addTableRows = () => {
     const rowsInput = {
-      renditja: "",
-      titullari: "",
       emertimi: "",
-      tipiveprimtarise: "",
-      kredite: "",
-      nrjavesem1: "",
-      seminare1: "",
-      leksione1: "",
-      praktika1: "",
-      laboratore1: "",
-      nrjavesem2: "",
-      seminare2: "",
-      leksione2: "",
-      praktika2: "",
-      laboratore2: "",
+      lenda: "",
     };
     setAddFormData([...addFormData, rowsInput]);
 
     setContacts([...contacts, rowsInput]);
-  };
-
-  const deleteTableRows = (index) => {
-    const rows = [...rowsData];
-    rows.splice(index, 1);
-    setRowsData(rows);
-  };
-
-  const handleChange = (index, evnt) => {
-    const { name, value } = evnt.target;
-    const rowsInput = [...rowsData];
-    rowsInput[index][name] = value;
-    setRowsData(rowsInput);
   };
 
   const handleEditClick = (event, contact) => {
@@ -234,23 +181,9 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     setEditId(contact.id);
 
     const formValues = {
-      plani: contact.plani,
-      viti: contact.viti,
-      renditja: contact.renditja,
-      titullari: contact.titullari,
+      lenda: contact.lenda,
+
       emertimi: contact.emertimi,
-      tipiveprimtarise: contact.tipiveprimtarise,
-      kredite: contact.kredite,
-      nrjavesem1: contact.nrjavesem1,
-      seminaresem1: contact.seminaresem1,
-      leksionesem1: contact.leksionesem1,
-      praktikasem1: contact.praktikasem1,
-      laboratoresem1: contact.laboratoresem1,
-      nrjavesem2: contact.nrjavesem2,
-      seminaresem2: contact.seminaresem2,
-      leksionesem2: contact.leksionesem2,
-      praktikasem2: contact.praktikasem2,
-      laboratoresem2: contact.laboratoresem2,
     };
 
     setEditFormData(formValues);
@@ -258,24 +191,13 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
 
   return (
     <>
-      {planpermbajtjaState.getPlanpermbajtjeStatus === "pending" ||
-      planpermbajtjaState.shtoPlanpermbajtjeStatus === "pending" ||
-      planpermbajtjaState.deletePlanpermbajtjaStatus === "pending" ||
-      planpermbajtjaState.updatePlanpermbajtjaStatus === "pending" ? (
+      {lendemezgjedhjeState.getLendemezgjedhjeStatus === "pending" ||
+      lendemezgjedhjeState.shtoLendemezgjedhjeStatus === "pending" ||
+      lendemezgjedhjeState.deleteLendemezgjedhjeStatus === "pending" ||
+      lendemezgjedhjeState.updateLendemezgjedhjeStatus === "pending" ? (
         <Loading center />
       ) : (
         <Wrapper>
-          {planpermbajtjaState.getPlanpermbajtjeStatus === "rejected" ||
-          (planpermbajtjaState.shtoPlanpermbajtjeStatus === "rejected") |
-            (planpermbajtjaState.deletePlanpermbajtjaStatus === "rejected") ||
-          planpermbajtjaState.updatePlanpermbajtjaStatus === "rejected" ? (
-            <Alert variant="danger">
-              {planpermbajtjaState.updatePlanpermbajtjaError ||
-                planpermbajtjaState.shtoPlanpermbajtjeError ||
-                planpermbajtjaState.updatePlanpermbajtjaError ||
-                planpermbajtjaState.shtoPlanpermbajtjeError}
-            </Alert>
-          ) : null}
           <table className="table">
             <thead>
               <tr key="kolonat">
@@ -301,21 +223,22 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
                 ? contacts.map((contact) => (
                     <>
                       {editId === contact.id ? (
-                        <EditableRow
+                        <EditableRow2
                           editFormData={editFormData}
                           handleEditFormChange={handleEditFormChange}
                           handleCancelClick={handleCancelClick}
                           handleEditFormSubmit={handleEditFormSubmit}
                         />
                       ) : !contact.id ? (
-                        <Addrow
+                        <Addrow2
                           addFormData={addFormData}
                           handleAddFormChange={handleAddFormChange}
                           handleCancelClick={handleCancelClick}
                           handleAddFormSubmit={handleAddFormSubmit}
+                          listelendesh={listelendesh}
                         />
                       ) : (
-                        <Readonlyrow
+                        <Readonlyrow2
                           mydata={contact}
                           handleEditClick={handleEditClick}
                           handleDeleteClick={handleDeleteClick}
@@ -331,4 +254,4 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     </>
   );
 }
-export default EditableTable;
+export default EditableTable2;

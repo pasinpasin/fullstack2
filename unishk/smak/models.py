@@ -141,7 +141,7 @@ class PlanPermbajtja(models.Model):
     
     renditja = models.IntegerField(blank=False)
     titullari = models.CharField(max_length=500,blank=True)
-    viti = models.IntegerField()
+    viti = models.IntegerField(blank=False)
     emertimi = models.CharField(max_length=500,blank=False)
     tipiveprimtarise=models.CharField(max_length=20,
                               choices=TipiVeprimtarise.choices,
@@ -197,6 +197,7 @@ class Lendemezgjedhje(models.Model):
     lenda = models.ForeignKey(PlanPermbajtja,
                              on_delete=models.CASCADE,
                              related_name='i_perket_lendes')
+   
 
     
     created = models.DateTimeField(auto_now_add=True)

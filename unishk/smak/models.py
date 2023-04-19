@@ -147,16 +147,16 @@ class PlanPermbajtja(models.Model):
                               choices=TipiVeprimtarise.choices,
                               blank=False)
     kredite = models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
-    nrjavesem1=models.IntegerField(blank=False)
-    seminaresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    leksionesem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    praktikasem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    laboratoresem1=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    nrjavesem1=models.IntegerField(blank=False,default=0)
+    seminaresem1=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
+    leksionesem1=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
+    praktikasem1=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
+    laboratoresem1=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
     nrjavesem2=models.IntegerField(blank=False,default=0)
-    seminaresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    leksionesem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    praktikasem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
-    laboratoresem2=models.DecimalField(max_digits = 2,decimal_places = 1,default=0)
+    seminaresem2=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
+    leksionesem2=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
+    praktikasem2=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
+    laboratoresem2=models.DecimalField(max_digits = 3,decimal_places = 1,default=0)
    
     plani = models.ForeignKey(Planet,
                              on_delete=models.CASCADE,

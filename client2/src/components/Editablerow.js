@@ -10,6 +10,10 @@ const EditableRow = ({
     { label: "A", value: "A" },
     { label: "B", value: "B" },
     { label: "C", value: "C" },
+    { label: "D", value: "D" },
+    { label: "E", value: "E" },
+    { label: "F", value: "F" },
+    { label: "m", value: "m" },
   ];
   return (
     <tr>
@@ -89,15 +93,6 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td className="classname" key="seminare" data-label="Seminare Sem 1">
-        <input
-          type="number"
-          placeholder="seminaresem1.."
-          name="seminaresem1"
-          value={editFormData.seminaresem1}
-          onChange={handleEditFormChange}
-        ></input>
-      </td>
       <td className="classname" key="leksione" data-label="Leksione Sem 1">
         <input
           type="text"
@@ -107,12 +102,12 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td className="classname" key="praktika" data-label="Praktika Sem 1">
+      <td className="classname" key="seminare" data-label="Seminare Sem 1">
         <input
-          type="text"
-          placeholder="praktikasem1"
-          name="praktikasem1"
-          value={editFormData.praktikasem1}
+          type="number"
+          placeholder="seminaresem1.."
+          name="seminaresem1"
+          value={editFormData.seminaresem1}
           onChange={handleEditFormChange}
         ></input>
       </td>
@@ -125,6 +120,16 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
+      <td className="classname" key="praktika" data-label="Praktika Sem 1">
+        <input
+          type="text"
+          placeholder="praktikasem1"
+          name="praktikasem1"
+          value={editFormData.praktikasem1}
+          onChange={handleEditFormChange}
+        ></input>
+      </td>
+     
 
       <td className="classname" key="nrjave2" data-label="Nrjave Sem 2">
         <input
@@ -132,15 +137,6 @@ const EditableRow = ({
           placeholder="nrjavesem2..."
           name="nrjavesem2"
           value={editFormData.nrjavesem2}
-          onChange={handleEditFormChange}
-        ></input>
-      </td>
-      <td className="classname" key="seminare2" data-label="Seminare Sem 2">
-        <input
-          type="text"
-          placeholder="seminaresem2.."
-          name="seminaresem2"
-          value={editFormData.seminaresem2}
           onChange={handleEditFormChange}
         ></input>
       </td>
@@ -153,6 +149,25 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
+      <td className="classname" key="seminare2" data-label="Seminare Sem 2">
+        <input
+          type="text"
+          placeholder="seminaresem2.."
+          name="seminaresem2"
+          value={editFormData.seminaresem2}
+          onChange={handleEditFormChange}
+        ></input>
+      </td>
+     
+      <td className="classname" key="laboratore2" data-label="Laboratore Sem 2">
+        <input
+          type="text"
+          placeholder="laboratoresem2"
+          name="laboratoresem2"
+          value={editFormData.laboratoresem2}
+          onChange={handleEditFormChange}
+        ></input>
+      </td>
       <td className="classname" key="praktika2" data-label="Praktika Sem 2">
         <input
           type="text"
@@ -162,12 +177,22 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td className="classname" key="laboratore2" data-label="Laboratore Sem 2">
+   
+      <td>
         <input
           type="text"
-          placeholder="laboratoresem2"
-          name="laboratoresem2"
-          value={editFormData.laboratoresem2}
+          placeholder="sem 1"
+          name="semestri1"
+          value={editFormData.semestri1}
+          onChange={handleEditFormChange}
+        ></input>
+      </td>
+      <td>
+        <input
+          type="text"
+          placeholder="sem 2"
+          name="semestri2"
+          value={editFormData.semestri2}
           onChange={handleEditFormChange}
         ></input>
       </td>

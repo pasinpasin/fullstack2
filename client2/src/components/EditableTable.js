@@ -53,6 +53,8 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     leksionesem2: "",
     praktikasem2: "",
     laboratoresem2: "",
+    semestri1:"",
+    semestri2:"",
   });
 
   const [addFormData, setAddFormData] = useState({
@@ -62,15 +64,19 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     tipi: "",
     kredite: "",
     nrjavesem1: "",
-    seminaresem1: "",
     leksionesem1: "",
+    seminaresem1: "",
+    
     praktikasem1: "",
     laboratoresem1: "",
     nrjavesem2: "",
-    seminaresem2: "",
     leksionesem2: "",
+    seminaresem2: "",
+   
     praktikasem2: "",
     laboratoresem2: "",
+    semestri1:"",
+    semestri2:"",
   });
 
   const handleEditFormChange = (event) => {
@@ -115,22 +121,42 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     const newContact = {
       plani: planiid,
       viti: viti,
-      renditja: addFormData.renditja,
-      titullari: addFormData.titullari,
-      emertimi: addFormData.emertimi,
+      renditja: isNaN(parseInt(addFormData.renditja)) ? 1 : parseInt(addFormData.renditja),
+      titullari:addFormData.titullari,
+     
+      emertimi:addFormData.emertimi,
       tipiveprimtarise: addFormData.tipi,
-      kredite: addFormData.kredite,
-      nrjavesem1: addFormData.nrjavesem1,
-      seminaresem1: addFormData.seminaresem1,
-      leksionesem1: addFormData.leksionesem1,
-      praktikasem1: addFormData.praktikasem1,
-      laboratoresem1: addFormData.laboratoresem1,
-      nrjavesem2: addFormData.nrjavesem2,
-      seminaresem2: addFormData.seminaresem2,
-      leksionesem2: addFormData.leksionesem2,
-      praktikasem2: addFormData.praktikasem2,
-      laboratoresem2: addFormData.laboratoresem2,
+      kredite: isNaN(parseFloat(addFormData.kredite)) ? 0 : parseFloat(addFormData.kredite).toFixed(1),
+      nrjavesem1: isNaN(parseInt(addFormData.nrjavesem1)) ? 0 : addFormData.nrjavesem1,
+      seminaresem1: isNaN(parseFloat(addFormData.seminaresem1))
+        ? 0
+        : parseFloat(addFormData.seminaresem1).toFixed(1),
+      leksionesem1: isNaN(parseFloat(addFormData.leksionesem1))
+        ? 0
+        : parseFloat(addFormData.leksionesem1).toFixed(1),
+      praktikasem1: isNaN(parseFloat(addFormData.praktikasem1))
+        ? 0
+        : parseFloat(addFormData.praktikasem1).toFixed(1),
+      laboratoresem1: isNaN(parseFloat(addFormData.laboratoresem1))
+        ? 0
+        : parseFloat(addFormData.laboratoresem1).toFixed(1),
+      nrjavesem2: isNaN(parseInt(addFormData.nrjavesem2)) ? 0 : parseInt(addFormData.nrjavesem2),
+      seminaresem2: isNaN(parseFloat(addFormData.seminaresem2))
+        ? 0
+        : parseFloat(addFormData.seminaresem2).toFixed(1),
+      leksionesem2: isNaN(parseFloat(addFormData.leksionesem2))
+        ? 0
+        : parseFloat(addFormData.leksionesem2).toFixed(1),
+      praktikasem2: isNaN(parseFloat(addFormData.praktikasem2))
+        ? 0
+        : parseFloat(addFormData.praktikasem2),
+      laboratoresem2: isNaN(parseFloat(addFormData.laboratoresem2))
+        ? 0
+        : parseFloat(addFormData.laboratoresem2).toFixed(1),
+        semestri1:addFormData.semestri1,
+      semestri2:addFormData.semestri2
     };
+    console.log(addFormData)
     /*  dispatch(shtoPlan(newContact))
     .then(data=>setContacts(el => el.map((r) => (r.id  ? r : data.payload.result.items)))
     ) */
@@ -330,7 +356,7 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
             </thead>
             <tbody>
               {contacts.length > 0
-                ? contacts.map((contact) => (
+                ? contacts.sort((a, b) => parseInt( isNaN(b.renditja,0)) - parseInt(a.renditja)).map((contact) => (
                     <>
                       {editId === contact.id ? (
                         <EditableRow

@@ -10,6 +10,10 @@ const Addrow = ({
     { label: "A", value: "A" },
     { label: "B", value: "B" },
     { label: "C", value: "C" },
+    { label: "D", value: "D" },
+    { label: "E", value: "E" },
+    { label: "F", value: "F" },
+    { label: "m", value: "m" },
   ];
 
   return (
@@ -92,6 +96,15 @@ const Addrow = ({
       <td>
         <input
           type="text"
+          placeholder="leksionesem1"
+          name="leksionesem1"
+          value={addFormData.leksionesem1}
+          onChange={handleAddFormChange}
+        ></input>
+      </td>
+      <td>
+        <input
+          type="text"
           name="seminaresem1"
           placeholder="seminaresem1.."
           value={addFormData.seminaresem1}
@@ -101,9 +114,9 @@ const Addrow = ({
       <td>
         <input
           type="text"
-          placeholder="leksionesem1"
-          name="leksionesem1"
-          value={addFormData.leksionesem1}
+          placeholder="laboratoresem1"
+          name="laboratoresem1"
+          value={addFormData.laboratoresem1}
           onChange={handleAddFormChange}
         ></input>
       </td>
@@ -116,15 +129,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
-        <input
-          type="text"
-          placeholder="laboratoresem1"
-          name="labortoresem1"
-          value={addFormData.laboratoresem1}
-          onChange={handleAddFormChange}
-        ></input>
-      </td>
+    
 
       <td>
         <input
@@ -132,15 +137,6 @@ const Addrow = ({
           placeholder="nrjavesem2..."
           name="nrjavesem2"
           value={addFormData.nrjavesem2}
-          onChange={handleAddFormChange}
-        ></input>
-      </td>
-      <td>
-        <input
-          type="text"
-          placeholder="seminaresem2.."
-          name="seminaresem2"
-          value={addFormData.seminaresem2}
           onChange={handleAddFormChange}
         ></input>
       </td>
@@ -156,18 +152,47 @@ const Addrow = ({
       <td>
         <input
           type="text"
-          placeholder="praktikasem2"
-          name="praktikasem2"
-          value={addFormData.praktikasem2}
+          placeholder="seminaresem2.."
+          name="seminaresem2"
+          value={addFormData.seminaresem2}
           onChange={handleAddFormChange}
         ></input>
       </td>
+  
       <td>
         <input
           type="text"
           placeholder="laboratoresem2"
           name="laboratoresem2"
           value={addFormData.laboratoresem2}
+          onChange={handleAddFormChange}
+        ></input>
+      </td>
+      <td>
+        <input
+          type="text"
+          placeholder="praktikasem2"
+          name="praktikasem2"
+          value={addFormData.praktikasem2}
+          onChange={handleAddFormChange}
+        ></input>
+      </td>
+     
+      <td>
+        <input
+          type="text"
+          placeholder="sem 1"
+          name="semestri1"
+          value={addFormData.semestri1}
+          onChange={handleAddFormChange}
+        ></input>
+      </td>
+      <td>
+        <input
+          type="text"
+          placeholder="sem 2"
+          name="semestri2"
+          value={addFormData.semestri2}
           onChange={handleAddFormChange}
         ></input>
       </td>

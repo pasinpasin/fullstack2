@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import FormrowSelect from "./FormrowSelect";
 
 const Addrow2 = ({
   addFormData2,
@@ -8,30 +7,30 @@ const Addrow2 = ({
   handleAddFormSubmit2,
   listelendesh,
 }) => {
-
   return (
     <tr>
       <td key="Lenda" data-label="Lenda">
-      <select
-        
-        value={addFormData2.emertimi}
-        name="lenda"
-        onChange={handleAddFormChange2}
-        className="form-select"
-      >
-      
-        {listelendesh.map((itemValue) => {
-          return (
-            <option
-              key={itemValue.id || itemValue}
-              value={itemValue.id || itemValue}
-              data-celesi={itemValue.id || itemValue}
-            >
-              {itemValue.emertimi || itemValue}
-            </option>
-          );
-        })}
-      </select>
+        <select
+          name="lenda"
+          value={addFormData2.lenda}
+          onChange={handleAddFormChange2}
+          className="form-select"
+        >
+          <option disabled hidden value="">
+            --Zgjedh--
+          </option>
+          {listelendesh.map((itemValue) => {
+            return (
+              <option
+                key={itemValue.id || itemValue}
+                value={itemValue.id || itemValue}
+                data-celesi={itemValue.id || itemValue}
+              >
+                {itemValue.emertimi || itemValue}
+              </option>
+            );
+          })}
+        </select>
       </td>
 
       <td

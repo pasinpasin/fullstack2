@@ -50,13 +50,16 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
 
   const [editId2, setEditId2] = useState(null);
 
-  console.log(listelendesh);
+  //console.log(listelendesh);
   const [editFormData2, setEditFormData2] = useState({
     lenda: "",
     emertimi: "",
   });
 
-  const [addFormData2, setAddFormData2] = useState([]);
+  const [addFormData2, setAddFormData2] = useState({
+    emertimi: "",
+    lenda: "",
+  });
 
   const handleEditFormChange2 = (event) => {
     event.preventDefault();
@@ -72,14 +75,21 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
   };
   const handleCancelClick2 = () => {
     setEditId2(null);
-    const  newContacts2 = [...contacts2];
+    setEditFormData2({
+      lenda: "",
+      emertimi: "",
+    });
+    //const newContacts2 = [...contacts2];
 
-    const index = contacts2.findIndex((contact) => contact.id === null);
+    //const index = contacts2.findIndex((contact) => contact.id === null);
 
-     newContacts2.splice(index, 1);
+    //newContacts2.splice(index, 1);
 
-    setContacts2( newContacts2);
-    setAddFormData2([]);
+    //setContacts2(newContacts2);
+    setAddFormData2({
+      emertimi: "",
+      lenda: "",
+    });
   };
 
   const handleAddFormChange2 = (event) => {
@@ -92,6 +102,7 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
     newFormData2[fieldName] = fieldValue;
 
     setAddFormData2(newFormData2);
+    console.log(addFormData2);
   };
 
   const handleAddFormSubmit2 = (event) => {
@@ -102,10 +113,8 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
 
       emertimi: addFormData2.emertimi,
     };
-    /*  dispatch(shtoPlan(newContact))
-    .then(data=>setContacts2(el => el.map((r) => (r.id  ? r : data.payload.result.items)))
-    ) */
-    console.log(newContact)
+
+    console.log(newContact);
 
     dispatch(shtoLendemezgjedhje(newContact))
       .unwrap()
@@ -113,7 +122,10 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
         // console.log(res);
         if (res.code === 200) {
           setContacts2((el) => el.map((r) => (r.id ? r : res.result.items)));
-          setAddFormData2([]);
+          setAddFormData2({
+            emertimi: "",
+            lenda: "",
+          });
         }
       })
       .catch((error) => {
@@ -136,13 +148,15 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
       .then((res) => {
         console.log(res);
         if (res.code === 200) {
-          const  newContacts2 = [...contacts2];
+          const newContacts2 = [...contacts2];
 
-          const index = contacts2.findIndex((contact) => contact.id === editId2);
+          const index = contacts2.findIndex(
+            (contact) => contact.id === editId2
+          );
 
-           newContacts2[index] = res.result.items;
+          newContacts2[index] = res.result.items;
           //console.log(editedContact)
-          setContacts2( newContacts2);
+          setContacts2(newContacts2);
           setEditId2(null);
         }
       })
@@ -153,35 +167,34 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
     //dispatch(updateLendemezgjedhje(editedContact))
   };
 
-  const handleDeleteClick2 = ( contact2Id) => {
-    dispatch(deleteLendemezgjedhje( contact2Id));
-    const  newContacts2 = [...contacts2];
+  const handleDeleteClick2 = (contact2Id) => {
+    dispatch(deleteLendemezgjedhje(contact2Id));
+    const newContacts2 = [...contacts2];
 
-    const index = contacts2.findIndex((contact) => contact.id ===  contact2Id);
+    const index = contacts2.findIndex((contact) => contact.id === contact2Id);
 
-     newContacts2.splice(index, 1);
+    newContacts2.splice(index, 1);
 
-    setContacts2( newContacts2);
+    setContacts2(newContacts2);
   };
-
-
 
   const addTableRows2 = () => {
-    const rowsInput2 = {
+    /*  const rowsInput2 = {
       emertimi: "",
       lenda: "",
-    };
-    setAddFormData2([...addFormData2, rowsInput2]);
+    }; */
+    //setAddFormData2([...addFormData2, rowsInput2]);
 
-    setContacts2([...contacts2, rowsInput2]);
+    //setContacts2([...contacts2, rowsInput2]);
+    setContacts2([...contacts2, addFormData2]);
   };
 
-  const handleEditClick22 = (event, contact) => {
+  const handleEditClick2 = (event, contact) => {
     event.preventDefault();
     setEditId2(contact.id);
 
     const formValues2 = {
-      lenda: contact.lenda,
+      lenda: contact.lenda.id,
 
       emertimi: contact.emertimi,
     };
@@ -228,6 +241,7 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
                           handleEditFormChange2={handleEditFormChange2}
                           handleCancelClick2={handleCancelClick2}
                           handleEditFormSubmit2={handleEditFormSubmit2}
+                          listelendesh={listelendesh}
                         />
                       ) : !lendetek.id ? (
                         <Addrow2
@@ -240,7 +254,7 @@ function EditableTable2({ columnsData2, semestridata2, lendepertezgjedhje }) {
                       ) : (
                         <Readonlyrow2
                           mydata2={lendetek}
-                          handleEditClick2={handleEditClick22}
+                          handleEditClick2={handleEditClick2}
                           handleDeleteClick2={handleDeleteClick2}
                         />
                       )}

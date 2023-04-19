@@ -1,11 +1,11 @@
 import React from "react";
 
 const Readonlyrow2 = ({ mydata2, handleEditClick2, handleDeleteClick2 }) => {
-  console.log(mydata2)
+  console.log(mydata2);
   return (
     <tr>
       <td key="Lenda2" data-label="Lenda">
-        {mydata2.lenda}
+        {mydata2.lenda.emertimi}
       </td>
 
       <td
@@ -16,7 +16,6 @@ const Readonlyrow2 = ({ mydata2, handleEditClick2, handleDeleteClick2 }) => {
       >
         {mydata2.emertimi}
       </td>
-      
 
       <td>
         <button

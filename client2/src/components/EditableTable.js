@@ -36,7 +36,7 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
 
   const [editId, setEditId] = useState(null);
 
-  console.log(contacts);
+  //console.log(contacts);
   const [editFormData, setEditFormData] = useState({
     renditja: "",
     titullari: "",
@@ -55,7 +55,23 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     laboratoresem2: "",
   });
 
-  const [addFormData, setAddFormData] = useState([]);
+  const [addFormData, setAddFormData] = useState({
+    renditja: "",
+    titullari: "",
+    emertimi: "",
+    tipi: "",
+    kredite: "",
+    nrjavesem1: "",
+    seminaresem1: "",
+    leksionesem1: "",
+    praktikasem1: "",
+    laboratoresem1: "",
+    nrjavesem2: "",
+    seminaresem2: "",
+    leksionesem2: "",
+    praktikasem2: "",
+    laboratoresem2: "",
+  });
 
   const handleEditFormChange = (event) => {
     event.preventDefault();
@@ -67,7 +83,6 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     newFormData[fieldName] = fieldValue;
 
     setEditFormData(newFormData);
-    // console.log(editFormData)
   };
   const handleCancelClick = () => {
     setEditId(null);
@@ -86,11 +101,12 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
 
     const fieldName = event.target.getAttribute("name");
     const fieldValue = event.target.value;
-    //console.log(fieldValue);
+    console.log(fieldValue);
     const newFormData = { ...addFormData };
     newFormData[fieldName] = fieldValue;
 
     setAddFormData(newFormData);
+    console.log(addFormData);
   };
 
   const handleAddFormSubmit = (event) => {
@@ -125,7 +141,23 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
         // console.log(res);
         if (res.code === 200) {
           setContacts((el) => el.map((r) => (r.id ? r : res.result.items)));
-          setAddFormData([]);
+          setAddFormData({
+            renditja: "",
+            titullari: "",
+            emertimi: "",
+            tipi: "",
+            kredite: "",
+            nrjavesem1: "",
+            seminaresem1: "",
+            leksionesem1: "",
+            praktikasem1: "",
+            laboratoresem1: "",
+            nrjavesem2: "",
+            seminaresem2: "",
+            leksionesem2: "",
+            praktikasem2: "",
+            laboratoresem2: "",
+          });
         }
       })
       .catch((error) => {
@@ -211,9 +243,9 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
       praktika2: "",
       laboratore2: "",
     };
-    setAddFormData([...addFormData, rowsInput]);
+    // setAddFormData([...addFormData, rowsInput]);
 
-    setContacts([...contacts, rowsInput]);
+    setContacts([...contacts, addFormData]);
   };
 
   const deleteTableRows = (index) => {

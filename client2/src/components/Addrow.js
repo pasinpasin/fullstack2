@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 
-const Addrow = ({ 
+const Addrow = ({
   addFormData,
   handleAddFormChange,
   handleCancelClick,
   handleAddFormSubmit,
 }) => {
+  const options = [
+    { label: "A", value: "A" },
+    { label: "B", value: "B" },
+    { label: "C", value: "C" },
+  ];
+
   return (
     <tr>
-      <td  key="Renditja" data-label="Renditja">
+      <td key="Renditja" data-label="Renditja">
         <input
           type="text"
           required="required"
@@ -18,7 +24,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td  key="Titullari" data-label="Titullari">
+      <td key="Titullari" data-label="Titullari">
         <input
           type="text"
           placeholder="titullari..."
@@ -29,7 +35,7 @@ const Addrow = ({
       </td>
       <td
         // width="10%"
-        
+
         key="emertimi"
         data-label="Emertimi"
       >
@@ -42,17 +48,29 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td  key="tipi" data-label="Tipi">
-        <input
-          type="text"
-          required="required"
-          placeholder="tipi..."
+      <td key="tipi12" data-label="Tipi">
+        <select
           name="tipi"
           value={addFormData.tipi}
           onChange={handleAddFormChange}
-        ></input>
+        >
+          <option disabled hidden value="">
+            --Zgjedh--
+          </option>
+          {options.map((itemValue) => {
+            return (
+              <option
+                key={itemValue.label}
+                value={itemValue.value}
+                data-celesi={itemValue.value}
+              >
+                {itemValue.label}
+              </option>
+            );
+          })}
+        </select>
       </td>
-      <td  key="kredite" data-label="Kredite">
+      <td key="kredite" data-label="Kredite">
         <input
           type="text"
           required="required"
@@ -155,7 +173,9 @@ const Addrow = ({
       </td>
 
       <td>
-        <button type="submit"onClick={handleAddFormSubmit}>Save</button>
+        <button type="submit" onClick={handleAddFormSubmit}>
+          Save
+        </button>
         <button type="button" onClick={handleCancelClick}>
           Cancel
         </button>

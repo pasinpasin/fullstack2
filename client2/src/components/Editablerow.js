@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/Tabela";
-const EditableRow = ({ 
+const EditableRow = ({
   editFormData,
   handleEditFormChange,
   handleCancelClick,
   handleEditFormSubmit,
 }) => {
+  const options = [
+    { label: "A", value: "A" },
+    { label: "B", value: "B" },
+    { label: "C", value: "C" },
+  ];
   return (
-  
     <tr>
-      <td  className="classname"  key="Renditja" data-label="Renditja">
+      <td className="classname" key="Renditja" data-label="Renditja">
         <input
           type="text"
-         
           required="required"
           placeholder="renditja..."
           name="renditja"
@@ -20,19 +23,19 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="Titullari" data-label="Titullari">
+      <td className="classname" key="Titullari" data-label="Titullari">
         <input
           type="text"
-          
           placeholder="titullari..."
           name="titullari"
           value={editFormData.titullari}
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname"
+      <td
+        className="classname"
         // width="10%"
-        
+
         key="emertimi"
         data-label="Emertimi"
       >
@@ -45,17 +48,29 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="tipi" data-label="Tipi">
-        <input
-          type="text"
-          required="required"
-          placeholder="tipi..."
-          name="tipiveprimtarise"
-          value={editFormData.tipiveprimtarise}
+      <td key="tipi12" data-label="Tipi">
+        <select
+          name="tipi"
+          value={editFormData.tipi}
           onChange={handleEditFormChange}
-        ></input>
+        >
+          <option disabled hidden value="">
+            --Zgjedh--
+          </option>
+          {options.map((itemValue) => {
+            return (
+              <option
+                key={itemValue.label}
+                value={itemValue.value}
+                data-celesi={itemValue.value}
+              >
+                {itemValue.label}
+              </option>
+            );
+          })}
+        </select>
       </td>
-      <td  className="classname" key="kredite" data-label="Kredite">
+      <td className="classname" key="kredite" data-label="Kredite">
         <input
           type="text"
           required="required"
@@ -65,7 +80,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  key="nrjave1" data-label="Nrjave Sem 1">
+      <td key="nrjave1" data-label="Nrjave Sem 1">
         <input
           type="text"
           placeholder="nrjavesem1..."
@@ -74,7 +89,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="seminare" data-label="Seminare Sem 1">
+      <td className="classname" key="seminare" data-label="Seminare Sem 1">
         <input
           type="number"
           placeholder="seminaresem1.."
@@ -83,7 +98,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="leksione" data-label="Leksione Sem 1">
+      <td className="classname" key="leksione" data-label="Leksione Sem 1">
         <input
           type="text"
           placeholder="leksionesem1"
@@ -92,7 +107,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="praktika" data-label="Praktika Sem 1">
+      <td className="classname" key="praktika" data-label="Praktika Sem 1">
         <input
           type="text"
           placeholder="praktikasem1"
@@ -101,7 +116,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="laboratore" data-label="Laboratore Sem 1">
+      <td className="classname" key="laboratore" data-label="Laboratore Sem 1">
         <input
           type="text"
           placeholder="laboratoresem1"
@@ -111,7 +126,7 @@ const EditableRow = ({
         ></input>
       </td>
 
-      <td  className="classname" key="nrjave2" data-label="Nrjave Sem 2">
+      <td className="classname" key="nrjave2" data-label="Nrjave Sem 2">
         <input
           type="text"
           placeholder="nrjavesem2..."
@@ -120,7 +135,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="seminare2" data-label="Seminare Sem 2">
+      <td className="classname" key="seminare2" data-label="Seminare Sem 2">
         <input
           type="text"
           placeholder="seminaresem2.."
@@ -129,7 +144,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="leksione2" data-label="Leksione Sem 2">
+      <td className="classname" key="leksione2" data-label="Leksione Sem 2">
         <input
           type="text"
           placeholder="leksionesem2"
@@ -138,7 +153,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname"  key="praktika2" data-label="Praktika Sem 2">
+      <td className="classname" key="praktika2" data-label="Praktika Sem 2">
         <input
           type="text"
           placeholder="praktikasem2"
@@ -147,7 +162,7 @@ const EditableRow = ({
           onChange={handleEditFormChange}
         ></input>
       </td>
-      <td  className="classname" key="laboratore2" data-label="Laboratore Sem 2">
+      <td className="classname" key="laboratore2" data-label="Laboratore Sem 2">
         <input
           type="text"
           placeholder="laboratoresem2"
@@ -158,13 +173,14 @@ const EditableRow = ({
       </td>
 
       <td>
-        <button type="submit"  onClick={handleEditFormSubmit}>Save</button>
+        <button type="submit" onClick={handleEditFormSubmit}>
+          Save
+        </button>
         <button type="button" onClick={handleCancelClick}>
           Cancel
         </button>
       </td>
     </tr>
-  
   );
 };
 

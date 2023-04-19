@@ -615,7 +615,7 @@ class PlaniViewSet(viewsets.ModelViewSet):
             print(plani)
             
             lendamezgjedhje=Lendemezgjedhje.objects.filter(lenda__plani__id=plani.id)
-            #print(lendamezgjedhje.query)
+            print(lendamezgjedhje)
             serializer = LendeMeZgjedhjeSerializer(lendamezgjedhje,many=True)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
         elif request.method == 'POST':
@@ -724,14 +724,15 @@ class LendeMeZgjedhjeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data,
                             status=status.HTTP_200_OK) 
     """
-    def patch(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         instance = self.get_object() #per ke  do ta bash update
         #print(instance)
-        serializer = self.get_serializer(instance=instance,data=request.data)  
+        serializer = self.get_serializer(instance=instance,data=request.data,partial=True)  
         #print(serializer)
         #serializer = self.serializer_class(instance=instance,data=request.data,partial=True)  # NOQA
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.save( )
+        #print(serializer.data)
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     def destroy(self, *args, **kwargs):
             print(self.get_object())

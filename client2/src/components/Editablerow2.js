@@ -1,24 +1,32 @@
-import React, { useState } from "react";
-import Wrapper from "../assets/wrappers/Tabela";
 const EditableRow2 = ({
-  editFormData,
-  handleEditFormChange,
-  handleCancelClick,
-  handleEditFormSubmit,
+  editFormData2,
+  handleEditFormChange2,
+  handleCancelClick2,
+  handleEditFormSubmit2,
+  listelendesh,
 }) => {
   return (
     <tr>
-      <td className="classname" key="RLenda" data-label="Lenda">
-        <input
-          type="text"
-          required="required"
-          placeholder="lenda..."
+      <td>
+        <select
           name="lenda"
-          value={editFormData.renditja}
-          onChange={handleEditFormChange}
-        ></input>
+          value={editFormData2.lenda}
+          onChange={handleEditFormChange2}
+          className="form-select"
+        >
+          {listelendesh.map((itemValue) => {
+            return (
+              <option
+                key={itemValue.id || itemValue}
+                value={itemValue.id || itemValue}
+                data-celesi={itemValue.id || itemValue}
+              >
+                {itemValue.emertimi || itemValue}
+              </option>
+            );
+          })}
+        </select>
       </td>
-
       <td
         className="classname"
         // width="10%"
@@ -31,16 +39,16 @@ const EditableRow2 = ({
           required="required"
           placeholder="emertimi..."
           name="emertimi"
-          value={editFormData.emertimi}
-          onChange={handleEditFormChange}
+          value={editFormData2.emertimi}
+          onChange={handleEditFormChange2}
         ></input>
       </td>
 
       <td>
-        <button type="submit" onClick={handleEditFormSubmit}>
+        <button type="submit" onClick={handleEditFormSubmit2}>
           Save
         </button>
-        <button type="button" onClick={handleCancelClick}>
+        <button type="button" onClick={handleCancelClick2}>
           Cancel
         </button>
       </td>

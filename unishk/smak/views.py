@@ -612,10 +612,10 @@ class PlaniViewSet(viewsets.ModelViewSet):
     def get_lendemezgjedhje(self, request ,pk=None):
         if request.method == 'GET':
             plani = self.get_object()
-            print(plani)
+            #print(plani)
             
             lendamezgjedhje=Lendemezgjedhje.objects.filter(lenda__plani__id=plani.id)
-            print(lendamezgjedhje)
+           # print(lendamezgjedhje)
             serializer = LendeMeZgjedhjeSerializer(lendamezgjedhje,many=True)
             return Response({'message':'success','error':False,'code':200,'result':{'totalItems':len(serializer.data),'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
         elif request.method == 'POST':
@@ -662,7 +662,7 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response({'message':'success','error':False,'code':200,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_200_OK)
     def destroy(self, *args, **kwargs):
-            print(self.get_object())
+           # print(self.get_object())
             serializer = self.get_serializer(self.get_object())
             super().destroy(*args, **kwargs)
             return Response({'message':'success','error':False,'code':202,'result':{'totalItems':1,'items':serializer.data,'totalPages':'null','currentPage':0}},status=status.HTTP_202_ACCEPTED)
@@ -670,7 +670,7 @@ class PlanpermbajtjaViewSet(viewsets.ModelViewSet):
               
 
     def list(self, request,id=None):
-            print("lista")
+          #  print("lista")
            
             planpermbajtja=self.get_queryset()
             serializer = self.get_serializer(planpermbajtja, many=True)

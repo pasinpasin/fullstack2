@@ -1,4 +1,4 @@
-import { useAppContext } from "../context/appContext";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
@@ -14,28 +14,19 @@ import { GrEdit } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 import useHttpClient from "../hooks/useHttpClient";
 import { useParams } from "react-router-dom";
+import { pdfPlani, pdfhtmlPlani } from "../features/planetSlice";
 
 const Planipdf = () => {
   const { pid } = useParams();
-  const [values, setValues] = useState();
-  const [dataloading, setdataloading] = useState(true);
+  const dispatch = useDispatch();
+  const planiState = useSelector((state) => state.planiState);
+  const { planipdf } = planiState;
   //const navigate = useNavigate();
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const {
-    user,
-    token,
 
-    showAlert,
-    displayAlert,
-    loginUser,
-    ListoFakultetet,
-    fakultetet,
-    SHTOFAKULTET_BEGIN,
-  } = useAppContext();
   const navigate = useNavigate();
 
   console.log(pid);
-  const getData = async () => {
+  /*  const getData = async () => {
     try {
       const response = await sendRequest(
         `plani/${pid}/gjeneroobjpdf`,
@@ -50,17 +41,21 @@ const Planipdf = () => {
       console.log(error);
       setdataloading(false);
     }
-  };
+  }; */
 
   useEffect(() => {
-    getData();
+    dispatch(pdfhtmlPlani(pid));
 
     // eslint-disable-next-line
-  }, []);
+  }, [dispatch, pid]);
 
   return (
     <>
-      {dataloading ? <Loading center /> : <PlanipdfComponent data={values} />}
+      {planiState.gjeneropdfhtmlStatus === "pending" ? (
+        <Loading center />
+      ) : (
+        <PlanipdfComponent data={planipdf} />
+      )}
     </>
   );
 };

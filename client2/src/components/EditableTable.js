@@ -53,8 +53,8 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     leksionesem2: "",
     praktikasem2: "",
     laboratoresem2: "",
-    semestri1:"",
-    semestri2:"",
+    semestri1: "",
+    semestri2: "",
   });
 
   const [addFormData, setAddFormData] = useState({
@@ -66,17 +66,17 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     nrjavesem1: "",
     leksionesem1: "",
     seminaresem1: "",
-    
+
     praktikasem1: "",
     laboratoresem1: "",
     nrjavesem2: "",
     leksionesem2: "",
     seminaresem2: "",
-   
+
     praktikasem2: "",
     laboratoresem2: "",
-    semestri1:"",
-    semestri2:"",
+    semestri1: "",
+    semestri2: "",
   });
 
   const handleEditFormChange = (event) => {
@@ -99,7 +99,23 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     newContacts.splice(index, 1);
 
     setContacts(newContacts);
-    setAddFormData([]);
+    setAddFormData({
+      renditja: "",
+      titullari: "",
+      emertimi: "",
+      tipi: "",
+      kredite: "",
+      nrjavesem1: "",
+      seminaresem1: "",
+      leksionesem1: "",
+      praktikasem1: "",
+      laboratoresem1: "",
+      nrjavesem2: "",
+      seminaresem2: "",
+      leksionesem2: "",
+      praktikasem2: "",
+      laboratoresem2: "",
+    });
   };
 
   const handleAddFormChange = (event) => {
@@ -107,12 +123,12 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
 
     const fieldName = event.target.getAttribute("name");
     const fieldValue = event.target.value;
-    console.log(fieldValue);
+    //console.log(fieldValue);
     const newFormData = { ...addFormData };
     newFormData[fieldName] = fieldValue;
 
     setAddFormData(newFormData);
-    console.log(addFormData);
+    //console.log(addFormData);
   };
 
   const handleAddFormSubmit = (event) => {
@@ -121,13 +137,19 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
     const newContact = {
       plani: planiid,
       viti: viti,
-      renditja: isNaN(parseInt(addFormData.renditja)) ? 1 : parseInt(addFormData.renditja),
-      titullari:addFormData.titullari,
-     
-      emertimi:addFormData.emertimi,
+      renditja: isNaN(parseInt(addFormData.renditja))
+        ? 1
+        : parseInt(addFormData.renditja),
+      titullari: addFormData.titullari,
+
+      emertimi: addFormData.emertimi,
       tipiveprimtarise: addFormData.tipi,
-      kredite: isNaN(parseFloat(addFormData.kredite)) ? 0 : parseFloat(addFormData.kredite).toFixed(1),
-      nrjavesem1: isNaN(parseInt(addFormData.nrjavesem1)) ? 0 : addFormData.nrjavesem1,
+      kredite: isNaN(parseFloat(addFormData.kredite))
+        ? 0
+        : parseFloat(addFormData.kredite).toFixed(1),
+      nrjavesem1: isNaN(parseInt(addFormData.nrjavesem1))
+        ? 0
+        : addFormData.nrjavesem1,
       seminaresem1: isNaN(parseFloat(addFormData.seminaresem1))
         ? 0
         : parseFloat(addFormData.seminaresem1).toFixed(1),
@@ -140,7 +162,9 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
       laboratoresem1: isNaN(parseFloat(addFormData.laboratoresem1))
         ? 0
         : parseFloat(addFormData.laboratoresem1).toFixed(1),
-      nrjavesem2: isNaN(parseInt(addFormData.nrjavesem2)) ? 0 : parseInt(addFormData.nrjavesem2),
+      nrjavesem2: isNaN(parseInt(addFormData.nrjavesem2))
+        ? 0
+        : parseInt(addFormData.nrjavesem2),
       seminaresem2: isNaN(parseFloat(addFormData.seminaresem2))
         ? 0
         : parseFloat(addFormData.seminaresem2).toFixed(1),
@@ -153,10 +177,10 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
       laboratoresem2: isNaN(parseFloat(addFormData.laboratoresem2))
         ? 0
         : parseFloat(addFormData.laboratoresem2).toFixed(1),
-        semestri1:addFormData.semestri1,
-      semestri2:addFormData.semestri2
+      semestri1: addFormData.semestri1,
+      semestri2: addFormData.semestri2,
     };
-    console.log(addFormData)
+    //console.log(addFormData);
     /*  dispatch(shtoPlan(newContact))
     .then(data=>setContacts(el => el.map((r) => (r.id  ? r : data.payload.result.items)))
     ) */
@@ -167,6 +191,7 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
         // console.log(res);
         if (res.code === 200) {
           setContacts((el) => el.map((r) => (r.id ? r : res.result.items)));
+
           setAddFormData({
             renditja: "",
             titullari: "",
@@ -179,6 +204,7 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
             praktikasem1: "",
             laboratoresem1: "",
             nrjavesem2: "",
+
             seminaresem2: "",
             leksionesem2: "",
             praktikasem2: "",
@@ -214,7 +240,7 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
       praktikasem2: editFormData.praktikasem2,
       laboratoresem2: editFormData.laboratoresem2,
     };
-    console.log(editFormData);
+    // console.log(editFormData);
     dispatch(updatePlanpermbajtja(editedContact))
       .unwrap()
       .then((res) => {
@@ -270,21 +296,12 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
       laboratore2: "",
     };
     // setAddFormData([...addFormData, rowsInput]);
+    setAddFormData({
+      ...addFormData,
 
+      renditja: contacts.length > 0 ? contacts.length + 1 : 1,
+    });
     setContacts([...contacts, addFormData]);
-  };
-
-  const deleteTableRows = (index) => {
-    const rows = [...rowsData];
-    rows.splice(index, 1);
-    setRowsData(rows);
-  };
-
-  const handleChange = (index, evnt) => {
-    const { name, value } = evnt.target;
-    const rowsInput = [...rowsData];
-    rowsInput[index][name] = value;
-    setRowsData(rowsInput);
   };
 
   const handleEditClick = (event, contact) => {
@@ -334,7 +351,7 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
                 planpermbajtjaState.shtoPlanpermbajtjeError}
             </Alert>
           ) : null}
-          <table className="table">
+          <table className="classname">
             <thead>
               <tr key="kolonat">
                 {columnsData.map((column) => (
@@ -356,31 +373,33 @@ function EditableTable({ columnsData, semestridata, viti, planiid }) {
             </thead>
             <tbody>
               {contacts.length > 0
-                ? contacts.sort((a, b) => parseInt( isNaN(b.renditja,0)) - parseInt(a.renditja)).map((contact) => (
-                    <>
-                      {editId === contact.id ? (
-                        <EditableRow
-                          editFormData={editFormData}
-                          handleEditFormChange={handleEditFormChange}
-                          handleCancelClick={handleCancelClick}
-                          handleEditFormSubmit={handleEditFormSubmit}
-                        />
-                      ) : !contact.id ? (
-                        <Addrow
-                          addFormData={addFormData}
-                          handleAddFormChange={handleAddFormChange}
-                          handleCancelClick={handleCancelClick}
-                          handleAddFormSubmit={handleAddFormSubmit}
-                        />
-                      ) : (
-                        <Readonlyrow
-                          mydata={contact}
-                          handleEditClick={handleEditClick}
-                          handleDeleteClick={handleDeleteClick}
-                        />
-                      )}
-                    </>
-                  ))
+                ? [...contacts]
+                    .sort((a, b) => a.renditja - b.renditja)
+                    .map((contact) => (
+                      <>
+                        {editId === contact.id ? (
+                          <EditableRow
+                            editFormData={editFormData}
+                            handleEditFormChange={handleEditFormChange}
+                            handleCancelClick={handleCancelClick}
+                            handleEditFormSubmit={handleEditFormSubmit}
+                          />
+                        ) : !contact.id ? (
+                          <Addrow
+                            addFormData={addFormData}
+                            handleAddFormChange={handleAddFormChange}
+                            handleCancelClick={handleCancelClick}
+                            handleAddFormSubmit={handleAddFormSubmit}
+                          />
+                        ) : (
+                          <Readonlyrow
+                            mydata={contact}
+                            handleEditClick={handleEditClick}
+                            handleDeleteClick={handleDeleteClick}
+                          />
+                        )}
+                      </>
+                    ))
                 : null}
             </tbody>
           </table>{" "}

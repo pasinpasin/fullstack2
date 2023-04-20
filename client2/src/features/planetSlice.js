@@ -3,6 +3,7 @@ import api from "../utils/api";
 
 const initialState = {
   plane: [],
+  planipdf: null,
   shtoPlaneStatus: "",
   shtoPlaneError: "",
   getPlaneStatus: "",
@@ -13,6 +14,10 @@ const initialState = {
   deletePlaniError: "",
   updatePlaniStatus: "",
   updatePlaniError: "",
+  gjeneropdfhtmlStatus: "",
+  gjeneropdfhtmlError: "",
+  gjeneropdfStatus: "",
+  gjneropdfError: "",
 };
 
 export const shtoPlan = createAsyncThunk(
@@ -97,6 +102,42 @@ export const updatePlani = createAsyncThunk(
   }
 );
 
+export const pdfhtmlPlani = createAsyncThunk(
+  "planet/pdfhtml",
+  async (id, { rejectWithValue }) => {
+    //console.log(plani);
+    try {
+      const response = await api.get(`plani/${id}/gjeneroobjpdf`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
+export const pdfPlani = createAsyncThunk(
+  "planet/pdf",
+  async (id, { rejectWithValue }) => {
+    //console.log(plani);
+    try {
+      const response = await api.get(`plani/${id}/gjeneropdf`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
 const planetSlice = createSlice({
   name: "planet",
   initialState,
@@ -114,6 +155,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     // [shtoPlan.fulfilled]: (state, action) => {
@@ -135,6 +180,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     //[shtoPlan.rejected]: (state, action) => {
@@ -149,6 +198,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     builder.addCase(getPlane.pending, (state, action) => {
@@ -163,6 +216,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     builder.addCase(getPlane.fulfilled, (state, action) => {
@@ -182,6 +239,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     //[getPlane.rejected]: (state, action) => {
@@ -196,6 +257,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
 
@@ -211,6 +276,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     //[deletePlani.fulfilled]: (state, action) => {
@@ -230,6 +299,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     //[deletePlani.rejected]: (state, action) => {
@@ -244,6 +317,10 @@ const planetSlice = createSlice({
         deletePlaniError: action.payload,
         updatePlaniStatus: "",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     // [updatePlani.pending]: (state, action) => {
@@ -258,6 +335,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "pending",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     //[updatePlani.fulfilled]: (state, action) => {
@@ -280,6 +361,10 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "success",
         updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
       };
     });
     // [updatePlani.rejected]: (state, action) => {
@@ -294,6 +379,122 @@ const planetSlice = createSlice({
         deletePlaniError: "",
         updatePlaniStatus: "rejected",
         updatePlaniError: action.payload,
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
+      };
+    });
+
+    builder.addCase(pdfhtmlPlani.pending, (state, action) => {
+      return {
+        ...state,
+        shtoPlaneStatus: "",
+        shtoPlaneError: "",
+        getPlaneStatus: "",
+        getPlaneError: "",
+        deletePlaniStatus: "",
+        deletePlaniError: "",
+        updatePlaniStatus: "",
+        updatePlaniError: "",
+        gjeneropdfhtmlStatus: "pending",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
+      };
+    });
+
+    builder.addCase(pdfhtmlPlani.fulfilled, (state, action) => {
+      console.log(action.payload);
+      return {
+        ...state,
+        planipdf: action.payload,
+        shtoPlaneStatus: "",
+        shtoPlaneError: "",
+        getPlaneStatus: "",
+        getPlaneError: "",
+        deletePlaniStatus: "",
+        deletePlaniError: "",
+        updatePlaniStatus: "",
+        updatePlaniError: "",
+        gjeneropdfhtmlStatus: "success",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
+      };
+    });
+    // [updatePlani.rejected]: (state, action) => {
+    builder.addCase(pdfhtmlPlani.rejected, (state, action) => {
+      return {
+        ...state,
+        shtoPlaneStatus: "",
+        shtoPlaneError: "",
+        getPlaneStatus: "",
+        getPlaneError: "",
+        deletePlaniStatus: "",
+        deletePlaniError: "",
+        updatePlaniStatus: "",
+        updatePlaniError: "",
+        gjeneropdfhtmlStatus: "rejected",
+        gjeneropdfhtmlError: action.payload,
+        gjeneropdfStatus: "",
+        gjneropdfError: "",
+      };
+    });
+
+    builder.addCase(pdfPlani.pending, (state, action) => {
+      return {
+        ...state,
+        shtoPlaneStatus: "",
+        shtoPlaneError: "",
+        getPlaneStatus: "",
+        getPlaneError: "",
+        deletePlaniStatus: "",
+        deletePlaniError: "",
+        updatePlaniStatus: "",
+        updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "pending",
+        gjneropdfError: "",
+      };
+    });
+
+    builder.addCase(pdfPlani.fulfilled, (state, action) => {
+      console.log(action.payload);
+      return {
+        ...state,
+        planipdf: action.payload,
+        shtoPlaneStatus: "",
+        shtoPlaneError: "",
+        getPlaneStatus: "",
+        getPlaneError: "",
+        deletePlaniStatus: "",
+        deletePlaniError: "",
+        updatePlaniStatus: "",
+        updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "success",
+        gjneropdfError: "",
+      };
+    });
+    // [updatePlani.rejected]: (state, action) => {
+    builder.addCase(pdfPlani.rejected, (state, action) => {
+      return {
+        ...state,
+        shtoPlaneStatus: "",
+        shtoPlaneError: "",
+        getPlaneStatus: "",
+        getPlaneError: "",
+        deletePlaniStatus: "",
+        deletePlaniError: "",
+        updatePlaniStatus: "",
+        updatePlaniError: "",
+        gjeneropdfhtmlStatus: "",
+        gjeneropdfhtmlError: "",
+        gjeneropdfStatus: "action.payload",
+        gjneropdfError: "rejected",
       };
     });
   },

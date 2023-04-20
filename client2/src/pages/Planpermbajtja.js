@@ -1,8 +1,9 @@
-
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import Wrapper from "../assets/wrappers/TabsWrapper";
+import { GrDocumentPdf } from "react-icons/gr";
 
 import Semestri from "../components/Semestri";
 import { useParams } from "react-router-dom";
@@ -13,10 +14,11 @@ import { getLendemezgjedhje } from "../features/lendeMeZgjedhjeSlice";
 import EditableTable from "../components/EditableTable";
 
 const Planpermbajtja = () => {
-
   const dispatch = useDispatch();
   const planpermbajtjaState = useSelector((state) => state.planpermbajtjaState);
-  const lendemezgjedhjeState = useSelector((state) => state.lendemezgjedhjeState);
+  const lendemezgjedhjeState = useSelector(
+    (state) => state.lendemezgjedhjeState
+  );
   const { planpermbajtja } = planpermbajtjaState;
   const { lendemezgjedhje } = lendemezgjedhjeState;
   const { id } = useParams();
@@ -59,12 +61,11 @@ const Planpermbajtja = () => {
     return newobj;
   };
 
-
   useEffect(() => {
-    console.log("efekt planpermb")
+    console.log("efekt planpermb");
     dispatch(getPlanpermbajtje(id));
     dispatch(getLendemezgjedhje(id));
-  }, [dispatch,id]);
+  }, [dispatch, id]);
 
   let url = "/departamenti/id/programi";
 
@@ -93,98 +94,101 @@ const Planpermbajtja = () => {
 
   return (
     <Wrapper>
-      {planpermbajtjaState.getPlanpermbajtjeStatus === "pending" || lendemezgjedhjeState.getLendemezgjedhjeStatus==="pending" ? (
+      {planpermbajtjaState.getPlanpermbajtjeStatus === "pending" ||
+      lendemezgjedhjeState.getLendemezgjedhjeStatus === "pending" ? (
         <Loading center />
       ) : (
-        <div className="Tabs">
-        
-          <ul className="nav" key="nav">
-            <li
-              key="tab1"
-              className={activeTab === "tab1" ? "active" : ""}
-              onClick={handleTab1}
-            >
-              Viti 1
-            </li>
-            <li
-              key="tab2"
-              className={activeTab === "tab2" ? "active" : ""}
-              onClick={handleTab2}
-            >
-              Viti 2
-            </li>
-            <li
-              key="tab3"
-              className={activeTab === "tab3" ? "active" : ""}
-              onClick={handleTab3}
-            >
-              Viti 3
-            </li>
-            <li
-              key="tab4"
-              className={activeTab === "tab4" ? "active" : ""}
-              onClick={handleTab4}
-            >
-              Viti 4
-            </li>
-            <li
-              key="tab5"
-              className={activeTab === "tab5" ? "active" : ""}
-              onClick={handleTab5}
-            >
-              Viti 5
-            </li>
-          </ul>
-
-          <div className="outlet">
-            {activeTab === "tab1" ? (
-              <Semestri
-                sem={setFilter(planpermbajtja, 1)}
-                zgjedhje={setFilter(lendemezgjedhje, 1)}
-                viti={1}
-                planiid={id}
-                
-                getdata={planpermbajtja}
-              />
-            ) : activeTab === "tab2" ? (
-              <Semestri
-                sem={setFilter(planpermbajtja, 2)}
-                zgjedhje={setFilter(lendemezgjedhje, 2)}
-                
-                viti={2}
-                planiid={id}
-                getdata={lendemezgjedhje}
-              />
-            ) : activeTab === "tab3" ? (
-              <Semestri
-                sem={setFilter(planpermbajtja, 3)}
-                zgjedhje={setFilter(lendemezgjedhje, 3)}
-                viti={3}
-                planiid={id}
-                
-                getdata={planpermbajtja}
-              />
-            ) : activeTab === "tab4" ? (
-              <Semestri
-                sem={setFilter(planpermbajtja, 4)}
-                zgjedhje={setFilter(lendemezgjedhje, 4)}
-                viti={4}
-                planiid={id}
-                
-                getdata={planpermbajtja}
-              />
-            ) : (
-              <Semestri
-                sem={setFilter(planpermbajtja, 5)}
-                zgjedhje={setFilter(lendemezgjedhje, 5)}
-                viti={5}
-                planiid={id}
-                
-                getdata={planpermbajtja}
-              />
-            )}
+        <>
+          <div>
+            {" "}
+            <Link to={`/plani/${id}/pdf`}>
+              <GrDocumentPdf size={35} />
+            </Link>
           </div>
-        </div>
+          <div className="Tabs">
+            <ul className="nav" key="nav">
+              <li
+                key="tab1"
+                className={activeTab === "tab1" ? "active" : ""}
+                onClick={handleTab1}
+              >
+                Viti 1
+              </li>
+              <li
+                key="tab2"
+                className={activeTab === "tab2" ? "active" : ""}
+                onClick={handleTab2}
+              >
+                Viti 2
+              </li>
+              <li
+                key="tab3"
+                className={activeTab === "tab3" ? "active" : ""}
+                onClick={handleTab3}
+              >
+                Viti 3
+              </li>
+              <li
+                key="tab4"
+                className={activeTab === "tab4" ? "active" : ""}
+                onClick={handleTab4}
+              >
+                Viti 4
+              </li>
+              <li
+                key="tab5"
+                className={activeTab === "tab5" ? "active" : ""}
+                onClick={handleTab5}
+              >
+                Viti 5
+              </li>
+            </ul>
+
+            <div className="outlet">
+              {activeTab === "tab1" ? (
+                <Semestri
+                  sem={setFilter(planpermbajtja, 1)}
+                  zgjedhje={setFilter(lendemezgjedhje, 1)}
+                  viti={1}
+                  planiid={id}
+                  getdata={planpermbajtja}
+                />
+              ) : activeTab === "tab2" ? (
+                <Semestri
+                  sem={setFilter(planpermbajtja, 2)}
+                  zgjedhje={setFilter(lendemezgjedhje, 2)}
+                  viti={2}
+                  planiid={id}
+                  getdata={lendemezgjedhje}
+                />
+              ) : activeTab === "tab3" ? (
+                <Semestri
+                  sem={setFilter(planpermbajtja, 3)}
+                  zgjedhje={setFilter(lendemezgjedhje, 3)}
+                  viti={3}
+                  planiid={id}
+                  getdata={planpermbajtja}
+                />
+              ) : activeTab === "tab4" ? (
+                <Semestri
+                  sem={setFilter(planpermbajtja, 4)}
+                  zgjedhje={setFilter(lendemezgjedhje, 4)}
+                  viti={4}
+                  planiid={id}
+                  getdata={planpermbajtja}
+                />
+              ) : (
+                <Semestri
+                  sem={setFilter(planpermbajtja, 5)}
+                  zgjedhje={setFilter(lendemezgjedhje, 5)}
+                  viti={5}
+                  planiid={id}
+                  getdata={planpermbajtja}
+                />
+              )}
+            </div>
+          </div>
+        </>
       )}
     </Wrapper>
   );

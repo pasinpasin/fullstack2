@@ -18,7 +18,7 @@ const Addrow = ({
 
   return (
     <tr>
-      <td key="Renditja" data-label="Renditja">
+      <td className="classname" key="Renditja" data-label="Renditja">
         <input
           type="text"
           required="required"
@@ -28,7 +28,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td key="Titullari" data-label="Titullari">
+      <td className="classname" key="Titullari" data-label="Titullari">
         <input
           type="text"
           placeholder="titullari..."
@@ -38,6 +38,7 @@ const Addrow = ({
         ></input>
       </td>
       <td
+        className="classname"
         // width="10%"
 
         key="emertimi"
@@ -52,7 +53,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td key="tipi12" data-label="Tipi">
+      <td className="classname" key="tipi12" data-label="Tipi">
         <select
           name="tipi"
           value={addFormData.tipi}
@@ -74,7 +75,7 @@ const Addrow = ({
           })}
         </select>
       </td>
-      <td key="kredite" data-label="Kredite">
+      <td className="classname" key="kredite" data-label="Kredite">
         <input
           type="text"
           required="required"
@@ -84,7 +85,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="nrjavesem1..."
@@ -93,7 +94,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="leksionesem1"
@@ -102,7 +103,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           name="seminaresem1"
@@ -111,7 +112,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="laboratoresem1"
@@ -120,7 +121,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="praktikasem1"
@@ -129,9 +130,8 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-    
 
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="nrjavesem2..."
@@ -140,7 +140,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="leksionesem2"
@@ -149,7 +149,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="seminaresem2.."
@@ -158,8 +158,8 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-  
-      <td>
+
+      <td className="classname">
         <input
           type="text"
           placeholder="laboratoresem2"
@@ -168,7 +168,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="praktikasem2"
@@ -177,8 +177,8 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-     
-      <td>
+
+      <td className="classname">
         <input
           type="text"
           placeholder="sem 1"
@@ -187,7 +187,7 @@ const Addrow = ({
           onChange={handleAddFormChange}
         ></input>
       </td>
-      <td>
+      <td className="classname">
         <input
           type="text"
           placeholder="sem 2"
@@ -197,7 +197,7 @@ const Addrow = ({
         ></input>
       </td>
 
-      <td>
+      <td className="classname">
         <button type="submit" onClick={handleAddFormSubmit}>
           Save
         </button>

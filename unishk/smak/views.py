@@ -525,12 +525,13 @@ class PlaniViewSet(viewsets.ModelViewSet):
             planpermbajtja2=PlanPermbajtja.objects.filter(plani=plani.id)
             ngarkesavjetore=PlanPermbajtja.objects.filter(plani=plani.id).exclude(tipiveprimtarise='m').values('viti').annotate(ngarkesasem1=Sum(F('seminaresem1') + F('leksionesem1')+F('laboratoresem1') + F('praktikasem1')),ngarkesasem2=Sum(F('seminaresem2') + F('leksionesem2')+F('laboratoresem2') + F('praktikasem2')),totkreditepervit=Sum('kredite')).order_by('viti')
             serializer=PlanpermbajtjaSerializer(planpermbajtja2,many=True)
-            print(serializer.data)
+            #(serializer.data)
             serializer3=TotaletSerializer(planpermbajtja,many=True)
             serializer4=NgarkesavjetoreSerializer(ngarkesavjetore, many=True)
             serializer2=PlaniSerializer(plani,many=False)
             finaltotal_percent=sum(item['percent'] for item in serializer3.data)
-            zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id))).all()
+            #zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id))).all()
+            zgjedhje=Lendemezgjedhje.objects.filter(lenda__plani=plani.id)
             serializer5=LendeMeZgjedhjeSerializer(zgjedhje,many=True)
            
             #######return Response({'result':{"obj1":serializer3.data, "obj2":serializer.data,"totkredite":totkredite,"finaltotal_percent": finaltotal_percent,"plani":serializer2.data,"obj3":serializer4.data,"zgjedhje":serializer5.data}}, template_name='plani.html.j2')
@@ -542,6 +543,7 @@ class PlaniViewSet(viewsets.ModelViewSet):
             weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')],presentational_hints=True)
            
             return response
+            #return Response({'message':'success','error':False,'code':200,'result':{response}},status=status.HTTP_200_OK);
             
             
 
@@ -564,7 +566,10 @@ class PlaniViewSet(viewsets.ModelViewSet):
             serializer2=PlaniSerializer(plani,many=False)
             finaltotal_percent=sum(item['percent'] for item in serializer3.data)
             #finaltotal_percent=sum(item['percent'] for item in planpermbajtja)
-            zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id))).all()
+            #zgjedhje=Lendemezgjedhje.objects.prefetch_related(Prefetch('lenda', queryset=PlanPermbajtja.objects.filter(plani=plani.id)))
+            zgjedhje=Lendemezgjedhje.objects.filter(lenda__plani=plani.id)
+           
+            
             serializer5=LendeMeZgjedhjeSerializer(zgjedhje,many=True)
             
             

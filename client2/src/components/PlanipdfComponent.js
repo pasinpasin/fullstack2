@@ -1,10 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { pdfPlani } from "../features/planetSlice";
+import api from "../utils/api"
+import { useState } from "react";
+import Loading from "./Loading"
 
 const PlanipdfComponent = (props) => {
-  const dispatch = useDispatch();
-  const planiState = useSelector((state) => state.planiState);
-  const { planipdf } = planiState;
+  
+ 
+ 
+  const [isloading,setisloading]=useState(false)
 
   let vA = 0,
     vB = 0,
@@ -15,7 +19,7 @@ const PlanipdfComponent = (props) => {
     chr,
     totali,
     teksti,
-    emertimi,
+    emertimi, 
     kredite,
     percent,
     totkrediteveprimtari
@@ -44,7 +48,8 @@ const PlanipdfComponent = (props) => {
       );
     } else if (chr === "B") {
       vB++;
-      console.log(vB);
+    /*   console.log(vB);
+      console.log(props.data.zgjedhje) */
       return vB === 1 ? (
         <>
           {" "}
@@ -141,39 +146,43 @@ const PlanipdfComponent = (props) => {
   };
   const getPDF = async () => {
     try {
-      /* const resp = await axios.get(
-        `http://127.0.0.1:8000/plani/${props.data.plani.id}/gjeneropdf`,
+      setisloading(true)
+      const resp = await api.get(
+        `plani/${props.data.plani.id}/gjeneropdf`,
         {
           responseType: "blob",
-          headers: { Authorization: `Bearer ${authTokens?.access}` },
+         
         }
-      ); */
-
-      dispatch(pdfPlani(props.data.plani.id))
-        .unwrap()
-        .then((res) => {
-          console.log(res);
-          if (res.code === 200) {
-            console.log(res);
-            var url = window.URL.createObjectURL(res.data);
-            var a = document.createElement("a");
-            a.href = url;
-            a.download = "kot";
-            document.body.appendChild(a); // append the element to the dom
-            a.click();
-            a.remove(); // afterwards, remove the element
-
-            return res;
-          }
-        });
+      );
+      console.log(resp);
+      var url = window.URL.createObjectURL(resp.data);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "kot";
+      document.body.appendChild(a); // append the element to the dom
+      a.click();
+      a.remove(); // afterwards, remove the element
+      setisloading(false)
+      return resp;
     } catch (e) {
+      setisloading(false)
       throw e;
     }
   };
 
+  
+
+
+
   return (
     <>
-      <button onClick={getPDF}>Download PDF</button>
+     {isloading ? (
+        <Loading center />
+      ) : (
+        <>
+    <button onClick={getPDF}>
+                    Download PDF
+                </button>
       <table className="maintab" width="100%">
         <tbody key="tbody2">
           <tr key="key1">
@@ -333,273 +342,274 @@ const PlanipdfComponent = (props) => {
         </tbody>
       </table>
       <br></br>
-
-      <table class="maintab" width="100%">
-        {props.data.obj3.map((ngarkesa) => (
-          <>
+   
+   <table class="maintab" width="100%">
+        
+          
+            { props.data.obj3.map((ngarkesa) =>
+            <>
             <tr>
-              <td colspan="3">
-                <table class="maintab" width="100%">
-                  <tr>
-                    <td colspan="5" align="center">
-                      <b>Viti {ngarkesa.viti}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="left" colspan="5">
-                      {ngarkesa.totkreditepervit > 60 ? (
-                        <span>
-                          <b>
-                            Numri Total i krediteve:
-                            <span style={{ color: "#bf4040" }}>
-                              <b>{ngarkesa.totkreditepervit}</b>
-                            </span>
-                          </b>
-                        </span>
-                      ) : (
-                        <span>
-                          <b>
-                            Numri Total i krediteve
-                            <span style={{ color: "#0080ff" }}>
-                              <b>{ngarkesa.totkreditepervit}</b>
-                            </span>
-                          </b>
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="25%"></td>
-                    <td align="center" width="24%">
-                      <b>Semestri I</b>
-                    </td>
-                    <td width="2%"></td>
-                    <td align="center" width="24%">
-                      <b>Semestri II</b>
-                    </td>
-                    <td width="25%"></td>
-                  </tr>
+               <td colspan="3">
+               
+                       <table class="maintab" width="100%">
+                           <tr>
+                           <td colspan="5" align="center">
+                           <b>Viti {ngarkesa.viti }</b>
+                           </td>
+                           </tr>
+                           <tr>
+                           <td align="left" colspan="5">
+                           
+                          { ngarkesa.totkreditepervit>60 ?
+                             <span>
+                               <b>
+                                 Numri Total i krediteve: 
+                                 <span style={{ color:"#bf4040" }}>
+                                   <b>{ngarkesa.totkreditepervit }</b>
+                               </span>
+                               </b>
+                             </span>
+                              :
+                           
+                             <span>
+                               <b>
+                                 Numri Total i krediteve
+                                 <span style={{color:"#0080ff"}}>
+                                   <b>{ngarkesa.totkreditepervit}</b>
+                               </span>
+                               </b>
+                             </span>
+                           }
+                           </td>
+                           
+                           </tr>
+                           <tr>
+                           <td width="25%"></td>
+                           <td align="center" width="24%">
+                               <b>Semestri I</b></td>
+                           <td width="2%"></td>
+                           <td align="center" width="24%">
+                               <b>Semestri II</b>
+                           </td>
+                           <td width="25%"></td>
+                           </tr>
+                       
+                           <tr>
+                           <td width="25%"></td>
+                           <td align="center"  width="24%">
+                               { ngarkesa.ngarkesasem1>25 ?
+                                   <span>
+                                       Ngarkesa mesimore:  <span style={{color:"#bf4040"}}>
+                                       <b>{ngarkesa.ngarkesasem1}</b>
+                                   </span>
+                                   </span>
+                                   
+                               
+                              :        <span>
+                                       Ngarkesa mesimore: <span style={{color:"#0080ff"}}>
+                                       <b>{ngarkesa.ngarkesasem1}</b> 
+                                   </span>
+                                   </span>
+                           
+                               }
+                           
+                           </td>
+                           <td width="2%"></td>
+                           <td align="center"  width="24%">
+                            { ngarkesa.ngarkesasem2>25 ?
+                               <span>
+                                   Ngarkesa mesimore:  <span style={{color:"#bf4040"}}>
+                                   <b>{ngarkesa.ngarkesasem2}</b>
+                               </span>
+                               </span>
+                           
+                           
+                           :      <span>
+                                   Ngarkesa mesimore: <span style={{color:"#0080ff"}}>
+                                   <b>{ngarkesa.ngarkesasem2}</b> 
+                                   </span>
+                                   </span>
+                          
+                            }
+                          
+                           <br></br>
+                           </td>
+                           <td width="25%"></td>
+                           </tr>
+                           
+                       </table>
+                       <br></br>
+                       <table class="maintab" width="100%">
+                      
+                           <tr>
+                               <th bgcolor="#ccd4e6" rowspan="2">Nr</th>
+                               <th bgcolor="#ccd4e6" rowspan="2">Emertimi Lendes</th>
+                               <th bgcolor="#ccd4e6" rowspan="2">Tipi Veprimtarise</th>
+                               <th bgcolor="#ccd4e6" rowspan="2">Kredite</th>
+                               <th  bgcolor="#ccd4e6" colspan="5">Semestri I</th>
+                               <th  bgcolor="#ccd4e6" colspan="5">Semestri II</th>
+                               <th  bgcolor="#ccd4e6" colspan="4">Totali</th>
+                               <th bgcolor="#ccd4e6" width="4%" rowspan="2">Ore jashte<br></br>auditorit</th>
+                               <th  bgcolor="#ccd4e6" colspan="2">Semestri</th>
+                           </tr>
+                           <tr>
+                               
+                               <th  bgcolor="#ccd4e6" width="4%">Nr Jave</th>
+                               <th bgcolor="#ccd4e6">Leks</th>
+                               <th bgcolor="#ccd4e6">Sem</th>
+                               <th bgcolor="#ccd4e6">Lab</th>
+                               <th bgcolor="#ccd4e6" width="3%">Prakt</th>
+                               <th  bgcolor="#ccd4e6" width="4%">Nr Jave</th>
+                               <th bgcolor="#ccd4e6">Leks</th>
+                               <th bgcolor="#ccd4e6">Sem</th>
+                               <th bgcolor="#ccd4e6">Lab</th>
+                               <th bgcolor="#ccd4e6" width="3%">Prakt</th>
+                               <th bgcolor="#ccd4e6">Leks</th>
+                               <th bgcolor="#ccd4e6">Sem</th>
+                               <th bgcolor="#ccd4e6">Lab</th>
+                               <th bgcolor="#ccd4e6">Prakt</th>
+                               <th bgcolor="#ccd4e6"> I </th>
+                               <th bgcolor="#ccd4e6">II</th>
+                           </tr>
+                            { props.data.obj2.map((lendet) =>
+                            lendet.viti===ngarkesa.viti && (
+                                  <tr>
+                             <td bgcolor="#eef1f7">
+                               {lendet.renditja}
+                             </td>
+                             <td bgcolor="#eef1f7">
+                                 {lendet.emertimi}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                {lendet.tipiveprimtarise}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.kredite }
+                             </td>
+                             <td  bgcolor="#eef1f7" align="center">
+                                 {lendet.nrjavesem1}
+                             </td>
+                             <td bgcolor="#eef1f7"  align="center">
+                                 {lendet.leksionesem1}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.seminaresem1}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.laboratoresem1}
+                             </td>
+                             <td bgcolor="#eef1f7"  align="center">
+                                {lendet.praktikasem1}
+                             </td>
+                             <td  bgcolor="#eef1f7" align="center">
+                                 { lendet.nrjavesem2 }
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.leksionesem2}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.seminaresem2}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.laboratoresem2}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.praktikasem2}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                               {lendet.totleksione}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.totseminare}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.totlaboratore}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                                 {lendet.totpraktika}
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                            
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                              { lendet.semestri1 }
+                             </td>
+                             <td bgcolor="#eef1f7" align="center">
+                               {lendet.semestri2}
+                             </td>
+                           </tr>
 
-                  <tr>
-                    <td width="25%"></td>
-                    <td align="center" width="24%">
-                      {ngarkesa.ngarkesasem1 > 25 ? (
-                        <span>
-                          Ngarkesa mesimore:{" "}
-                          <span style={{ color: "#bf4040" }}>
-                            <b>{ngarkesa.ngarkesasem1}</b>
-                          </span>
-                        </span>
-                      ) : (
-                        <span>
-                          Ngarkesa mesimore:{" "}
-                          <span style={{ color: "#0080ff" }}>
-                            <b>{ngarkesa.ngarkesasem1}</b>
-                          </span>
-                        </span>
-                      )}
-                    </td>
-                    <td width="2%"></td>
-                    <td align="center" width="24%">
-                      {ngarkesa.ngarkesasem2 > 25 ? (
-                        <span>
-                          Ngarkesa mesimore:{" "}
-                          <span style={{ color: "#bf4040" }}>
-                            <b>{ngarkesa.ngarkesasem2}</b>
-                          </span>
-                        </span>
-                      ) : (
-                        <span>
-                          Ngarkesa mesimore:{" "}
-                          <span style={{ color: "#0080ff" }}>
-                            <b>{ngarkesa.ngarkesasem2}</b>
-                          </span>
-                        </span>
-                      )}
+                           ) )}
+                            { (props.data.zgjedhje && props.data.zgjedhje.length>0) &&
+                          
+                                   <tr >
+                                       <td colspan="21" align="Center">
+                                       <br></br>
+                                       <table width="50%">
+                                           <tr>
+                                           
+                                           <th bgcolor="#ccd4e6">Emërtimi i Lëndës</th>
+                                           <th bgcolor="#ccd4e6">Tipi i Veprimtarisë</th>
+                                           </tr>
+                                       
+                                        { props.data.zgjedhje.map((lendemezgjedhje) =>
+                                          lendemezgjedhje.lenda.viti===ngarkesa.viti &&
+                                           <tr>
+                                                <td bgcolor="#eef1f7">
+                                       { lendemezgjedhje.emertimi }
+                                       </td>
+                                       <td bgcolor="#eef1f7">
+                                         {lendemezgjedhje.lenda.emertimi }
+                                       </td>
 
-                      <br></br>
-                    </td>
-                    <td width="25%"></td>
-                  </tr>
-                </table>
-                <br></br>
-                <table class="maintab" width="100%">
-                  <tr>
-                    <th bgcolor="#ccd4e6" rowspan="2">
-                      Nr
-                    </th>
-                    <th bgcolor="#ccd4e6" rowspan="2">
-                      Emertimi Lendes
-                    </th>
-                    <th bgcolor="#ccd4e6" rowspan="2">
-                      Tipi Veprimtarise
-                    </th>
-                    <th bgcolor="#ccd4e6" rowspan="2">
-                      Kredite
-                    </th>
-                    <th bgcolor="#ccd4e6" colspan="5">
-                      Semestri I
-                    </th>
-                    <th bgcolor="#ccd4e6" colspan="5">
-                      Semestri II
-                    </th>
-                    <th bgcolor="#ccd4e6" colspan="4">
-                      Totali
-                    </th>
-                    <th bgcolor="#ccd4e6" width="4%" rowspan="2">
-                      Ore jashte<br></br>auditorit
-                    </th>
-                    <th bgcolor="#ccd4e6" colspan="2">
-                      Semestri
-                    </th>
-                  </tr>
-                  <tr>
-                    <th bgcolor="#ccd4e6" width="4%">
-                      Nr Jave
-                    </th>
-                    <th bgcolor="#ccd4e6">Leks</th>
-                    <th bgcolor="#ccd4e6">Sem</th>
-                    <th bgcolor="#ccd4e6">Lab</th>
-                    <th bgcolor="#ccd4e6" width="3%">
-                      Prakt
-                    </th>
-                    <th bgcolor="#ccd4e6" width="4%">
-                      Nr Jave
-                    </th>
-                    <th bgcolor="#ccd4e6">Leks</th>
-                    <th bgcolor="#ccd4e6">Sem</th>
-                    <th bgcolor="#ccd4e6">Lab</th>
-                    <th bgcolor="#ccd4e6" width="3%">
-                      Prakt
-                    </th>
-                    <th bgcolor="#ccd4e6">Leks</th>
-                    <th bgcolor="#ccd4e6">Sem</th>
-                    <th bgcolor="#ccd4e6">Lab</th>
-                    <th bgcolor="#ccd4e6">Prakt</th>
-                    <th bgcolor="#ccd4e6"> I </th>
-                    <th bgcolor="#ccd4e6">II</th>
-                  </tr>
-                  {props.data.obj2.map(
-                    (lendet) =>
-                      lendet.viti === ngarkesa.viti && (
-                        <tr>
-                          <td bgcolor="#eef1f7">{lendet.renditja}</td>
-                          <td bgcolor="#eef1f7">{lendet.emertimi}</td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.tipiveprimtarise}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.kredite}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.nrjavesem1}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.leksionesem1}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.seminaresem1}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.laboratoresem1}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.praktikasem1}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.nrjavesem2}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.leksionesem2}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.seminaresem2}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.laboratoresem2}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.praktikasem2}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.totleksione}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.totseminare}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.totlaboratore}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.totpraktika}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center"></td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.semestri1}
-                          </td>
-                          <td bgcolor="#eef1f7" align="center">
-                            {lendet.semestri2}
-                          </td>
-                        </tr>
-                      )
-                  )}
-                  {props.data.zgjedhje && props.data.zgjedhje.length > 0 && (
-                    <tr>
-                      <td colspan="21" align="Center">
-                        <br></br>
-                        <table width="50%">
-                          <tr>
-                            <th bgcolor="#ccd4e6">Emërtimi i Lëndës</th>
-                            <th bgcolor="#ccd4e6">Tipi i Veprimtarisë</th>
-                          </tr>
+                                           </tr>
+                                        )}
+                                       </table>
+                                       <br></br>
+                                       </td>
 
-                          {props.data.zgjedhje.map(
-                            (lendemezgjedhje) =>
-                              lendemezgjedhje.lenda.viti === ngarkesa.viti && (
-                                <tr>
-                                  <td bgcolor="#eef1f7">
-                                    {lendemezgjedhje.emertimi}
-                                  </td>
-                                  <td bgcolor="#eef1f7">
-                                    {lendemezgjedhje.lenda.emertimi}
-                                  </td>
-                                </tr>
-                              )
-                          )}
-                        </table>
-                        <br></br>
-                      </td>
-                    </tr>
-                  )}
 
-                  <tr>
-                    <td colspan="21">
-                      <br></br>
-                    </td>
-                  </tr>
-                </table>
-                <br></br>
-                <br></br>
-              </td>
-            </tr>
-          </>
-        ))}
+                                   </tr>
+                               }
 
-        <tr>
-          <td colspan="3" align="right">
-            <br></br>
-            <br></br>
-            <div class="footerdiv">
-              <div class="staffname2">Drejtori i departamentit</div>
-              <br></br>
-              <br></br>
-              <div class="staffname2"></div>
-              <br></br>
-              <br></br>
-            </div>
-          </td>
-        </tr>
-      </table>
+                             
+                               <tr>
+                                   <td colspan="21">
+                                   <br></br>
+                                   </td>
+                               </tr>
+                           
+                       </table>
+                       <br></br>
+                       <br></br>
+                     
+
+               </td>
+               </tr>
+               </> )} 
+           
+           
+             <tr>
+                 <td colspan="3"  align="right">
+                 <br></br>
+                 <br></br>
+                 <div class="footerdiv">
+                     <div class="staffname2" >
+                     Drejtori i departamentit
+                     </div>
+                     <br></br>
+                     <br></br>
+                     <div class="staffname2" >
+                     
+                     </div>
+                     <br></br>
+                     <br></br>
+
+                 </div>
+                 </td>
+             </tr>
+             
+           </table></>)}
     </>
   );
 };

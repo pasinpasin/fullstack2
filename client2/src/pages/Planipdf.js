@@ -10,17 +10,14 @@ import FormRow from "../components/FormRow";
 import axios from "axios";
 import PlanipdfComponent from "../components/PlanipdfComponent";
 
-import { GrEdit } from "react-icons/gr";
-import { MdDelete } from "react-icons/md";
-import useHttpClient from "../hooks/useHttpClient";
 import { useParams } from "react-router-dom";
-import { pdfPlani, pdfhtmlPlani } from "../features/planetSlice";
+import { pdfhtmlPlani } from "../features/planetSlice";
 
 const Planipdf = () => {
   const { pid } = useParams();
   const dispatch = useDispatch();
   const planiState = useSelector((state) => state.planiState);
-  const { planipdf } = planiState;
+  const { planipdfhtml } = planiState;
   //const navigate = useNavigate();
 
   const navigate = useNavigate();
@@ -44,17 +41,18 @@ const Planipdf = () => {
   }; */
 
   useEffect(() => {
-    dispatch(pdfhtmlPlani(pid));
+    console.log("efekt plani pdf")
+    dispatch(pdfhtmlPlani(pid)); 
 
     // eslint-disable-next-line
   }, [dispatch, pid]);
 
   return (
     <>
-      {planiState.gjeneropdfhtmlStatus === "pending" ? (
+      {planiState.gjeneropdfhtmlStatus === "pending" || planipdfhtml===null ? (
         <Loading center />
       ) : (
-        <PlanipdfComponent data={planipdf} />
+        <PlanipdfComponent data={planipdfhtml} />
       )}
     </>
   );

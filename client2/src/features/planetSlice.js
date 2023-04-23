@@ -4,6 +4,7 @@ import api from "../utils/api";
 const initialState = {
   plane: [],
   planipdf: null,
+  planipdfhtml:null,
   shtoPlaneStatus: "",
   shtoPlaneError: "",
   getPlaneStatus: "",
@@ -125,7 +126,10 @@ export const pdfPlani = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     //console.log(plani);
     try {
-      const response = await api.get(`plani/${id}/gjeneropdf`);
+      const response = await api.get(`plani/${id}/gjeneropdf`, {
+        responseType: "blob",
+      });
+      console.log(response)
       return response.data;
     } catch (error) {
       console.log(error);
@@ -408,7 +412,7 @@ const planetSlice = createSlice({
       console.log(action.payload);
       return {
         ...state,
-        planipdf: action.payload,
+        planipdfhtml: action.payload.result,
         shtoPlaneStatus: "",
         shtoPlaneError: "",
         getPlaneStatus: "",
@@ -461,7 +465,7 @@ const planetSlice = createSlice({
     });
 
     builder.addCase(pdfPlani.fulfilled, (state, action) => {
-      console.log(action.payload);
+     // console.log(action.payload);
       return {
         ...state,
         planipdf: action.payload,
@@ -493,8 +497,8 @@ const planetSlice = createSlice({
         updatePlaniError: "",
         gjeneropdfhtmlStatus: "",
         gjeneropdfhtmlError: "",
-        gjeneropdfStatus: "action.payload",
-        gjneropdfError: "rejected",
+        gjeneropdfStatus: "rejected",
+        gjneropdfError: action.payload,
       };
     });
   },

@@ -103,29 +103,26 @@
 
     {%- for lende in result.obj2 if lende.tipiveprimtarise == tipi.tipiveprimtarise -%}
 
-   
-        {%- if lende.tipiveprimtarise == "A" -%}
-         <tr bgcolor="#ccd4e6">
-        {%- set varA.value = varA.value + 1 -%}
+    <tr bgcolor="#ccd4e6">
+      {%- if lende.tipiveprimtarise == "A" -%}
+      {%- set varA.value = varA.value + 1 -%}
 
-        {%- if varA.value == 1 -%}
+      {%- if varA.value == 1 -%}
 
-          <td rowspan="{{ tipi.total }}" width="40%">LENDE BAZE-pergatitje metodologiike dhe kulture e pergjithshme
-            (Simboli
-            A)</td>
-          <td width="30%">{{ lende.emertimi }}</td>
-          <td width="10%">{{ lende.kredite }}</td>
-          <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
-          <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
-   
+      <td rowspan="{{ tipi.total }}" width="40%">LENDE BAZE-pergatitje metodologiike dhe kulture e pergjithshme
+        (Simboli
+        A)</td>
+      <td width="30%">{{ lende.emertimi }}</td>
+      <td width="10%">{{ lende.kredite }}</td>
+      <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
+      <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
+    </tr>
     {%- else -%}
-    
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ lende.kredite }}</td>
     </tr>
     {%- endif -%}
     {%- elif lende.tipiveprimtarise == "B" -%}
-     <tr bgcolor="#ccd4e6">
     {%- set varB.value = varB.value + 1 -%}
     {%- if varB.value == 1 -%}
     <td rowspan="{{ tipi.total }}" width="40%">LËNDË KARAKTERIZUESE-përgatitje për disiplinën shkencore (Simboli B)
@@ -134,7 +131,7 @@
     <td width="10%">{{ ("%.2f"|format(lende.kredite)).rstrip('0').rstrip('.') }}</td>
     <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
     <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
-    
+    </tr>
     {%- else -%}
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ ("%.2f"|format(lende.kredite)).rstrip('0').rstrip('.') }}</td>
@@ -142,7 +139,6 @@
     {%- endif -%}
 
     {%- elif lende.tipiveprimtarise == "C" -%}
-     <tr bgcolor="#ccd4e6">
     {%- set varC.value = varC.value + 1 -%}
     {%- if varC.value == 1 -%}
 
@@ -152,38 +148,36 @@
     <td width="10%">{{ lende.kredite }}</td>
     <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
     <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }}</td>
-    
+    </tr>
     {%- else -%}
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ lende.kredite }}</td>
     </tr>
     {%- endif -%}
     {%- elif lende.tipiveprimtarise == "D" -%}
-    <tr bgcolor="#ccd4e6">
     {%- set varD.value = varD.value + 1 -%}
     {%- if varD.value == 1 -%}
-    <td rowspan="{{ tipi.total }}" width="40%" style ="break-inside: avoid">LËNDË PLOTËSUESE-gjuhë të huaja, njohuri informatike, praktika
+    <td rowspan="{{ tipi.total }}" width="40%">LËNDË PLOTËSUESE-gjuhë të huaja, njohuri informatike, praktika
       profesionale (Simboli D)</td>
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ lende.kredite }}</td>
     <td rowspan="{{tipi.total}}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
     <td rowspan="{{tipi.total}}" width="10%">{{ tipi.percent }}</td>
-    
+    </tr>
     {%- else -%}
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ lende.kredite }}</td>
     </tr>
     {%- endif -%}
     {%- else -%}
-     <tr bgcolor="#ccd4e6">
     {%- set varE.value = varE.value + 1 -%}
     {%- if varE.value == 1 -%}
-    <td rowspan="{{ tipi.total }}" style ="break-inside: avoid" width="40%">DETYRIME PËRMBYLLËSE. (Simboli E)</td>
+    <td rowspan="{{ tipi.total }}" width="40%">DETYRIME PËRMBYLLËSE. (Simboli E)</td>
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ lende.kredite }}</td>
     <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.totkrediteveprimtari }}</td>
     <td rowspan="{{ tipi.total }}" width="10%">{{ tipi.percent }} </td>
-    
+    </tr>
     {%- else -%}
     <td width="30%">{{ lende.emertimi }}</td>
     <td width="10%">{{ lende.kredite }}</td>

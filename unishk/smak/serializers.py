@@ -286,14 +286,14 @@ class PlaniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Planet
         fields = '__all__'
-        #depth = 1
+        
       
     
 
     def to_representation(self, instance):
        ret = super().to_representation(instance)
        ret['programi'] = ProgramiSerializer(instance.programi).data
-       return ret
+       return ret 
     
 class SemestriSerializer(serializers.ModelSerializer):
     
@@ -343,14 +343,15 @@ class LendeMeZgjedhjeSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = Lendemezgjedhje
-        fields = ('id','emertimi','lenda','created','updated')
-        #depth = 1 
-    def to_representation(self, instance):
+       # fields = ('id','emertimi','lenda','created','updated')
+        fields = '__all__'
+        depth = 1 
+"""  def to_representation(self, instance):
        ret = super().to_representation(instance)
        #ret['plani'] = PlaniSerializer(instance.plani).data
        ret['lenda'] = PlanpermbajtjaSerializer(instance.lenda).data
       
-       return ret
+       return ret  """
     
 """class LendeMeZgjedhjeQuerySerializer(serializers.Serializer):
     emertimi = serializers.CharField(max_length=256, required=True)

@@ -1,6 +1,10 @@
 @page {
-    size: Letter landscape; 
-      margin: 0in 0.44in 0.2in 0.44in;   
+   /*  size: Letter landscape; 
+      margin: 0in 0.44in 0.2in 0.44in;    */
+
+      size: A4 landscape;
+    
+     
       
     
     
@@ -9,13 +13,13 @@
 
 
 
-table { break-inside:auto }
-tr,td  {
-     /* break-inside:avoid; */
-     /* break-after:auto  */
-     
-    
-     break-inside: avoid;
-    
-    }
+table { page-break-inside:auto }
 
+tr,td, td[rowspan]  {
+  /* break-inside:avoid;
+   break-after:auto  ; 
+  */
+ 
+  page-break-inside: avoid;
+ 
+ }
